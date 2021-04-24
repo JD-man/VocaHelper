@@ -9,10 +9,15 @@ import UIKit
 
 class WordsViewController: UIViewController {
     
-    var collectionView:  UICollectionView?
+    private var collectionView:  UICollectionView?
     
     // test용 파일개수
-    var lastIdx: Int = 10
+    private var lastIdx: Int = 10
+    
+    // MARK: - Popup Closure
+    
+    private var deleteClosure: (() -> Void)?
+    private var cancelClosure: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +33,8 @@ class WordsViewController: UIViewController {
         navigationItem.title = "Words"
         
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.bounds.width/3-10, height: view.bounds.width/3-10)
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: view.bounds.width/3-15, height: view.bounds.width/3-20)
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
@@ -36,7 +42,7 @@ class WordsViewController: UIViewController {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)
         collectionView?.register(AddCollectionViewCell.self, forCellWithReuseIdentifier: AddCollectionViewCell.identifier)
-        collectionView?.backgroundColor = .systemBackground
+        collectionView?.backgroundColor = .systemPink
         collectionView?.delegate = self
         collectionView?.dataSource = self
         
@@ -62,7 +68,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier, for: indexPath) as! WordsCollectionViewCell
-            cell.label.text = "Name"
+            cell.label.text = "\(indexPath.row)"
             return cell
         }
     }
@@ -70,33 +76,59 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        // Action Sheet이 아닌 Custom PopUp View를 만들어야 할듯
+        // Action Sheet이 아닌 Custom PopUp View를 만들었음
+        
         if let cell = collectionView.cellForItem(at: indexPath) as? WordsCollectionViewCell {
-            let actionSheet = UIAlertController(title: "Select" , message: "you want", preferredStyle: .alert)
-            actionSheet.addTextField { (tf) in
-                tf.returnKeyType = .default
-                tf.placeholder = "Change Name"
-                tf.textAlignment = .center
-                tf.autocorrectionType = .no
-                tf.clearButtonMode = .whileEditing
-                tf.text = cell.label.text
-            }
-            actionSheet.addAction(UIAlertAction(title: "Edit", style: .destructive, handler: { (_) in
-                print("\(cell.label.text!)")
-            }))
-            actionSheet.addAction(UIAlertAction(title: "Practice", style: .default, handler: nil))
-            actionSheet.addAction(UIAlertAction(title: "Test", style: .default, handler: nil))
-            actionSheet.addAction(UIAlertAction(title: "Exit", style: .cancel, handler: { (_) in
-                cell.label.text = actionSheet.textFields?[0].text
-            }))
-            
-            self.present(actionSheet, animated: true, completion: nil)
-        } else {
+            let popupVC = PopupViewController()
+            popupVC.delegate = self
+            popupVC.modalPresentationStyle = .overCurrentContext
+            popupVC.textField.text = cell.label.text
+            deleteClosure = { () -> Void in return collectionView.deleteItems(at: [IndexPath.init(row: indexPath.row, section: indexPath.section)])}
+            cancelClosure = { () -> Void in return cell.label.text = popupVC.textField.text }
+            self.present(popupVC, animated: true, completion: nil)
+            } else {
             if let _ = collectionView.cellForItem(at: indexPath) as? AddCollectionViewCell {
                 // Add Cell
                 lastIdx += 1
+                collectionView.insertItems(at: [IndexPath.init(row: indexPath.row, section: indexPath.section)])
                 collectionView.reloadData()
                 print("Add Cell")
             } else { return } }
     }
+    
+    
 }
+
+extension WordsViewController: PopupViewControllerDelegate {
+    
+    
+    func didTapEdit() {
+    }
+    
+    func didTapPractice() {
+        print("Tap Practice")
+    }
+    
+    func didTapTest() {
+        print("Tap Test")
+    }
+    
+    func didTapDelete() {
+        guard let deleteClosure = deleteClosure, let collectionView = collectionView else {
+            return
+        }
+        lastIdx -= 1
+        deleteClosure()
+        collectionView.reloadData()
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func didTapExit() {
+        guard let cancelClosure = cancelClosure else {
+            return
+        }
+        self.dismiss(animated: true, completion: cancelClosure)
+    }
+}
+
+
