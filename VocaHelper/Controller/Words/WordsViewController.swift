@@ -12,7 +12,8 @@ class WordsViewController: UIViewController {
     private var collectionView:  UICollectionView?
     
     // 파일개수
-    private var lastIdx: Int = 10
+    private var fileNames: [String] = []
+    private var fileCount: Int = 0
     
     // MARK: - Popup Closure
     
@@ -29,6 +30,7 @@ class WordsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView?.frame = view.bounds
+        fileLoad()
     }
     
     private func configure() {
@@ -54,6 +56,25 @@ class WordsViewController: UIViewController {
         }
         view.addSubview(collectionView)
     }
+    
+    private func fileLoad() {
+        let fileManager = FileManager.default
+        guard let directory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        do {
+            fileNames = try fileManager.contentsOfDirectory(atPath: directory.path)
+            guard let dsStoreIdx =  fileNames.firstIndex(of: ".DS_Store") else {
+                return
+            }
+            fileNames.remove(at: dsStoreIdx)
+            fileNames.sort()
+            fileCount = fileNames.count            
+        }
+        catch {
+            print(error)
+        }
+    }
 }
 
 extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -62,21 +83,26 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return lastIdx + 1
+        return fileCount + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.row == lastIdx {
+        if indexPath.row == fileCount {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddCollectionViewCell.identifier, for: indexPath) as! AddCollectionViewCell
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier, for: indexPath) as! WordsCollectionViewCell
-            cell.label.text = "\(indexPath.row)"
+            let realName = fileNames[indexPath.row]
+            cell.label.text = String(realName[realName.index(realName.startIndex, offsetBy: 25) ..< realName.endIndex])
             return cell
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+                
+        guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
         
         // Action Sheet이 아닌 Custom PopUp View를 만들었음
         
@@ -92,38 +118,81 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
             
             editClosure = { () -> EditViewController in
                 let editVC = EditViewController()
+                
                 // 저장파일을 가져와야함
-                editVC.voca.vocas = [0 : ["cell.label.text!" : "a"]]
-                editVC.navigationItem.title = cell.label.text
+                let decoder = JSONDecoder()
+                let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
+                do {
+                        let data = try Data(contentsOf: path)
+                        editVC.voca = try decoder.decode(VocaData.self, from: data)
+                    } catch {
+                    print(error)
+                }
+                editVC.navigationItem.title = popupVC.textField.text
                 return editVC
             }
             deleteClosure = { () -> Void in return collectionView.deleteItems(at: [indexPath])}
-            cancelClosure = { () -> Void in return cell.label.text = popupVC.textField.text }
+            cancelClosure = { () -> Void in
+                guard let fileName = popupVC.textField.text else {
+                    return
+                }
+                //change file name
+                let realName = self.fileNames[indexPath.row]
+                let datePart = String(realName[realName.startIndex ..< realName.index(realName.startIndex, offsetBy: 25)])
+                let currRealName = datePart + fileName
+                
+                let prevName = directory.appendingPathComponent(self.fileNames[indexPath.row]).path
+                let currName = directory.appendingPathComponent(currRealName).path
+                
+                do {
+                    try FileManager.default.moveItem(atPath: prevName, toPath: currName)
+                } catch {
+                    print(error)
+                }
+                
+                cell.label.text = fileName
+                self.fileNames[indexPath.row] = currRealName
+                print(self.fileNames)
+                return
+            }
             
             tabBarController?.tabBar.isHidden = true
             self.present(popupVC, animated: true, completion: nil)
             } else {
             if let cell = collectionView.cellForItem(at: indexPath) as? AddCollectionViewCell {
-                // Add Cell
+                
                 UIView.animate(withDuration: 0.2) {
                     cell.backgroundColor = .systemGray6
                     cell.backgroundColor = .systemBackground
                 }
-                lastIdx += 1
+                fileNames.append("\(Date())Name")
+                fileCount = fileNames.count
+                // 빈 파일 하나 추가
+                let newVocaData = VocaData(vocas: [Int : [String : String]]())
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = .prettyPrinted
+                do {                    
+                    print(directory)
+                    let path = directory.appendingPathComponent("\(Date())Name")
+                    let data = try encoder.encode(newVocaData)
+                    try data.write(to: path)
+                    } catch {
+                    print(error)
+                }
+                 
+                // Add Cell
                 collectionView.insertItems(at: [indexPath])
             } else { return } }
     }
 }
 
 extension WordsViewController: PopupViewControllerDelegate {
-    
-    
     func didTapEdit() {
-        guard let editClosure = editClosure else {
+        guard let editClosure = editClosure, let cancelClosure = cancelClosure else {
             return
         }
         let editVC = editClosure()
-        self.dismiss(animated: false, completion: nil)
+        self.dismiss(animated: false, completion: cancelClosure)
         navigationController?.pushViewController(editVC, animated: true)
     }
     
@@ -142,7 +211,7 @@ extension WordsViewController: PopupViewControllerDelegate {
         
         let alert = UIAlertController(title: "Delete?", message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
-            self.lastIdx -= 1
+            self.fileCount -= 1
             deleteClosure()
             self.dismiss(animated: true, completion: nil)
             self.tabBarController?.tabBar.isHidden = false
@@ -159,5 +228,3 @@ extension WordsViewController: PopupViewControllerDelegate {
         tabBarController?.tabBar.isHidden = false
     }
 }
-
-

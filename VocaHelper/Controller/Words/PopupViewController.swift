@@ -29,6 +29,8 @@ class PopupViewController: UIViewController {
         textField.layer.cornerRadius = 20
         textField.font = UIFont.systemFont(ofSize: 25)
         textField.adjustsFontSizeToFitWidth = true
+        textField.autocorrectionType = .no
+        textField.autocapitalizationType = .none
         return textField
     }()
     

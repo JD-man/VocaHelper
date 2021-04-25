@@ -114,7 +114,7 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
 extension EditViewController: EditTableViewFooterDelegate {
     func addLine() {
         vocaCount += 1
-        tableView.insertRows(at: [IndexPath.init(row: vocaCount-1, section: 0)], with: .bottom)
-        tableView.scrollToRow(at: IndexPath.init(row: vocaCount-1, section: 0), at: .bottom, animated: true)
+        tableView.insertRows(at: [IndexPath.init(row: vocaCount-1, section: 0)], with: .top)
+        tableView.scrollToRow(at: IndexPath.init(row: vocaCount-1, section: 0), at: .top, animated: true)
     }
 }

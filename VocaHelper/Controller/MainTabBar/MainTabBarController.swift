@@ -8,7 +8,7 @@
 import UIKit
 
 class MainTabBarController: UITabBarController {
-
+    
     let wordsNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WordsViewController())
         nav.tabBarItem.title = "Words"
