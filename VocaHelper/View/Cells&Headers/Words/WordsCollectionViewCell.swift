@@ -14,20 +14,18 @@ class WordsCollectionViewCell: UICollectionViewCell {
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "folder")
-        imageView.tintColor = .label
+        imageView.tintColor = .label        
         return imageView
     }()
     
     let label: UILabel = {
-        let label = UILabel()
-        label.text = "text"
+        let label = UILabel()        
         label.textAlignment = .center
-        label.backgroundColor = .systemBackground
+        label.textColor = .systemBackground
+        label.backgroundColor = .systemIndigo
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
-    
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -44,6 +42,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
         let imageSizeheight = self.bounds.width/2.5
         
         imageView.frame = CGRect(x: self.bounds.width/2 - imageSizeWidth/2 , y: self.bounds.height/2 - imageSizeheight/1.5, width: imageSizeWidth, height: imageSizeheight)
+        
         label.frame = CGRect(x: 10, y:  self.bounds.width/6 + imageSizeWidth, width: self.bounds.width-20, height: imageSizeheight/2)
     }
     
@@ -53,8 +52,8 @@ class WordsCollectionViewCell: UICollectionViewCell {
     }
     
     private func configure() {
-        addSubview(imageView)
-        addSubview(label)
+        contentView.addSubview(imageView)
+        contentView.addSubview(label)
         backgroundColor = .systemBackground
     }
 }

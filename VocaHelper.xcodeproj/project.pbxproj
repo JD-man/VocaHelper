@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		89086EFE2634305B0078BC8F /* VocaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89086EFD2634305B0078BC8F /* VocaData.swift */; };
 		895AAB442633C6D400532021 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB432633C6D400532021 /* PopupViewController.swift */; };
+		895AAB4A2633F90900532021 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB492633F90900532021 /* EditViewController.swift */; };
+		895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */; };
+		895AAB572634165800532021 /* EditTableViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB562634165800532021 /* EditTableViewFooter.swift */; };
 		89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651F9C2632BE4900949DEB /* AppDelegate.swift */; };
 		89651F9F2632BE4900949DEB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651F9E2632BE4900949DEB /* SceneDelegate.swift */; };
 		89651FA62632BE4A00949DEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89651FA52632BE4A00949DEB /* Assets.xcassets */; };
@@ -20,7 +24,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		89086EFD2634305B0078BC8F /* VocaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaData.swift; sourceTree = "<group>"; };
 		895AAB432633C6D400532021 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
+		895AAB492633F90900532021 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewCell.swift; sourceTree = "<group>"; };
+		895AAB562634165800532021 /* EditTableViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewFooter.swift; sourceTree = "<group>"; };
 		89651F992632BE4900949DEB /* VocaHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocaHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89651F9C2632BE4900949DEB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		89651F9E2632BE4900949DEB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +53,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		895AAB462633F8C800532021 /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				895AAB492633F90900532021 /* EditViewController.swift */,
+			);
+			path = Edit;
+			sourceTree = "<group>";
+		};
+		895AAB472633F8CE00532021 /* Practice */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Practice;
+			sourceTree = "<group>";
+		};
+		895AAB482633F8D500532021 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		895AAB4D2633F9F700532021 /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */,
+				895AAB562634165800532021 /* EditTableViewFooter.swift */,
+			);
+			path = Edit;
+			sourceTree = "<group>";
+		};
 		89651F902632BE4900949DEB = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +118,9 @@
 		89651FB62632BF2500949DEB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				895AAB462633F8C800532021 /* Edit */,
+				895AAB472633F8CE00532021 /* Practice */,
+				895AAB482633F8D500532021 /* Test */,
 				89651FBB2632BF6800949DEB /* Search */,
 				89651FBA2632BF5D00949DEB /* Words */,
 				89651FB92632BF4E00949DEB /* MainTabBar */,
@@ -89,7 +131,7 @@
 		89651FB72632BF2F00949DEB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				89651FC32632C4A700949DEB /* Cells */,
+				89651FC32632C4A700949DEB /* Cells&Headers */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -97,6 +139,7 @@
 		89651FB82632BF3D00949DEB /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				89086EFD2634305B0078BC8F /* VocaData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -126,12 +169,13 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
-		89651FC32632C4A700949DEB /* Cells */ = {
+		89651FC32632C4A700949DEB /* Cells&Headers */ = {
 			isa = PBXGroup;
 			children = (
+				895AAB4D2633F9F700532021 /* Edit */,
 				89651FCA2632D32800949DEB /* Words */,
 			);
-			path = Cells;
+			path = "Cells&Headers";
 			sourceTree = "<group>";
 		};
 		89651FCA2632D32800949DEB /* Words */ = {
@@ -217,9 +261,13 @@
 				89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */,
 				89651F9F2632BE4900949DEB /* SceneDelegate.swift in Sources */,
 				89651FBE2632C0DF00949DEB /* WordsViewController.swift in Sources */,
+				895AAB572634165800532021 /* EditTableViewFooter.swift in Sources */,
 				89651FC52632C4D700949DEB /* WordsCollectionViewCell.swift in Sources */,
 				89651FB42632BEA300949DEB /* MainTabBarController.swift in Sources */,
+				89086EFE2634305B0078BC8F /* VocaData.swift in Sources */,
 				895AAB442633C6D400532021 /* PopupViewController.swift in Sources */,
+				895AAB4A2633F90900532021 /* EditViewController.swift in Sources */,
+				895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

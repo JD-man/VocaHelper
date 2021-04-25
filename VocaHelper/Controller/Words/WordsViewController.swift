@@ -11,13 +11,15 @@ class WordsViewController: UIViewController {
     
     private var collectionView:  UICollectionView?
     
-    // test용 파일개수
+    // 파일개수
     private var lastIdx: Int = 10
     
     // MARK: - Popup Closure
     
+    private var editClosure: (() -> EditViewController)?
     private var deleteClosure: (() -> Void)?
     private var cancelClosure: (() -> Void)?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,10 +41,11 @@ class WordsViewController: UIViewController {
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
         
+        
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)
         collectionView?.register(AddCollectionViewCell.self, forCellWithReuseIdentifier: AddCollectionViewCell.identifier)
-        collectionView?.backgroundColor = .systemPink
+        collectionView?.backgroundColor = .systemBackground
         collectionView?.delegate = self
         collectionView?.dataSource = self
         
@@ -74,35 +77,54 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
         
         // Action Sheet이 아닌 Custom PopUp View를 만들었음
         
         if let cell = collectionView.cellForItem(at: indexPath) as? WordsCollectionViewCell {
+            UIView.animate(withDuration: 0.2) {
+                cell.backgroundColor = .systemGray5
+                cell.backgroundColor = .systemBackground                
+            }
             let popupVC = PopupViewController()
             popupVC.delegate = self
             popupVC.modalPresentationStyle = .overCurrentContext
             popupVC.textField.text = cell.label.text
-            deleteClosure = { () -> Void in return collectionView.deleteItems(at: [IndexPath.init(row: indexPath.row, section: indexPath.section)])}
+            
+            editClosure = { () -> EditViewController in
+                let editVC = EditViewController()
+                // 저장파일을 가져와야함
+                editVC.voca.vocas = [0 : ["cell.label.text!" : "a"]]
+                editVC.navigationItem.title = cell.label.text
+                return editVC
+            }
+            deleteClosure = { () -> Void in return collectionView.deleteItems(at: [indexPath])}
             cancelClosure = { () -> Void in return cell.label.text = popupVC.textField.text }
+            
+            tabBarController?.tabBar.isHidden = true
             self.present(popupVC, animated: true, completion: nil)
             } else {
-            if let _ = collectionView.cellForItem(at: indexPath) as? AddCollectionViewCell {
+            if let cell = collectionView.cellForItem(at: indexPath) as? AddCollectionViewCell {
                 // Add Cell
+                UIView.animate(withDuration: 0.2) {
+                    cell.backgroundColor = .systemGray6
+                    cell.backgroundColor = .systemBackground
+                }
                 lastIdx += 1
-                collectionView.insertItems(at: [IndexPath.init(row: indexPath.row, section: indexPath.section)])
-                collectionView.reloadData()
-                print("Add Cell")
+                collectionView.insertItems(at: [indexPath])
             } else { return } }
     }
-    
-    
 }
 
 extension WordsViewController: PopupViewControllerDelegate {
     
     
     func didTapEdit() {
+        guard let editClosure = editClosure else {
+            return
+        }
+        let editVC = editClosure()
+        self.dismiss(animated: false, completion: nil)
+        navigationController?.pushViewController(editVC, animated: true)
     }
     
     func didTapPractice() {
@@ -114,13 +136,19 @@ extension WordsViewController: PopupViewControllerDelegate {
     }
     
     func didTapDelete() {
-        guard let deleteClosure = deleteClosure, let collectionView = collectionView else {
+        guard let deleteClosure = deleteClosure else {
             return
         }
-        lastIdx -= 1
-        deleteClosure()
-        collectionView.reloadData()
-        self.dismiss(animated: true, completion: nil)
+        
+        let alert = UIAlertController(title: "Delete?", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
+            self.lastIdx -= 1
+            deleteClosure()
+            self.dismiss(animated: true, completion: nil)
+            self.tabBarController?.tabBar.isHidden = false
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func didTapExit() {
@@ -128,6 +156,7 @@ extension WordsViewController: PopupViewControllerDelegate {
             return
         }
         self.dismiss(animated: true, completion: cancelClosure)
+        tabBarController?.tabBar.isHidden = false
     }
 }
 

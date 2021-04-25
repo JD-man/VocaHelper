@@ -26,6 +26,7 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -33,6 +34,6 @@ class MainTabBarController: UITabBarController {
     }
     
     private func configure() {
-        setViewControllers([wordsNavVC, searchNavVC], animated: true)
+        setViewControllers([wordsNavVC, searchNavVC], animated: true)        
     }
 }

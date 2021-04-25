@@ -23,8 +23,12 @@ class PopupViewController: UIViewController {
         let textField = UITextField()
         textField.text = "Popup"
         textField.textAlignment = .center
-        textField.backgroundColor = .systemBackground
+        textField.backgroundColor = .label
+        textField.textColor = .systemBackground
         textField.placeholder = "Change Name"
+        textField.layer.cornerRadius = 20
+        textField.font = UIFont.systemFont(ofSize: 25)
+        textField.adjustsFontSizeToFitWidth = true
         return textField
     }()
     
@@ -72,28 +76,34 @@ class PopupViewController: UIViewController {
         super.viewDidLoad()
         
         configure()
+        addSubViews()
         // Do any additional setup after loading the view.
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let popupWidth = view.bounds.width / 2
-        let popupHeight = view.bounds.height / 10
+        let popupHeight = view.bounds.height / 15
         let popupX = view.bounds.width / 2 - popupWidth / 2
         let popupY = view.bounds.height / 2 - (popupHeight / 2) * 6
         
         textField.frame = CGRect(x: popupX, y: popupY, width: popupWidth, height: popupHeight)
-        editButton.frame = CGRect(x: popupX, y: textField.frame.origin.y + +textField.bounds.height, width: popupWidth, height: popupHeight)
+        editButton.frame = CGRect(x: popupX, y: textField.frame.origin.y + +textField.bounds.height + 5, width: popupWidth, height: popupHeight)
         practiceButton.frame = CGRect(x: popupX, y: editButton.frame.origin.y + +editButton.bounds.height, width: popupWidth, height: popupHeight)
         testButton.frame = CGRect(x: popupX, y: practiceButton.frame.origin.y + +practiceButton.bounds.height, width: popupWidth, height: popupHeight)
         deleteButton.frame = CGRect(x: popupX, y: testButton.frame.origin.y + +testButton.bounds.height, width: popupWidth, height: popupHeight)
         exitButton.frame = CGRect(x: popupX, y: deleteButton.frame.origin.y + +deleteButton.bounds.height, width: popupWidth, height: popupHeight)
         
         addTarget()
+        
+        textField.delegate = self
     }
     
     private func configure() {
-        view.backgroundColor = UIColor(red: 30/255.0, green: 30/255.0, blue: 30/255.0, alpha: 0.5)
+        view.backgroundColor = UIColor(white: 0.6, alpha: 0.7)
+    }
+    
+    private func addSubViews() {
         view.addSubview(textField)
         view.addSubview(editButton)
         view.addSubview(practiceButton)
@@ -128,5 +138,11 @@ class PopupViewController: UIViewController {
     
     @objc private func didTapExitButton() {
         delegate?.didTapExit()
+    }
+}
+
+extension PopupViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
     }
 }
