@@ -10,6 +10,7 @@ import UIKit
 class EditViewController: UIViewController {
        
     public var voca = VocaData(vocas: [Int : [String : String]]())
+    public var fileName: String = ""
     
     private var vocaCount: Int = 0
     
@@ -55,11 +56,28 @@ class EditViewController: UIViewController {
     }
     
     @objc private func didTapLeftButton() {
+        makeVocas()
+        saveVocas()
         tabBarController?.tabBar.isHidden = false
         navigationController?.popViewController(animated: true)
     }
     
     @objc private func didTapRightButton() {
+        
+    }
+    
+    private func makeVocas() {
+        for i in 0 ..< vocaCount {
+            let indexPath = IndexPath.init(row: i, section: 0)
+            guard let cell = tableView.cellForRow(at: indexPath) as? EditTableViewCell,
+                  let word = cell.wordTextField.text, let meaning = cell.meaningTextField.text else {
+                return
+            }
+            voca.vocas[i] = [word : meaning]
+        }
+    }
+    
+    private func saveVocas() {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         
@@ -67,10 +85,7 @@ class EditViewController: UIViewController {
             guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return
             }
-            guard let title  = self.navigationItem.title else {
-                return
-            }
-            let path = directory.appendingPathComponent(title)
+            let path = directory.appendingPathComponent(fileName)
             print(path)
             let data = try encoder.encode(voca)
             try data.write(to: path)
@@ -114,7 +129,8 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
 extension EditViewController: EditTableViewFooterDelegate {
     func addLine() {
         vocaCount += 1
-        tableView.insertRows(at: [IndexPath.init(row: vocaCount-1, section: 0)], with: .top)
-        tableView.scrollToRow(at: IndexPath.init(row: vocaCount-1, section: 0), at: .top, animated: true)
+        let indexPath: IndexPath = IndexPath.init(row: vocaCount-1, section: 0)
+        tableView.insertRows(at: [indexPath], with: .top)
+        tableView.scrollToRow(at: indexPath , at: .top, animated: true)
     }
 }

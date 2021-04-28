@@ -64,11 +64,13 @@ class WordsViewController: UIViewController {
         }
         do {
             fileNames = try fileManager.contentsOfDirectory(atPath: directory.path)
-            guard let dsStoreIdx =  fileNames.firstIndex(of: ".DS_Store") else {
-                return
+            if fileNames.contains(".DS_Store") {
+                guard let dsStoreIdx =  fileNames.firstIndex(of: ".DS_Store") else {
+                    return
+                }
+                fileNames.remove(at: dsStoreIdx)
+                fileNames.sort()
             }
-            fileNames.remove(at: dsStoreIdx)
-            fileNames.sort()
             fileCount = fileNames.count            
         }
         catch {
@@ -129,9 +131,20 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     print(error)
                 }
                 editVC.navigationItem.title = popupVC.textField.text
+                editVC.fileName = self.fileNames[indexPath.row]
                 return editVC
             }
-            deleteClosure = { () -> Void in return collectionView.deleteItems(at: [indexPath])}
+            
+            deleteClosure = { () -> Void in
+                collectionView.deleteItems(at: [indexPath])
+                let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
+                if let error = try? FileManager.default.removeItem(atPath: path.path) {
+                    print(error)
+                } else {
+                    return
+                }
+                return }
+            
             cancelClosure = { () -> Void in
                 guard let fileName = popupVC.textField.text else {
                     return
@@ -152,7 +165,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 
                 cell.label.text = fileName
                 self.fileNames[indexPath.row] = currRealName
-                print(self.fileNames)
+                //print(self.fileNames)
                 return
             }
             
