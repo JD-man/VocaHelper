@@ -18,6 +18,7 @@ class WordsViewController: UIViewController {
     // MARK: - Popup Closure
     
     private var editClosure: (() -> EditViewController)?
+    private var practiceClosure: (() -> PracticeViewController)?
     private var deleteClosure: (() -> Void)?
     private var cancelClosure: (() -> Void)?
     
@@ -107,7 +108,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
         }
         
         // Action Sheet이 아닌 Custom PopUp View를 만들었음
-        
+        // 단어장셀 터치시
         if let cell = collectionView.cellForItem(at: indexPath) as? WordsCollectionViewCell {
             UIView.animate(withDuration: 0.2) {
                 cell.backgroundColor = .systemGray5
@@ -118,6 +119,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
             popupVC.modalPresentationStyle = .overCurrentContext
             popupVC.textField.text = cell.label.text
             
+            // edit 터치시 실행될 클로져
             editClosure = { () -> EditViewController in
                 let editVC = EditViewController()
                 
@@ -135,6 +137,25 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 return editVC
             }
             
+            // practice 터치시 실행될 클로져
+            
+            practiceClosure = { ()-> PracticeViewController in
+                let practiceVC = PracticeViewController()
+                
+                // 저장파일을 가져오기
+                let decoder = JSONDecoder()
+                let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
+                do {
+                        let data = try Data(contentsOf: path)
+                    practiceVC.voca = try decoder.decode(VocaData.self, from: data)
+                    } catch {
+                    print(error)
+                }
+                practiceVC.navigationItem.title = popupVC.textField.text
+                return practiceVC
+            }
+            
+            // delete 터치시 실행될 클로져
             deleteClosure = { () -> Void in
                 collectionView.deleteItems(at: [indexPath])
                 let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
@@ -145,6 +166,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 return }
             
+            // exit 터치시 실행될 클로져
             cancelClosure = { () -> Void in
                 guard let fileName = popupVC.textField.text else {
                     return
@@ -171,7 +193,10 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
             
             tabBarController?.tabBar.isHidden = true
             self.present(popupVC, animated: true, completion: nil)
-            } else {
+            }
+            
+            // 추가하기 셀
+            else {
             if let cell = collectionView.cellForItem(at: indexPath) as? AddCollectionViewCell {
                 
                 UIView.animate(withDuration: 0.2) {
@@ -193,7 +218,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     print(error)
                 }
                  
-                // Add Cell
+                // 컬렉션뷰에 셀추가
                 collectionView.insertItems(at: [indexPath])
             } else { return } }
     }
@@ -210,7 +235,12 @@ extension WordsViewController: PopupViewControllerDelegate {
     }
     
     func didTapPractice() {
-        print("Tap Practice")
+        guard let practiceClosure = practiceClosure, let cancelClosure = cancelClosure else {
+            return
+        }
+        let practiceVC = practiceClosure()
+        self.dismiss(animated: true, completion: cancelClosure)
+        navigationController?.pushViewController(practiceVC, animated: true)
     }
     
     func didTapTest() {

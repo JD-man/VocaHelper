@@ -21,7 +21,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
     let label: UILabel = {
         let label = UILabel()        
         label.textAlignment = .center
-        label.textColor = .systemBackground
+        label.textColor = .label
         label.backgroundColor = .systemIndigo
         label.adjustsFontSizeToFitWidth = true
         return label

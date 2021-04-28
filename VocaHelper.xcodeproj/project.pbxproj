@@ -21,6 +21,8 @@
 		89651FC12632C0EE00949DEB /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651FC02632C0EE00949DEB /* SearchViewController.swift */; };
 		89651FC52632C4D700949DEB /* WordsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651FC42632C4D700949DEB /* WordsCollectionViewCell.swift */; };
 		89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651FC72632D32500949DEB /* AddCollectionViewCell.swift */; };
+		89A42696263928F800555CCD /* PracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42695263928F800555CCD /* PracticeViewController.swift */; };
+		89A42699263956B900555CCD /* BlindUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42698263956B900555CCD /* BlindUIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,8 @@
 		89651FC02632C0EE00949DEB /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		89651FC42632C4D700949DEB /* WordsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsCollectionViewCell.swift; sourceTree = "<group>"; };
 		89651FC72632D32500949DEB /* AddCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCollectionViewCell.swift; sourceTree = "<group>"; };
+		89A42695263928F800555CCD /* PracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewController.swift; sourceTree = "<group>"; };
+		89A42698263956B900555CCD /* BlindUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindUIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,7 @@
 		895AAB472633F8CE00532021 /* Practice */ = {
 			isa = PBXGroup;
 			children = (
+				89A42695263928F800555CCD /* PracticeViewController.swift */,
 			);
 			path = Practice;
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				89651FC32632C4A700949DEB /* Cells&Headers */,
+				89A42698263956B900555CCD /* BlindUIView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -256,7 +262,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89A42696263928F800555CCD /* PracticeViewController.swift in Sources */,
 				89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */,
+				89A42699263956B900555CCD /* BlindUIView.swift in Sources */,
 				89651FC12632C0EE00949DEB /* SearchViewController.swift in Sources */,
 				89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */,
 				89651F9F2632BE4900949DEB /* SceneDelegate.swift in Sources */,
