@@ -21,16 +21,15 @@ class PopupViewController: UIViewController {
     
     let textField: UITextField = {
         let textField = UITextField()
-        textField.text = "Popup"
         textField.textAlignment = .center
         textField.backgroundColor = .label
         textField.textColor = .systemBackground
-        textField.placeholder = "Change Name"
         textField.layer.cornerRadius = 20
         textField.font = UIFont.systemFont(ofSize: 25)
         textField.adjustsFontSizeToFitWidth = true
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
+        textField.keyboardType = .default
         return textField
     }()
     
@@ -140,6 +139,10 @@ class PopupViewController: UIViewController {
     
     @objc private func didTapExitButton() {
         delegate?.didTapExit()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        textField.resignFirstResponder()
     }
 }
 

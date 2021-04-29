@@ -16,7 +16,7 @@ class EditViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
+        tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)        
         return tableView
     }()
     
@@ -25,8 +25,9 @@ class EditViewController: UIViewController {
         configure()
         addSubViews()
         addFooter()
-        // Do any additional setup after loading the view.
     }
+    
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -85,8 +86,7 @@ class EditViewController: UIViewController {
             guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return
             }
-            let path = directory.appendingPathComponent(fileName)
-            print(path)
+            let path = directory.appendingPathComponent(fileName)            
             let data = try encoder.encode(voca)
             try data.write(to: path)
         } catch {
@@ -105,10 +105,12 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
         if let word = voca.vocas[indexPath.row]?.keys.first, let meaning = voca.vocas[indexPath.row]?.values.first {
             cell.wordTextField.text = word
             cell.meaningTextField.text = meaning
+            cell.delegate = self
             return cell
         } else {
-            cell.wordTextField.text = "Word"
-            cell.meaningTextField.text = "Meaning"
+            cell.wordTextField.placeholder = "Word"
+            cell.meaningTextField.placeholder = "Meaning"
+            cell.delegate = self
             return cell
         }        
     }
@@ -117,6 +119,15 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
             self.vocaCount -= 1
             tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            self.voca.vocas.removeAll()
+
+            for i in 0..<self.vocaCount {
+                guard let cell = tableView.cellForRow(at: IndexPath.init(row: i, section: 0)) as? EditTableViewCell else{
+                    return
+                }
+                self.voca.vocas[i] = [cell.wordTextField.text!: cell.meaningTextField.text!]
+            }            
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
@@ -132,5 +143,23 @@ extension EditViewController: EditTableViewFooterDelegate {
         let indexPath: IndexPath = IndexPath.init(row: vocaCount-1, section: 0)
         tableView.insertRows(at: [indexPath], with: .top)
         tableView.scrollToRow(at: indexPath , at: .top, animated: true)
+        
     }
 }
+
+// 키보드가 텍스트필드를 가려서 추가한 델리게이트, 애니메이션
+
+extension EditViewController: EditTableViewCellDelegate {
+    func keyboardWillAppear() {
+        UIView.animate(withDuration: 0.3) {
+            self.view.frame.origin.y -= 250
+        }
+    }
+    
+    func keyboardWillDisappear() {
+        UIView.animate(withDuration: 0.3) {
+            self.view.frame.origin.y += 250
+        }
+    }
+}
+

@@ -51,5 +51,4 @@ class EditTableViewFooter: UIView {
     @objc private func didTapAddButton() {
         delegate?.addLine()
     }
-    
 }

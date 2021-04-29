@@ -157,8 +157,10 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
             
             // delete 터치시 실행될 클로져
             deleteClosure = { () -> Void in
+                self.fileCount -= 1
                 collectionView.deleteItems(at: [indexPath])
                 let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
+                self.fileNames.remove(at: indexPath.row)                
                 if let error = try? FileManager.default.removeItem(atPath: path.path) {
                     print(error)
                 } else {
@@ -229,8 +231,9 @@ extension WordsViewController: PopupViewControllerDelegate {
         guard let editClosure = editClosure, let cancelClosure = cancelClosure else {
             return
         }
+        cancelClosure()
         let editVC = editClosure()
-        self.dismiss(animated: false, completion: cancelClosure)
+        self.dismiss(animated: false, completion: nil)
         navigationController?.pushViewController(editVC, animated: true)
     }
     
@@ -254,7 +257,6 @@ extension WordsViewController: PopupViewControllerDelegate {
         
         let alert = UIAlertController(title: "Delete?", message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
-            self.fileCount -= 1
             deleteClosure()
             self.dismiss(animated: true, completion: nil)
             self.tabBarController?.tabBar.isHidden = false

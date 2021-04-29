@@ -7,9 +7,17 @@
 
 import UIKit
 
+protocol EditTableViewCellDelegate: AnyObject {
+    func keyboardWillAppear()
+    func keyboardWillDisappear()
+}
+
 class EditTableViewCell: UITableViewCell {
     
     static let identifier: String = "EditTableViewCell"
+    
+    weak var delegate: EditTableViewCellDelegate?
+    private var isKeyboardMove: Bool = false
     
     let wordTextField: UITextField = {
         let textfield = UITextField()
@@ -18,7 +26,11 @@ class EditTableViewCell: UITableViewCell {
         textfield.autocapitalizationType = .none
         textfield.adjustsFontSizeToFitWidth = true
         textfield.font = UIFont.systemFont(ofSize: 30)
-        textfield.returnKeyType = .continue        
+        textfield.returnKeyType = .done
+        textfield.keyboardType = .alphabet
+        textfield.clipsToBounds = true
+        textfield.layer.cornerRadius = 20
+        textfield.layer.borderWidth = 1.5
         return textfield
     }()
     
@@ -27,8 +39,12 @@ class EditTableViewCell: UITableViewCell {
         textfield.textAlignment = .center
         textfield.autocorrectionType = .no
         textfield.autocapitalizationType = .none
+        textfield.adjustsFontSizeToFitWidth = true
         textfield.font = UIFont.systemFont(ofSize: 30)
         textfield.returnKeyType = .done
+        textfield.clipsToBounds = true
+        textfield.layer.cornerRadius = 20
+        textfield.layer.borderWidth = 1
         return textfield
     }()
     
@@ -43,11 +59,17 @@ class EditTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let width = self.bounds.width / 2
-        let height = self.bounds.height
+        let width = self.bounds.width / 2 - 10
+        let height = self.bounds.height / 1.5
         
-        wordTextField.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        meaningTextField.frame = CGRect(x: wordTextField.bounds.origin.x + wordTextField.bounds.width, y: 0, width: width, height: height)
+        wordTextField.frame = CGRect(x: 5,
+                                                          y: self.bounds.height/2 - height/2,
+                                                          width: width,
+                                                          height: height)
+        meaningTextField.frame = CGRect(x: self.bounds.width / 2 + 5,
+                                                               y: self.bounds.height/2 - height/2,
+                                                               width: width,
+                                                               height: height)
         
         wordTextField.delegate = self
         meaningTextField.delegate = self
@@ -56,7 +78,7 @@ class EditTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         wordTextField.text = ""
-        wordTextField.text = ""
+        meaningTextField.text = ""
     }
     
     private func addSubViews() {
@@ -66,14 +88,27 @@ class EditTableViewCell: UITableViewCell {
 }
 
 extension EditTableViewCell: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == wordTextField {
-            wordTextField.resignFirstResponder()
-            meaningTextField.becomeFirstResponder()
-            return true
-        } else {
-            meaningTextField.resignFirstResponder()            
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if self.frame.origin.y >= 300 {
+            delegate?.keyboardWillAppear()
+            isKeyboardMove = true
         }
+        textField.placeholder = ""
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if isKeyboardMove{
+            delegate?.keyboardWillDisappear()
+            isKeyboardMove = false
+        }
+        
+        if textField == wordTextField, textField.text == "" {
+            wordTextField.placeholder = "Word"
+        } else {
+            meaningTextField.placeholder = "Meaning"
+        }
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
         return true
     }
 }
