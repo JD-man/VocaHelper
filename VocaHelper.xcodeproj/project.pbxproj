@@ -23,6 +23,8 @@
 		89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651FC72632D32500949DEB /* AddCollectionViewCell.swift */; };
 		89A42696263928F800555CCD /* PracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42695263928F800555CCD /* PracticeViewController.swift */; };
 		89A42699263956B900555CCD /* BlindUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42698263956B900555CCD /* BlindUIView.swift */; };
+		89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B15C7D263A7F1B007C29E1 /* TestViewController.swift */; };
+		89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C744BD263AE2A30013D620 /* ResultViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,8 @@
 		89651FC72632D32500949DEB /* AddCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCollectionViewCell.swift; sourceTree = "<group>"; };
 		89A42695263928F800555CCD /* PracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewController.swift; sourceTree = "<group>"; };
 		89A42698263956B900555CCD /* BlindUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindUIView.swift; sourceTree = "<group>"; };
+		89B15C7D263A7F1B007C29E1 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		89C744BD263AE2A30013D620 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +80,8 @@
 		895AAB482633F8D500532021 /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				89B15C7D263A7F1B007C29E1 /* TestViewController.swift */,
+				89C744BD263AE2A30013D620 /* ResultViewController.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -265,6 +271,7 @@
 				89A42696263928F800555CCD /* PracticeViewController.swift in Sources */,
 				89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */,
 				89A42699263956B900555CCD /* BlindUIView.swift in Sources */,
+				89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */,
 				89651FC12632C0EE00949DEB /* SearchViewController.swift in Sources */,
 				89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */,
 				89651F9F2632BE4900949DEB /* SceneDelegate.swift in Sources */,
@@ -272,6 +279,7 @@
 				895AAB572634165800532021 /* EditTableViewFooter.swift in Sources */,
 				89651FC52632C4D700949DEB /* WordsCollectionViewCell.swift in Sources */,
 				89651FB42632BEA300949DEB /* MainTabBarController.swift in Sources */,
+				89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */,
 				89086EFE2634305B0078BC8F /* VocaData.swift in Sources */,
 				895AAB442633C6D400532021 /* PopupViewController.swift in Sources */,
 				895AAB4A2633F90900532021 /* EditViewController.swift in Sources */,

@@ -29,7 +29,7 @@ class EditTableViewCell: UITableViewCell {
         textfield.returnKeyType = .done
         textfield.keyboardType = .alphabet
         textfield.clipsToBounds = true
-        textfield.layer.cornerRadius = 20
+        textfield.layer.cornerRadius = 10
         textfield.layer.borderWidth = 1.5
         return textfield
     }()
@@ -43,8 +43,8 @@ class EditTableViewCell: UITableViewCell {
         textfield.font = UIFont.systemFont(ofSize: 30)
         textfield.returnKeyType = .done
         textfield.clipsToBounds = true
-        textfield.layer.cornerRadius = 20
-        textfield.layer.borderWidth = 1
+        textfield.layer.cornerRadius = 10
+        textfield.layer.borderWidth = 1.5
         return textfield
     }()
     

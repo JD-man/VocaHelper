@@ -19,6 +19,7 @@ class WordsViewController: UIViewController {
     
     private var editClosure: (() -> EditViewController)?
     private var practiceClosure: (() -> PracticeViewController)?
+    private var testClosure: (() -> TestViewController)?
     private var deleteClosure: (() -> Void)?
     private var cancelClosure: (() -> Void)?
     
@@ -155,6 +156,21 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 return practiceVC
             }
             
+            // test 터치시 실행될 클로져
+            
+            testClosure = { () -> TestViewController in
+                let testVC = TestViewController()
+                let decoder = JSONDecoder()
+                let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
+                do {
+                        let data = try Data(contentsOf: path)
+                    testVC.voca = try decoder.decode(VocaData.self, from: data)
+                    } catch {
+                    print(error)
+                }
+                testVC.navigationItem.title = popupVC.textField.text
+                return testVC}
+            
             // delete 터치시 실행될 클로져
             deleteClosure = { () -> Void in
                 self.fileCount -= 1
@@ -247,7 +263,13 @@ extension WordsViewController: PopupViewControllerDelegate {
     }
     
     func didTapTest() {
-        print("Tap Test")
+        guard let testClosure = testClosure, let cancelClosure = cancelClosure else {
+            return
+        }
+        cancelClosure()
+        let testVC = testClosure()
+        self.dismiss(animated: true, completion: nil)
+        navigationController?.pushViewController(testVC, animated: true)
     }
     
     func didTapDelete() {

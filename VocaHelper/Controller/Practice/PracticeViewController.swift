@@ -25,6 +25,8 @@ class PracticeViewController: UIViewController {
         label.text = "word"
         label.font = UIFont.systemFont(ofSize: 25)
         label.adjustsFontSizeToFitWidth = true
+        label.clipsToBounds = true
+        label.layer.cornerRadius = 10
         return label
     }()
     
@@ -36,6 +38,8 @@ class PracticeViewController: UIViewController {
         label.text = "meaning"
         label.font = UIFont.systemFont(ofSize: 25)
         label.adjustsFontSizeToFitWidth = true
+        label.clipsToBounds = true
+        label.layer.cornerRadius = 10
         return label
     }()
     
@@ -132,8 +136,14 @@ class PracticeViewController: UIViewController {
             let alert = UIAlertController(title: "마지막 단어입니다.", message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
+            return
         }
+        let originLayerFrame = self.wordLabel.layer.frame.origin.x
+        self.wordLabel.layer.frame.origin.x = -wordLabel.bounds.width - 5
         changeQuestion(vocaCount)
+        UIView.animate(withDuration: 0.7) {
+            self.wordLabel.frame.origin.x = originLayerFrame
+        }
     }
     
     @objc private func didTapPrevButton() {
@@ -143,7 +153,13 @@ class PracticeViewController: UIViewController {
             let alert = UIAlertController(title: "첫번째 단어입니다.", message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
+            return
         }
+        let originLayerFrame = self.wordLabel.layer.frame.origin.x
+        self.wordLabel.layer.frame.origin.x = meaningLabel.frame.origin.x
         changeQuestion(vocaCount)
+        UIView.animate(withDuration: 0.7) {
+            self.wordLabel.frame.origin.x = originLayerFrame
+        }
     }
 }
