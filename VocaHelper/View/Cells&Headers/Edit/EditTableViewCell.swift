@@ -108,7 +108,6 @@ extension EditTableViewCell: UITextFieldDelegate {
             meaningTextField.placeholder = "Meaning"
         }
         delegate?.reload(word: wordTextField.text!, meaning: meaningTextField.text!)
-        
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == wordTextField {
@@ -118,7 +117,6 @@ extension EditTableViewCell: UITextFieldDelegate {
             meaningTextField.resignFirstResponder()
             wordTextField.becomeFirstResponder()
         }
-        
         return true
     }
 }

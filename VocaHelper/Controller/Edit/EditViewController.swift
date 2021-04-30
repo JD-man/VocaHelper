@@ -14,13 +14,16 @@ class EditViewController: UIViewController {
     
     private var vocaCount: Int = 0
     private var selectedRow: Int = 0
+    
     private var touchXPos : CGFloat = 0
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)        
+        tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
         return tableView
     }()
+    
+    private let gesture = UITapGestureRecognizer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +39,10 @@ class EditViewController: UIViewController {
         tableView.dataSource = self
         
         vocaCount = voca.vocas.count
+        
+        gesture.addTarget(self, action: #selector(didTapTable))
+        gesture.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(gesture)
     }
     
     private func configure() {
@@ -67,13 +74,21 @@ class EditViewController: UIViewController {
         
     }
     
+    @objc private func didTapTable() {
+        touchXPos = gesture.location(in: tableView).x
+        print(touchXPos)
+    }
+    
     private func makeVocas() {
         tableView.reloadData()
         for i in 0 ..< vocaCount {
             let indexPath = IndexPath(row: i, section: 0)
+            
+            // datasource로 모든셀에 접근할 수 있다.
             guard let cell = tableView.dataSource?.tableView(self.tableView, cellForRowAt: indexPath) as? EditTableViewCell else {
                 return
             }
+            // tableView에서 바로 cellForRow를 가져오면 보이는 셀까지만 접근한다.
 //            guard let cell = tableView.cellForRow(at: indexPath) as? EditTableViewCell else {
 //                return
 //            }
@@ -146,10 +161,16 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
         // 선택된 cell의 row를 가져올 필요가 있어서 cell에 textfield를 컨텐트뷰에서 빼고 그냥 뷰에 넣었음.
         selectedRow = indexPath.row
         
-        if cell.wordTextField.isFirstResponder {
+        // 당장은 제스쳐에 의한 touchXPos가 입력이 되지만 제스쳐와 didselect사이에서 뭐가 빠른지 모르겠음
+        // touchXPos가 제대로 들어오고 난 다음에 아래 코드들이 실행되도록 만들어야함        
+        print(touchXPos)
+        
+        if touchXPos > tableView.bounds.width / 2 {
             cell.meaningTextField.becomeFirstResponder()
+            cell.wordTextField.resignFirstResponder()
         } else {
             cell.wordTextField.becomeFirstResponder()
+            cell.meaningTextField.resignFirstResponder()
         }
     }
     
@@ -158,11 +179,6 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
             return
         }
         voca.vocas[selectedRow] = [cell.wordTextField.text! : cell.meaningTextField.text!]
-        
-    }
-    
-    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-        print("endedit")
     }
 }
 
@@ -180,7 +196,7 @@ extension EditViewController: EditTableViewFooterDelegate {
 
 extension EditViewController: EditTableViewCellDelegate {
     
-    // 텍스트를 수정했을때 vocas를 변경할줄 알아야한다
+    // 텍스트를 수정했을때 datasource를 수정해야하므로 vocas를 변경한다
     func reload(word: String, meaning: String) {
         voca.vocas[selectedRow] = [word : meaning]
     }
