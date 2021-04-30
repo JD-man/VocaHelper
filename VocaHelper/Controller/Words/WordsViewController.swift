@@ -27,6 +27,9 @@ class WordsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
+//        // 결과화면 테스트용 나중에 지울것
+//        let resultVC = ResultViewController()
+//        self.present(resultVC, animated: true, completion: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -71,8 +74,8 @@ class WordsViewController: UIViewController {
                     return
                 }
                 fileNames.remove(at: dsStoreIdx)
-                fileNames.sort()
             }
+            fileNames.sort()            
             fileCount = fileNames.count            
         }
         catch {
@@ -206,6 +209,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 cell.label.text = fileName
                 self.fileNames[indexPath.row] = currRealName
                 //print(self.fileNames)
+                collectionView.reloadData()
                 return
             }
             
@@ -228,7 +232,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = .prettyPrinted
                 do {                    
-                    print(directory)
+                    //print(directory)
                     let path = directory.appendingPathComponent("\(Date())Name")
                     let data = try encoder.encode(newVocaData)
                     try data.write(to: path)
@@ -238,6 +242,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                  
                 // 컬렉션뷰에 셀추가
                 collectionView.insertItems(at: [indexPath])
+                collectionView.reloadData()
             } else { return } }
     }
 }
@@ -268,8 +273,15 @@ extension WordsViewController: PopupViewControllerDelegate {
         }
         cancelClosure()
         let testVC = testClosure()
-        self.dismiss(animated: true, completion: nil)
-        navigationController?.pushViewController(testVC, animated: true)
+        let minimumCount: Int = 10
+        if testVC.voca.vocas.count < minimumCount {            
+            let alert = UIAlertController(title: "테스트할 단어가 부족합니다.", message: "단어는 최소 \(minimumCount)개가 필요합니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+            navigationController?.pushViewController(testVC, animated: true)
+        }
     }
     
     func didTapDelete() {

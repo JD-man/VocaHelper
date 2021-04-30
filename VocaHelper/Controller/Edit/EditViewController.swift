@@ -13,6 +13,8 @@ class EditViewController: UIViewController {
     public var fileName: String = ""
     
     private var vocaCount: Int = 0
+    private var selectedRow: Int = 0
+    private var touchXPos : CGFloat = 0
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -26,8 +28,6 @@ class EditViewController: UIViewController {
         addSubViews()
         addFooter()
     }
-    
-    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -68,13 +68,16 @@ class EditViewController: UIViewController {
     }
     
     private func makeVocas() {
+        tableView.reloadData()
         for i in 0 ..< vocaCount {
-            let indexPath = IndexPath.init(row: i, section: 0)
-            guard let cell = tableView.cellForRow(at: indexPath) as? EditTableViewCell,
-                  let word = cell.wordTextField.text, let meaning = cell.meaningTextField.text else {
+            let indexPath = IndexPath(row: i, section: 0)
+            guard let cell = tableView.dataSource?.tableView(self.tableView, cellForRowAt: indexPath) as? EditTableViewCell else {
                 return
             }
-            voca.vocas[i] = [word : meaning]
+//            guard let cell = tableView.cellForRow(at: indexPath) as? EditTableViewCell else {
+//                return
+//            }
+            voca.vocas[i] = [cell.wordTextField.text! : cell.meaningTextField.text!]
         }
     }
     
@@ -119,15 +122,14 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
             self.vocaCount -= 1
             tableView.deleteRows(at: [indexPath], with: .fade)
-            
             self.voca.vocas.removeAll()
-
             for i in 0..<self.vocaCount {
                 guard let cell = tableView.cellForRow(at: IndexPath.init(row: i, section: 0)) as? EditTableViewCell else{
                     return
                 }
                 self.voca.vocas[i] = [cell.wordTextField.text!: cell.meaningTextField.text!]
-            }            
+            }
+            tableView.reloadData()
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
@@ -135,21 +137,54 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //tableView.deselectRow(at: indexPath, animated: true)
+        guard let cell = tableView.cellForRow(at: indexPath) as? EditTableViewCell else {
+            return
+        }
+        // 선택된 cell의 row를 가져올 필요가 있어서 cell에 textfield를 컨텐트뷰에서 빼고 그냥 뷰에 넣었음.
+        selectedRow = indexPath.row
+        
+        if cell.wordTextField.isFirstResponder {
+            cell.meaningTextField.becomeFirstResponder()
+        } else {
+            cell.wordTextField.becomeFirstResponder()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? EditTableViewCell else {
+            return
+        }
+        voca.vocas[selectedRow] = [cell.wordTextField.text! : cell.meaningTextField.text!]
+        
+    }
+    
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        print("endedit")
+    }
 }
 
 extension EditViewController: EditTableViewFooterDelegate {
     func addLine() {
         vocaCount += 1
-        let indexPath: IndexPath = IndexPath.init(row: vocaCount-1, section: 0)
+        let indexPath: IndexPath = IndexPath.init(row: vocaCount - 1, section: 0)
         tableView.insertRows(at: [indexPath], with: .top)
         tableView.scrollToRow(at: indexPath , at: .top, animated: true)
-        
+        //voca.vocas[vocaCount - 1] = [ : ]
     }
 }
 
 // 키보드가 텍스트필드를 가려서 추가한 델리게이트, 애니메이션
 
 extension EditViewController: EditTableViewCellDelegate {
+    
+    // 텍스트를 수정했을때 vocas를 변경할줄 알아야한다
+    func reload(word: String, meaning: String) {
+        voca.vocas[selectedRow] = [word : meaning]
+    }
+    
     func keyboardWillAppear() {
         UIView.animate(withDuration: 0.3) {
             self.view.frame.origin.y -= 250

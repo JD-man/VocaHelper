@@ -15,7 +15,8 @@ class TestViewController: UIViewController {
     
     private var vocaIndices: [Int] = []
     private var prevQuestion: [Int] = []
-    private var answers: [String] = []
+    private var userAnswers: [String] = []
+    private var realAnswers: [String] = []
     private var currVocaIndex: Int = 0
     
     private let stackView: UIStackView = {
@@ -54,6 +55,12 @@ class TestViewController: UIViewController {
         configStackView()
         vocaCount = voca.vocas.count
         vocaIndices = Array(0 ..< vocaCount).shuffled()
+        for index in vocaIndices {
+            guard let word = voca.vocas[index]?.values.first else {
+                break
+            }
+            realAnswers.append(word)
+        }
         settingQuestion(currVocaIndex)
     }
     
@@ -100,14 +107,17 @@ class TestViewController: UIViewController {
         guard let answer = sender.currentTitle else {
             return
         }
-        answers.append(answer)
+        userAnswers.append(answer)
         currVocaIndex += 1
         if currVocaIndex == vocaCount {
-            currVocaIndex = 0
+            
             let alert = UIAlertController(title: "마지막 문제입니다.", message: "결과화면이 표시됩니다.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
                 let resultVC = ResultViewController()
-                //resultVC.modalPresentationStyle = .fullScreen
+                resultVC.modalPresentationStyle = .fullScreen
+                resultVC.userAnswers = self.userAnswers
+                resultVC.realAnswers = self.realAnswers
+                resultVC.presentingView = self
                 self.present(resultVC, animated: true, completion: self.resultPresentComplete)
             }))
             self.present(alert, animated: true, completion: nil)
@@ -117,6 +127,9 @@ class TestViewController: UIViewController {
     }
     
     private func resultPresentComplete() {
+        currVocaIndex = 0
+        userAnswers = []
+        prevQuestion = []
         settingQuestion(currVocaIndex)
     }
     
@@ -128,7 +141,25 @@ class TestViewController: UIViewController {
             return
         }
         question.text = word
-        answerButton.setTitle(meaning, for: .normal)        
+        
+        var wrongAnswers: [String] = []
+        
+        while wrongAnswers.count <= 4 {
+            guard let wrongAnswer = realAnswers.randomElement() else {
+                return
+            }
+            if  wrongAnswer != meaning && !wrongAnswers.contains(wrongAnswer)  {
+                wrongAnswers.append(wrongAnswer)
+            }
+        }
+        
+        for (i,button) in buttons.enumerated() {
+            if button == answerButton {
+                answerButton.setTitle(meaning, for: .normal)
+            } else {
+                button.setTitle(wrongAnswers[i], for: .normal)
+            }
+        }
         prevQuestion.append(randomIdx)
     }
 }

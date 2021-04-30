@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		89014771263BC0000054962A /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89014770263BC0000054962A /* ResultTableViewCell.swift */; };
+		89014773263BD5C60054962A /* ResultTableViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89014772263BD5C60054962A /* ResultTableViewFooter.swift */; };
 		89086EFE2634305B0078BC8F /* VocaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89086EFD2634305B0078BC8F /* VocaData.swift */; };
 		895AAB442633C6D400532021 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB432633C6D400532021 /* PopupViewController.swift */; };
 		895AAB4A2633F90900532021 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB492633F90900532021 /* EditViewController.swift */; };
@@ -28,6 +30,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		89014770263BC0000054962A /* ResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
+		89014772263BD5C60054962A /* ResultTableViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewFooter.swift; sourceTree = "<group>"; };
 		89086EFD2634305B0078BC8F /* VocaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaData.swift; sourceTree = "<group>"; };
 		895AAB432633C6D400532021 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		895AAB492633F90900532021 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +65,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8901476F263BBFE70054962A /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				89014770263BC0000054962A /* ResultTableViewCell.swift */,
+				89014772263BD5C60054962A /* ResultTableViewFooter.swift */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
 		895AAB462633F8C800532021 /* Edit */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,6 +197,7 @@
 		89651FC32632C4A700949DEB /* Cells&Headers */ = {
 			isa = PBXGroup;
 			children = (
+				8901476F263BBFE70054962A /* Test */,
 				895AAB4D2633F9F700532021 /* Edit */,
 				89651FCA2632D32800949DEB /* Words */,
 			);
@@ -279,7 +293,9 @@
 				895AAB572634165800532021 /* EditTableViewFooter.swift in Sources */,
 				89651FC52632C4D700949DEB /* WordsCollectionViewCell.swift in Sources */,
 				89651FB42632BEA300949DEB /* MainTabBarController.swift in Sources */,
+				89014773263BD5C60054962A /* ResultTableViewFooter.swift in Sources */,
 				89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */,
+				89014771263BC0000054962A /* ResultTableViewCell.swift in Sources */,
 				89086EFE2634305B0078BC8F /* VocaData.swift in Sources */,
 				895AAB442633C6D400532021 /* PopupViewController.swift in Sources */,
 				895AAB4A2633F90900532021 /* EditViewController.swift in Sources */,

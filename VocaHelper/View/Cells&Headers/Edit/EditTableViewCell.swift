@@ -10,6 +10,7 @@ import UIKit
 protocol EditTableViewCellDelegate: AnyObject {
     func keyboardWillAppear()
     func keyboardWillDisappear()
+    func reload(word: String, meaning: String)
 }
 
 class EditTableViewCell: UITableViewCell {
@@ -82,8 +83,8 @@ class EditTableViewCell: UITableViewCell {
     }
     
     private func addSubViews() {
-        contentView.addSubview(wordTextField)
-        contentView.addSubview(meaningTextField)
+        self.addSubview(wordTextField)
+        self.addSubview(meaningTextField)
     }
 }
 
@@ -106,9 +107,18 @@ extension EditTableViewCell: UITextFieldDelegate {
         } else {
             meaningTextField.placeholder = "Meaning"
         }
+        delegate?.reload(word: wordTextField.text!, meaning: meaningTextField.text!)
+        
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        if textField == wordTextField {
+            wordTextField.resignFirstResponder()
+            meaningTextField.becomeFirstResponder()
+        } else {
+            meaningTextField.resignFirstResponder()
+            wordTextField.becomeFirstResponder()
+        }
+        
         return true
     }
 }
