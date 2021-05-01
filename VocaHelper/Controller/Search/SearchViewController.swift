@@ -11,6 +11,9 @@ class SearchViewController: UIViewController {
     
     private var vocaDatas: [VocaData] = []
     private var files: [URL] = []
+    
+    // 어디의 단어장에서 왔는지 저장하는 Array
+    private var vocaDataIdx: [Int] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,8 +74,9 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let editVC = EditViewController()
-        editVC.voca = self.vocaDatas[indexPath.row]        
-        editVC.fileName = files[indexPath.row].lastPathComponent
+        editVC.voca = self.vocaDatas[vocaDataIdx[indexPath.row]]
+        editVC.fileName = files[vocaDataIdx[indexPath.row]].lastPathComponent
+        //print(files[vocaDataIdx[indexPath.row]])
         self.tabBarController?.tabBar.isHidden = true
         self.navigationController?.pushViewController(editVC, animated: true)
     }
@@ -88,14 +92,17 @@ extension SearchViewController: UISearchResultsUpdating {
         }
         
         searchResultsVC.searchResults = []
+        vocaDataIdx = []
         
-        for vocaData in vocaDatas {
+        for (i,vocaData) in vocaDatas.enumerated() {
             for voca in vocaData.vocas {
                 guard let word = voca.value.keys.first else {
                     return
                 }
-                if word == searchText {
-                    searchResultsVC.searchResults.append(searchText)
+                if word.contains(searchText) {
+                    searchResultsVC.searchResults.append(word)
+                    searchResultsVC.searchResults.sort()
+                    vocaDataIdx.append(i)
                     searchResultsVC.tableView.reloadData()
                 }
             }
