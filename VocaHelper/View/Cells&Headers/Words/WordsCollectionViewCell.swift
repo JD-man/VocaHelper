@@ -22,8 +22,11 @@ class WordsCollectionViewCell: UICollectionViewCell {
         let label = UILabel()        
         label.textAlignment = .center
         label.textColor = .label
-        label.backgroundColor = .systemIndigo
+        label.backgroundColor = .label
         label.adjustsFontSizeToFitWidth = true
+        label.textColor = .systemBackground
+        label.layer.cornerRadius = 10
+        label.clipsToBounds = true
         return label
     }()
     

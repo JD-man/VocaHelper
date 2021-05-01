@@ -62,6 +62,12 @@ class TestViewController: UIViewController {
             realAnswers.append(word)
         }
         settingQuestion(currVocaIndex)
+        
+        navigationItem.hidesBackButton = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.backward"),
+                                                                                                style: .done,
+                                                                                                target: self,
+                                                                                                action: #selector(didTapLeftButton))
     }
     
     override func viewDidLayoutSubviews() {
@@ -124,6 +130,11 @@ class TestViewController: UIViewController {
         } else {
             settingQuestion(currVocaIndex)
         }        
+    }
+    
+    @objc private func didTapLeftButton() {
+        tabBarController?.tabBar.isHidden = false
+        navigationController?.popViewController(animated: true)
     }
     
     private func resultPresentComplete() {

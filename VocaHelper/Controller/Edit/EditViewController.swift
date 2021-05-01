@@ -76,7 +76,6 @@ class EditViewController: UIViewController {
     
     @objc private func didTapTable() {
         touchXPos = gesture.location(in: tableView).x
-        print(touchXPos)
     }
     
     private func makeVocas() {
@@ -163,7 +162,7 @@ extension EditViewController: UITableViewDelegate, UITableViewDataSource {
         
         // 당장은 제스쳐에 의한 touchXPos가 입력이 되지만 제스쳐와 didselect사이에서 뭐가 빠른지 모르겠음
         // touchXPos가 제대로 들어오고 난 다음에 아래 코드들이 실행되도록 만들어야함        
-        print(touchXPos)
+        //print(touchXPos)
         
         if touchXPos > tableView.bounds.width / 2 {
             cell.meaningTextField.becomeFirstResponder()

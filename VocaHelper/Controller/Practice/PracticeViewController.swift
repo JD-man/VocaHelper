@@ -68,6 +68,12 @@ class PracticeViewController: UIViewController {
         view.backgroundColor = .systemBackground
         addSubviews()
         changeQuestion(0)
+        navigationItem.hidesBackButton = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.backward"),
+                                                                                                style: .done,
+                                                                                                target: self,
+                                                                                                action: #selector(didTapLeftButton))
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -161,5 +167,10 @@ class PracticeViewController: UIViewController {
         UIView.animate(withDuration: 0.7) {
             self.wordLabel.frame.origin.x = originLayerFrame
         }
+    }
+    
+    @objc private func didTapLeftButton() {
+        tabBarController?.tabBar.isHidden = false
+        navigationController?.popViewController(animated: true)
     }
 }

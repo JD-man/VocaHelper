@@ -32,6 +32,8 @@ class EditTableViewCell: UITableViewCell {
         textfield.clipsToBounds = true
         textfield.layer.cornerRadius = 10
         textfield.layer.borderWidth = 1.5
+        textfield.backgroundColor = .systemIndigo
+        textfield.textColor = .systemBackground
         return textfield
     }()
     
@@ -114,8 +116,7 @@ extension EditTableViewCell: UITextFieldDelegate {
             wordTextField.resignFirstResponder()
             meaningTextField.becomeFirstResponder()
         } else {
-            meaningTextField.resignFirstResponder()
-            wordTextField.becomeFirstResponder()
+            meaningTextField.resignFirstResponder()            
         }
         return true
     }

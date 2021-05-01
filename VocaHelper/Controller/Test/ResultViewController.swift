@@ -63,6 +63,7 @@ class ResultViewController: UIViewController {
     
     private func toRoot() {
         presentingView?.navigationController?.popToRootViewController(animated: true)
+        presentingView?.tabBarController?.tabBar.isHidden = false
     }
 }
 
@@ -80,7 +81,7 @@ extension ResultViewController: UITableViewDelegate, UITableViewDataSource {
         let userAnswer = userAnswers[indexPath.row]
         let score = scoreArray[indexPath.row]
         cell.wordLabel.text = realAnswer
-        cell.userAnswerLabel.text = "제출한답 : " +  userAnswer
+        cell.userAnswerLabel.text = userAnswer
         cell.resultLabel.text = score
         
         if score == "정답" {
@@ -92,7 +93,7 @@ extension ResultViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 70
     }
 }
 

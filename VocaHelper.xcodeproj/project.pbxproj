@@ -27,6 +27,7 @@
 		89A42699263956B900555CCD /* BlindUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42698263956B900555CCD /* BlindUIView.swift */; };
 		89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B15C7D263A7F1B007C29E1 /* TestViewController.swift */; };
 		89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C744BD263AE2A30013D620 /* ResultViewController.swift */; };
+		89C897EB263D13630066FD39 /* SearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		89A42698263956B900555CCD /* BlindUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindUIView.swift; sourceTree = "<group>"; };
 		89B15C7D263A7F1B007C29E1 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		89C744BD263AE2A30013D620 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
+		89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				89651FC02632C0EE00949DEB /* SearchViewController.swift */,
+				89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				89A42696263928F800555CCD /* PracticeViewController.swift in Sources */,
 				89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */,
 				89A42699263956B900555CCD /* BlindUIView.swift in Sources */,
+				89C897EB263D13630066FD39 /* SearchResultsTableViewController.swift in Sources */,
 				89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */,
 				89651FC12632C0EE00949DEB /* SearchViewController.swift in Sources */,
 				89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */,

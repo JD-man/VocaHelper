@@ -292,6 +292,7 @@ extension WordsViewController: PopupViewControllerDelegate {
         let alert = UIAlertController(title: "Delete?", message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
             deleteClosure()
+            self.collectionView?.reloadData()
             self.dismiss(animated: true, completion: nil)
             self.tabBarController?.tabBar.isHidden = false
         }))
