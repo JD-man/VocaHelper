@@ -27,9 +27,6 @@ class WordsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
-//        // 결과화면 테스트용 나중에 지울것
-//        let resultVC = ResultViewController()
-//        self.present(resultVC, animated: true, completion: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -90,6 +87,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // 파일개수에 추가버튼 1개 추가
         return fileCount + 1
     }
     
@@ -99,6 +97,9 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier, for: indexPath) as! WordsCollectionViewCell
+            
+            // 파일 이름에서 시간부분을 제외해서 UI에 표시해야한다.
+            // 시간부분은 24번째 글자까지있다.
             let realName = fileNames[indexPath.row]
             cell.label.text = String(realName[realName.index(realName.startIndex, offsetBy: 25) ..< realName.endIndex])
             return cell
@@ -110,26 +111,32 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
         guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
-        
-        // Action Sheet이 아닌 Custom PopUp View를 만들었음
-        // 단어장셀 터치시
+       
+        // 파일 터치시 실행되는 부분
         if let cell = collectionView.cellForItem(at: indexPath) as? WordsCollectionViewCell {
             UIView.animate(withDuration: 0.2) {
                 cell.backgroundColor = .systemGray5
                 cell.backgroundColor = .systemBackground                
             }
+            
+            // 커스텀 팝업뷰를 만들었음
             let popupVC = PopupViewController()
             popupVC.delegate = self
             popupVC.modalPresentationStyle = .overCurrentContext
             popupVC.textField.text = cell.label.text
             
+            
+            // 팝업뷰의 버튼을 누르면 실행되야하는 클로저들을 여기에서 만들었다.
+            // 파일 셀을 터치하면 전부 생성됨
+            
             // edit 터치시 실행될 클로져
-            editClosure = { () -> EditViewController in
+            // 파일에 들어있는 단어들을 가지는 EditViewController을 생성해서 return한다.
+            editClosure = { [weak self] () -> EditViewController in
                 let editVC = EditViewController()
                 
                 // 저장파일을 가져와야함
                 let decoder = JSONDecoder()
-                let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
+                let path = directory.appendingPathComponent(self?.fileNames[indexPath.row] ?? "")
                 do {
                         let data = try Data(contentsOf: path)
                         editVC.voca = try decoder.decode(VocaData.self, from: data)
@@ -137,18 +144,18 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     print(error)
                 }
                 editVC.navigationItem.title = popupVC.textField.text
-                editVC.fileName = self.fileNames[indexPath.row]
+                editVC.fileName = self?.fileNames[indexPath.row] ?? ""
                 return editVC
             }
             
             // practice 터치시 실행될 클로져
             
-            practiceClosure = { ()-> PracticeViewController in
+            practiceClosure = { [weak self] ()->  PracticeViewController in
                 let practiceVC = PracticeViewController()
                 
                 // 저장파일을 가져오기
                 let decoder = JSONDecoder()
-                let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
+                let path = directory.appendingPathComponent(self?.fileNames[indexPath.row] ?? "")
                 do {
                         let data = try Data(contentsOf: path)
                     practiceVC.voca = try decoder.decode(VocaData.self, from: data)
@@ -161,10 +168,10 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
             
             // test 터치시 실행될 클로져
             
-            testClosure = { () -> TestViewController in
+            testClosure = { [weak self]() -> TestViewController in
                 let testVC = TestViewController()
                 let decoder = JSONDecoder()
-                let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
+                let path = directory.appendingPathComponent(self?.fileNames[indexPath.row] ?? "")
                 do {
                         let data = try Data(contentsOf: path)
                     testVC.voca = try decoder.decode(VocaData.self, from: data)
@@ -172,32 +179,34 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     print(error)
                 }
                 testVC.navigationItem.title = popupVC.textField.text
-                return testVC}
+                return testVC
+            }
             
             // delete 터치시 실행될 클로져
-            deleteClosure = { () -> Void in
-                self.fileCount -= 1
+            deleteClosure = { [weak self] () -> Void in
+                self?.fileCount -= 1
                 collectionView.deleteItems(at: [indexPath])
-                let path = directory.appendingPathComponent(self.fileNames[indexPath.row])
-                self.fileNames.remove(at: indexPath.row)                
+                let path = directory.appendingPathComponent(self?.fileNames[indexPath.row] ?? "")
+                self?.fileNames.remove(at: indexPath.row)
                 if let error = try? FileManager.default.removeItem(atPath: path.path) {
                     print(error)
                 } else {
                     return
                 }
-                return }
+                return
+            }
             
             // exit 터치시 실행될 클로져
-            cancelClosure = { () -> Void in
+            cancelClosure = { [weak self] () -> Void in
                 guard let fileName = popupVC.textField.text else {
                     return
                 }
                 //change file name
-                let realName = self.fileNames[indexPath.row]
+                let realName = self?.fileNames[indexPath.row] ?? ""
                 let datePart = String(realName[realName.startIndex ..< realName.index(realName.startIndex, offsetBy: 25)])
                 let currRealName = datePart + fileName
                 
-                let prevName = directory.appendingPathComponent(self.fileNames[indexPath.row]).path
+                let prevName = directory.appendingPathComponent(self?.fileNames[indexPath.row] ?? "").path
                 let currName = directory.appendingPathComponent(currRealName).path
                 
                 do {
@@ -207,7 +216,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 
                 cell.label.text = fileName
-                self.fileNames[indexPath.row] = currRealName
+                self?.fileNames[indexPath.row] = currRealName
                 //print(self.fileNames)
                 collectionView.reloadData()
                 return
@@ -217,7 +226,7 @@ extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSou
             self.present(popupVC, animated: true, completion: nil)
             }
             
-            // 추가하기 셀
+            // 추가하기 셀 터치하는 부분
             else {
             if let cell = collectionView.cellForItem(at: indexPath) as? AddCollectionViewCell {
                 
@@ -273,7 +282,8 @@ extension WordsViewController: PopupViewControllerDelegate {
         }
         cancelClosure()
         let testVC = testClosure()
-        let minimumCount: Int = 10
+        // 저장된 단어들의 수가 10개 이상이어야 테스트 가능
+        let minimumCount: Int = 10        
         if testVC.voca.vocas.count < minimumCount {            
             let alert = UIAlertController(title: "테스트할 단어가 부족합니다.", message: "단어는 최소 \(minimumCount)개가 필요합니다.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))

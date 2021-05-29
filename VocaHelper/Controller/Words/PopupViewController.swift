@@ -97,7 +97,7 @@ class PopupViewController: UIViewController {
         
         addTarget()
         
-        textField.delegate = self
+        textField.delegate = self        
     }
     
     private func configure() {
@@ -122,22 +122,42 @@ class PopupViewController: UIViewController {
     }
     
     @objc private func didTapEditButton() {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.editButton.backgroundColor = .systemGray4
+            self?.editButton.backgroundColor = .systemBackground
+        }
         delegate?.didTapEdit()
     }
     
     @objc private func didTapPracticeButton() {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.practiceButton.backgroundColor = .systemGray4
+            self?.practiceButton.backgroundColor = .systemBackground
+        }
         delegate?.didTapPractice()
     }
     
     @objc private func didTapTestButton() {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.testButton.backgroundColor = .systemGray4
+            self?.testButton.backgroundColor = .systemBackground
+        }
         delegate?.didTapTest()
     }
     
     @objc private func didTapDeleteButton() {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.deleteButton.backgroundColor = .systemGray4
+            self?.deleteButton.backgroundColor = .systemBackground
+        }
         delegate?.didTapDelete()
     }
     
     @objc private func didTapExitButton() {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.exitButton.backgroundColor = .systemGray4
+            self?.exitButton.backgroundColor = .systemBackground
+        }
         delegate?.didTapExit()
     }
     
