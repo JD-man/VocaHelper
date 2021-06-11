@@ -7,6 +7,7 @@
 
 import Foundation
 
-struct VocaData: Codable {    
+struct VocaData: Codable {
+    // 테스트
     var vocas: [Int : [String : String]]
 }
