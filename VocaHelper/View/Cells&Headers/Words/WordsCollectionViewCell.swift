@@ -11,6 +11,8 @@ class WordsCollectionViewCell: UICollectionViewCell {
     
     static let identifier: String = "WordsCollectionViewCell"
     
+    var didTapped: (() -> Void)?
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "folder")
@@ -59,4 +61,5 @@ class WordsCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(label)
         backgroundColor = .systemBackground
     }
+    
 }

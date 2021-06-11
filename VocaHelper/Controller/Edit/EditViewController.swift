@@ -50,7 +50,7 @@ class EditViewController: UIViewController {
         
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.backward"), style: .plain, target: self, action: #selector(didTapLeftButton))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "highlighter"), style: .plain, target: self, action: #selector(didTapRightButton))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "highlighter"), style: .plain, target: self, action: #selector(didTapRightButton))
     }
     
     private func addFooter() {
@@ -70,9 +70,9 @@ class EditViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    @objc private func didTapRightButton() {
-        
-    }
+//    @objc private func didTapRightButton() {
+//        
+//    }
     
     @objc private func didTapTable() {
         touchXPos = gesture.location(in: tableView).x

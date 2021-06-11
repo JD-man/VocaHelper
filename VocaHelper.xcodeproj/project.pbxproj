@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,6 +29,8 @@
 		89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B15C7D263A7F1B007C29E1 /* TestViewController.swift */; };
 		89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C744BD263AE2A30013D620 /* ResultViewController.swift */; };
 		89C897EB263D13630066FD39 /* SearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */; };
+		89F2E5FF2673A79E00890828 /* VocaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F2E5FE2673A79E00890828 /* VocaManager.swift */; };
+		89F2E6022673A87300890828 /* WordsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F2E6012673A87300890828 /* WordsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		89B15C7D263A7F1B007C29E1 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		89C744BD263AE2A30013D620 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 		89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsTableViewController.swift; sourceTree = "<group>"; };
+		89F2E5FE2673A79E00890828 /* VocaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaManager.swift; sourceTree = "<group>"; };
+		89F2E6012673A87300890828 /* WordsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsViewModel.swift; sourceTree = "<group>"; };
 		9BDBCFBC40A6D583B3BB29F4 /* Pods-VocaHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VocaHelper.release.xcconfig"; path = "Target Support Files/Pods-VocaHelper/Pods-VocaHelper.release.xcconfig"; sourceTree = "<group>"; };
 		A3B5758B2A00F839701FE9A1 /* Pods_VocaHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VocaHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -78,7 +82,6 @@
 				18F976D12CA1D881C8E96EC8 /* Pods-VocaHelper.debug.xcconfig */,
 				9BDBCFBC40A6D583B3BB29F4 /* Pods-VocaHelper.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -146,6 +149,8 @@
 		89651F9B2632BE4900949DEB /* VocaHelper */ = {
 			isa = PBXGroup;
 			children = (
+				89F2E6002673A83E00890828 /* ViewModels */,
+				89F2E5FD2673A76A00890828 /* Service */,
 				89651FB82632BF3D00949DEB /* Model */,
 				89651FB72632BF2F00949DEB /* View */,
 				89651FB62632BF2500949DEB /* Controller */,
@@ -231,6 +236,22 @@
 				89651FC72632D32500949DEB /* AddCollectionViewCell.swift */,
 			);
 			path = Words;
+			sourceTree = "<group>";
+		};
+		89F2E5FD2673A76A00890828 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				89F2E5FE2673A79E00890828 /* VocaManager.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		89F2E6002673A83E00890828 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				89F2E6012673A87300890828 /* WordsViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		A51EF2F24EA85FBEA0CED30A /* Frameworks */ = {
@@ -363,6 +384,7 @@
 				89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */,
 				89651F9F2632BE4900949DEB /* SceneDelegate.swift in Sources */,
 				89651FBE2632C0DF00949DEB /* WordsViewController.swift in Sources */,
+				89F2E6022673A87300890828 /* WordsViewModel.swift in Sources */,
 				895AAB572634165800532021 /* EditTableViewFooter.swift in Sources */,
 				89651FC52632C4D700949DEB /* WordsCollectionViewCell.swift in Sources */,
 				89651FB42632BEA300949DEB /* MainTabBarController.swift in Sources */,
@@ -370,6 +392,7 @@
 				89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */,
 				89014771263BC0000054962A /* ResultTableViewCell.swift in Sources */,
 				89086EFE2634305B0078BC8F /* VocaData.swift in Sources */,
+				89F2E5FF2673A79E00890828 /* VocaManager.swift in Sources */,
 				895AAB442633C6D400532021 /* PopupViewController.swift in Sources */,
 				895AAB4A2633F90900532021 /* EditViewController.swift in Sources */,
 				895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */,

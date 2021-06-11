@@ -11,6 +11,8 @@ class AddCollectionViewCell: UICollectionViewCell {
     
     static let identifier: String = "AddCollectionViewCell"
     
+    var didTapped: (() -> Void)?
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "folder.badge.plus")
