@@ -7,17 +7,17 @@
 
 import UIKit
 
-protocol PopupViewControllerDelegate: AnyObject {
-    func didTapEdit()
-    func didTapPractice()
-    func didTapTest()
-    func didTapExit()
-    func didTapDelete()
-}
-
 class PopupViewController: UIViewController {
     
-    weak var delegate: PopupViewControllerDelegate?
+    deinit {
+        print("deinit")
+    }
+    
+    public var editClosure: (() -> Void)?
+    public var practiceClosure: (() -> Void)?
+    public var testClosure: (() -> Void)?
+    public var deleteClosure: (() -> Void)?
+    public var exitClosure: (() -> Void)?
     
     let textField: UITextField = {
         let textField = UITextField()
@@ -126,7 +126,12 @@ class PopupViewController: UIViewController {
             self?.editButton.backgroundColor = .systemGray4
             self?.editButton.backgroundColor = .systemBackground
         }
-        delegate?.didTapEdit()
+        guard let editClosure = editClosure,
+              let exitClosure = exitClosure else {
+            return
+        }
+        exitClosure()
+        editClosure()
     }
     
     @objc private func didTapPracticeButton() {
@@ -134,33 +139,36 @@ class PopupViewController: UIViewController {
             self?.practiceButton.backgroundColor = .systemGray4
             self?.practiceButton.backgroundColor = .systemBackground
         }
-        delegate?.didTapPractice()
+        
     }
-    
+
     @objc private func didTapTestButton() {
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.testButton.backgroundColor = .systemGray4
             self?.testButton.backgroundColor = .systemBackground
         }
-        delegate?.didTapTest()
+        //delegate?.didTapTest()
     }
-    
+
     @objc private func didTapDeleteButton() {
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.deleteButton.backgroundColor = .systemGray4
             self?.deleteButton.backgroundColor = .systemBackground
         }
-        delegate?.didTapDelete()
+        //delegate?.didTapDelete()
     }
-    
+
     @objc private func didTapExitButton() {
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.exitButton.backgroundColor = .systemGray4
             self?.exitButton.backgroundColor = .systemBackground
         }
-        delegate?.didTapExit()
+        guard  let exitClosure = exitClosure else {
+            return
+        }
+        exitClosure()
     }
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         textField.resignFirstResponder()
     }

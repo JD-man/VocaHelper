@@ -9,5 +9,12 @@ import Foundation
 
 struct VocaData: Codable {
     // 테스트
-    var vocas: [Int : [String : String]]
+    var vocas: [Voca]
 }
+
+struct Voca: Codable {
+    var id: Int
+    var word: String
+    var meaning: String
+}
+

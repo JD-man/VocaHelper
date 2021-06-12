@@ -11,13 +11,14 @@ class AddCollectionViewCell: UICollectionViewCell {
     
     static let identifier: String = "AddCollectionViewCell"
     
-    var didTapped: (() -> Void)?
+    public var didTapped: (() -> Void)?
     
-    let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "folder.badge.plus")
-        imageView.tintColor = .systemGreen
-        return imageView
+    public let button: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "folder.badge.plus"), for: .normal)
+        button.tintColor = .systemGreen
+        
+        return button
     }()
     
     override init(frame: CGRect) {
@@ -34,7 +35,7 @@ class AddCollectionViewCell: UICollectionViewCell {
         let imageSizeWidth = self.bounds.width/2
         let imageSizeheight = self.bounds.width/2.5
         
-        imageView.frame = CGRect(x: self.bounds.width/2 - imageSizeWidth/2 , y: self.bounds.height/2 - imageSizeheight/2, width: imageSizeWidth, height: imageSizeheight)
+        button.frame = CGRect(x: self.bounds.width/2 - imageSizeWidth/2 , y: self.bounds.height/2 - imageSizeheight/2, width: imageSizeWidth, height: imageSizeheight)
     }
     
     override func prepareForReuse() {
@@ -42,7 +43,15 @@ class AddCollectionViewCell: UICollectionViewCell {
     }
     
     private func configure() {
-        addSubview(imageView)
+        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        addSubview(button)
         backgroundColor = .systemBackground
-    }    
+    }
+    
+    @objc private func didTapButton() {
+        guard let didTapped = didTapped else {
+            return
+        }
+        didTapped()
+    }
 }

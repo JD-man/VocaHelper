@@ -10,12 +10,11 @@ import RxSwift
 
 final class VocaManager {
     static let shared = VocaManager()
-    
+    static let directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        
     let disposableBag = DisposeBag()
     
-//    var fileNames: [String] = []
-//    var fileCount: Int = 0
-    
+    /// Get Name of files which is saved in phone storage
     func fileLoad() -> Observable<[String]> {
         return Observable.create() { emitter in
             let fileManager = FileManager.default
@@ -40,4 +39,25 @@ final class VocaManager {
             return Disposables.create()
         }
     }
+    
+    /// Make voca from Filename
+    func makeVoca(fileName: String) -> Observable<[Voca]> {
+        return Observable<[Voca]>.create() {emitter in
+            // 저장파일을 가져와야함
+            let decoder = JSONDecoder()
+            guard let directory = VocaManager.directoryURL else {
+                return Disposables.create()
+            }
+            let path = directory.appendingPathComponent(fileName)
+            do {
+                let data = try Data(contentsOf: path)
+                let vocaData  = try decoder.decode(VocaData.self, from: data)                
+                emitter.onNext(vocaData.vocas)
+            } catch {
+                print(error)
+            }
+            return Disposables.create()
+        }
+    }
+
 }

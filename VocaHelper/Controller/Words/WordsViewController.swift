@@ -14,22 +14,12 @@ class WordsViewController: UIViewController {
     
     private var collectionView:  UICollectionView?
     
-    private var vocaManager = VocaManager()
-    private var viewModels = WordsViewModelList()
+    public var viewModels = WordsViewModelList()
     private let disposeBag = DisposeBag()
     
     // 파일개수
     private var fileNames: [String] = []
     private var fileCount: Int = 0
-    
-    // MARK: - Popup Closure
-    
-    private var editClosure: (() -> EditViewController)?
-    private var practiceClosure: (() -> PracticeViewController)?
-    private var testClosure: (() -> TestViewController)?
-    private var deleteClosure: (() -> Void)?
-    private var cancelClosure: (() -> Void)?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,8 +62,7 @@ class WordsViewController: UIViewController {
         }
         
         viewModels.fileNameSubject
-            .bind(to: collectionView.rx.items) { cv, row, item in
-                print(item.fileName)
+            .bind(to: collectionView.rx.items) { [weak self] cv, row, item in
                 if item.fileName == "ButtonCell" {
                     guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: AddCollectionViewCell.identifier,
                                                              for: IndexPath(row:row, section: 0)) as? AddCollectionViewCell else {
@@ -84,59 +73,20 @@ class WordsViewController: UIViewController {
                 }
                 else {
                     guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier,
-                                                             for: IndexPath(row:row, section: 0)) as? WordsCollectionViewCell else {
-                        return UICollectionViewCell()
-                    }
+                                                             for: IndexPath(row:row, section: 0)) as? WordsCollectionViewCell,
+                          let strongSelf = self else {
+                              return UICollectionViewCell()
+                          }
                     cell.label.text = item.changeToRealName(fileName: item.fileName)
-                    cell.didTapped = { item.didTapWordButton() }
+                    cell.didTapped = { item.didTapWordButton(view: strongSelf) }
                     return cell
-                }
-                
-            }.disposed(by: disposeBag)
-        
-        collectionView.rx.itemSelected
-            .bind { indexPath in
-                if let cell = collectionView.cellForItem(at: indexPath) as? WordsCollectionViewCell {
-                    guard let didtapped = cell.didTapped else {
-                        return
-                    }
-                    didtapped()
-                }
-                else if let cell = collectionView.cellForItem(at: indexPath) as? AddCollectionViewCell {
-                    guard let didtapped = cell.didTapped else {
-                        return
-                    }
-                    didtapped()
                 }
             }.disposed(by: disposeBag)
     }
 }
 
-//extension WordsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return 1
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        // 파일개수에 추가버튼 1개 추가
-//        return fileCount + 1
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        if indexPath.row == fileCount {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddCollectionViewCell.identifier, for: indexPath) as! AddCollectionViewCell
-//            return cell
-//        } else {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier, for: indexPath) as! WordsCollectionViewCell
-//
-//            // 파일 이름에서 시간부분을 제외해서 UI에 표시해야한다.
-//            // 시간부분은 24번째 글자까지있다.
-//            let realName = fileNames[indexPath.row]
-//            cell.label.text = String(realName[realName.index(realName.startIndex, offsetBy: 25) ..< realName.endIndex])
-//            return cell
-//        }
-//    }
-//
+
+
 //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //
 //        guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -287,65 +237,65 @@ class WordsViewController: UIViewController {
 //    }
 //}
 
-extension WordsViewController: PopupViewControllerDelegate {
-    func didTapEdit() {
-        guard let editClosure = editClosure, let cancelClosure = cancelClosure else {
-            return
-        }
-        cancelClosure()
-        let editVC = editClosure()
-        self.dismiss(animated: false, completion: nil)
-        navigationController?.pushViewController(editVC, animated: true)
-    }
-    
-    func didTapPractice() {
-        guard let practiceClosure = practiceClosure, let cancelClosure = cancelClosure else {
-            return
-        }
-        let practiceVC = practiceClosure()
-        self.dismiss(animated: true, completion: cancelClosure)
-        navigationController?.pushViewController(practiceVC, animated: true)
-    }
-    
-    func didTapTest() {
-        guard let testClosure = testClosure, let cancelClosure = cancelClosure else {
-            return
-        }
-        cancelClosure()
-        let testVC = testClosure()
-        // 저장된 단어들의 수가 10개 이상이어야 테스트 가능
-        let minimumCount: Int = 10        
-        if testVC.voca.vocas.count < minimumCount {            
-            let alert = UIAlertController(title: "테스트할 단어가 부족합니다.", message: "단어는 최소 \(minimumCount)개가 필요합니다.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        } else {
-            self.dismiss(animated: true, completion: nil)
-            navigationController?.pushViewController(testVC, animated: true)
-        }
-    }
-    
-    func didTapDelete() {
-        guard let deleteClosure = deleteClosure else {
-            return
-        }
-        
-        let alert = UIAlertController(title: "Delete?", message: "", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
-            deleteClosure()
-            self.collectionView?.reloadData()
-            self.dismiss(animated: true, completion: nil)
-            self.tabBarController?.tabBar.isHidden = false
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    func didTapExit() {
-        guard let cancelClosure = cancelClosure else {
-            return
-        }
-        self.dismiss(animated: true, completion: cancelClosure)
-        tabBarController?.tabBar.isHidden = false
-    }
-}
+//extension WordsViewController: PopupViewControllerDelegate {
+//    func didTapEdit() {
+//        guard let editClosure = editClosure, let cancelClosure = cancelClosure else {
+//            return
+//        }
+//        cancelClosure()
+//        let editVC = editClosure()
+//        self.dismiss(animated: false, completion: nil)
+//        navigationController?.pushViewController(editVC, animated: true)
+//    }
+//    
+//    func didTapPractice() {
+//        guard let practiceClosure = practiceClosure, let cancelClosure = cancelClosure else {
+//            return
+//        }
+//        let practiceVC = practiceClosure()
+//        self.dismiss(animated: true, completion: cancelClosure)
+//        navigationController?.pushViewController(practiceVC, animated: true)
+//    }
+//    
+//    func didTapTest() {
+//        guard let testClosure = testClosure, let cancelClosure = cancelClosure else {
+//            return
+//        }
+//        cancelClosure()
+//        let testVC = testClosure()
+//        // 저장된 단어들의 수가 10개 이상이어야 테스트 가능
+//        let minimumCount: Int = 10        
+//        if testVC.voca.vocas.count < minimumCount {            
+//            let alert = UIAlertController(title: "테스트할 단어가 부족합니다.", message: "단어는 최소 \(minimumCount)개가 필요합니다.", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+//        } else {
+//            self.dismiss(animated: true, completion: nil)
+//            navigationController?.pushViewController(testVC, animated: true)
+//        }
+//    }
+//    
+//    func didTapDelete() {
+//        guard let deleteClosure = deleteClosure else {
+//            return
+//        }
+//        
+//        let alert = UIAlertController(title: "Delete?", message: "", preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
+//            deleteClosure()
+//            self.collectionView?.reloadData()
+//            self.dismiss(animated: true, completion: nil)
+//            self.tabBarController?.tabBar.isHidden = false
+//        }))
+//        alert.addAction(UIAlertAction(title: "No", style: .default, handler: nil))
+//        self.present(alert, animated: true, completion: nil)
+//    }
+//    
+//    func didTapExit() {
+//        guard let cancelClosure = cancelClosure else {
+//            return
+//        }
+//        self.dismiss(animated: true, completion: cancelClosure)
+//        tabBarController?.tabBar.isHidden = false
+//    }
+//}

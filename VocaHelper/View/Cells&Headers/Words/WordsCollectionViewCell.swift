@@ -13,11 +13,11 @@ class WordsCollectionViewCell: UICollectionViewCell {
     
     var didTapped: (() -> Void)?
     
-    let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "folder")
-        imageView.tintColor = .label        
-        return imageView
+    let button: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "folder"), for: .normal)
+        button.tintColor = .label
+        return button
     }()
     
     let label: UILabel = {
@@ -46,7 +46,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
         let imageSizeWidth = self.bounds.width/2
         let imageSizeheight = self.bounds.width/2.5
         
-        imageView.frame = CGRect(x: self.bounds.width/2 - imageSizeWidth/2 , y: self.bounds.height/2 - imageSizeheight/1.5, width: imageSizeWidth, height: imageSizeheight)
+        button.frame = CGRect(x: self.bounds.width/2 - imageSizeWidth/2 , y: self.bounds.height/2 - imageSizeheight/1.5, width: imageSizeWidth, height: imageSizeheight)
         
         label.frame = CGRect(x: 10, y:  self.bounds.width/6 + imageSizeWidth, width: self.bounds.width-20, height: imageSizeheight/2)
     }
@@ -57,9 +57,16 @@ class WordsCollectionViewCell: UICollectionViewCell {
     }
     
     private func configure() {
-        contentView.addSubview(imageView)
+        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        contentView.addSubview(button)
         contentView.addSubview(label)
         backgroundColor = .systemBackground
     }
     
+    @objc private func didTapButton() {
+        guard let didTapped = didTapped else {
+            return
+        }
+        didTapped()
+    }
 }
