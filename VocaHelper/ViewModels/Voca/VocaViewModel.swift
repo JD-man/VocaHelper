@@ -8,13 +8,11 @@
 import Foundation
 import RxSwift
 
-class VocaViewModel {
-    var id: Int
+class VocaViewModel {    
     var word: String
     var meaning: String
     
-    init (id: Int, word: String, meaning: String) {
-        self.id = id
+    init (word: String, meaning: String) {
         self.word = word
         self.meaning = meaning
     }

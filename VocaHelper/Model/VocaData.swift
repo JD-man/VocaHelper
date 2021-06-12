@@ -12,8 +12,7 @@ struct VocaData: Codable {
     var vocas: [Voca]
 }
 
-struct Voca: Codable {
-    var id: Int
+struct Voca: Codable {    
     var word: String
     var meaning: String
 }

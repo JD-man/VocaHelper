@@ -21,7 +21,7 @@ class VocaViewModelList {
         VocaManager.shared.loadVocas(fileName: fileName)
             .map {
                 $0.map {
-                    return VocaViewModel(id: $0.id, word: $0.word, meaning: $0.meaning)
+                    return VocaViewModel(word: $0.word, meaning: $0.meaning)
                 }
             }.subscribe(onNext: { [weak self] in
                 self?.vocaSubject.onNext($0)
@@ -33,7 +33,7 @@ class VocaViewModelList {
         Observable<[Voca]>.just(VocaManager.shared.vocas)
             .map {
                 $0.map {
-                    return VocaViewModel(id: $0.id, word: $0.word, meaning: $0.meaning)
+                    return VocaViewModel(word: $0.word, meaning: $0.meaning)
                 }
             }.subscribe(onNext: { [weak self] in
                 self?.vocaSubject.onNext($0)

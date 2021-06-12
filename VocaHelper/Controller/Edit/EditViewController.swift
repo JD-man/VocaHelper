@@ -80,7 +80,7 @@ class EditViewController: UIViewController {
                 guard let fileName = self?.fileName else {
                     return
                 }
-                VocaManager.shared.saveVocas(fileName: fileName, isNewLine: false)
+                VocaManager.shared.saveVocas(fileName: fileName)
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
         
@@ -96,39 +96,47 @@ class EditViewController: UIViewController {
                     let fileName = self?.fileName else {
                     return
                 }
-                VocaManager.shared.saveVocas(fileName: fileName, isNewLine: true)
-                self?.viewModel.makeViewModels(fileName: fileName)
+                VocaManager.shared.vocas.append(Voca(word: "", meaning: ""))
+                let newViewModels: [VocaViewModel] = VocaManager.shared.vocas
+                    .map {
+                        return VocaViewModel(word: $0.word, meaning: $0.meaning)
+                    }
+                self?.viewModel.vocaSubject.onNext(newViewModels)
                 let indexPath = IndexPath.init(row: tableView.numberOfRows(inSection: 0) - 1, section: 0)
                 self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+                VocaManager.shared.saveVocas(fileName: fileName)
             }.disposed(by: disposeBag)
         
         tableView.rx.itemSelected
             .bind() { [weak self] indexPath in
                 guard let cell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell,
                       let width = self?.tableView.frame.size.width,
-                      let touchXPos = self?.touchXPos,
-                      let disposeBag = self?.disposeBag else {
+                      let touchXPos = self?.touchXPos else {
                     return
                 }
                 if touchXPos < width / 2{
-                    print(VocaManager.shared.vocas[indexPath.row].word)
+                    print(VocaManager.shared.vocas.count)
                     cell.wordTextField.becomeFirstResponder()
-                    cell.wordTextField.rx.controlEvent(.editingDidEnd)
-                        .bind() {
-                            VocaManager.shared.vocas[indexPath.row].word = cell.wordTextField.text ?? ""
-                            VocaManager.shared.saveVocas(fileName: self?.fileName ?? "" , isNewLine: false)
-                            self?.viewModel.makeViewModelsFromVocas()
-                        }.disposed(by: disposeBag)
                 }
                 else {
                     cell.meaningTextField.becomeFirstResponder()
-                    cell.meaningTextField.rx.controlEvent(.editingDidEnd)
-                        .bind() {
-                            VocaManager.shared.vocas[indexPath.row].meaning = cell.meaningTextField.text ?? ""
-                            VocaManager.shared.saveVocas(fileName: self?.fileName ?? "" , isNewLine: false)
-                            self?.viewModel.makeViewModelsFromVocas()
-                        }.disposed(by: disposeBag)
                 }
+            }.disposed(by: disposeBag)
+        
+        tableView.rx.itemDeselected
+            .bind() { [weak self] indexPath in
+                guard let cell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell,
+                      let word = cell.wordTextField.text,
+                      let meaning = cell.meaningTextField.text else {
+                    return
+                }
+                VocaManager.shared.vocas[indexPath.row].word = word
+                VocaManager.shared.vocas[indexPath.row].meaning = meaning
+                let newViewModels: [VocaViewModel] = VocaManager.shared.vocas
+                    .map {
+                        return VocaViewModel(word: $0.word, meaning: $0.meaning)
+                    }
+                self?.viewModel.vocaSubject.onNext(newViewModels)
             }.disposed(by: disposeBag)
     }
 }

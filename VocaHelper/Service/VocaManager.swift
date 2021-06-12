@@ -64,11 +64,8 @@ final class VocaManager {
     }
     
     /// Make and Save VocaData
-    public func saveVocas(fileName: String, isNewLine: Bool) {
-        var vocaData = VocaData(vocas: vocas)
-        if isNewLine {
-            vocaData.vocas.append(Voca(id: vocaData.vocas.count, word: "", meaning: ""))            
-        }
+    public func saveVocas(fileName: String) {
+        let vocaData = VocaData(vocas: vocas)        
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         
