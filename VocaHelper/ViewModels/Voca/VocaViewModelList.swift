@@ -30,13 +30,10 @@ class VocaViewModelList {
     
     /// Load ViewModel From VocaData Vocas
     public func makeViewModelsFromVocas() {
-        Observable<[Voca]>.just(VocaManager.shared.vocas)
+        let newViewModels: [VocaViewModel] = VocaManager.shared.vocas
             .map {
-                $0.map {
-                    return VocaViewModel(word: $0.word, meaning: $0.meaning)
-                }
-            }.subscribe(onNext: { [weak self] in
-                self?.vocaSubject.onNext($0)
-            }).disposed(by: disposeBag)
+                return VocaViewModel(word: $0.word, meaning: $0.meaning)
+            }
+        vocaSubject.onNext(newViewModels)
     }
 }

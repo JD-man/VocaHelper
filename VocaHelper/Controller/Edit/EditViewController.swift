@@ -54,14 +54,10 @@ class EditViewController: UIViewController {
         let footer = EditTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
         tableView.tableFooterView = footer
                 
-        gesture = UITapGestureRecognizer(target: self, action: #selector(didTapTable))
+        gesture = UITapGestureRecognizer()
         gesture.cancelsTouchesInView = false        
         tableView.addGestureRecognizer(gesture)
         view.addSubview(tableView)
-    }
-    
-    @objc private func didTapTable() {
-        touchXPos = gesture.location(in: tableView).x
     }
     
     private func rxConfigure() {
@@ -97,14 +93,15 @@ class EditViewController: UIViewController {
                     return
                 }
                 VocaManager.shared.vocas.append(Voca(word: "", meaning: ""))
-                let newViewModels: [VocaViewModel] = VocaManager.shared.vocas
-                    .map {
-                        return VocaViewModel(word: $0.word, meaning: $0.meaning)
-                    }
-                self?.viewModel.vocaSubject.onNext(newViewModels)
+                self?.viewModel.makeViewModelsFromVocas()
                 let indexPath = IndexPath.init(row: tableView.numberOfRows(inSection: 0) - 1, section: 0)
                 self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
                 VocaManager.shared.saveVocas(fileName: fileName)
+            }.disposed(by: disposeBag)
+        
+        gesture.rx.event
+            .bind { [weak self] in
+                self?.touchXPos = $0.location(in: self?.tableView).x
             }.disposed(by: disposeBag)
         
         tableView.rx.itemSelected
@@ -132,93 +129,26 @@ class EditViewController: UIViewController {
                 }
                 VocaManager.shared.vocas[indexPath.row].word = word
                 VocaManager.shared.vocas[indexPath.row].meaning = meaning
-                let newViewModels: [VocaViewModel] = VocaManager.shared.vocas
-                    .map {
-                        return VocaViewModel(word: $0.word, meaning: $0.meaning)
-                    }
-                self?.viewModel.vocaSubject.onNext(newViewModels)
+                self?.viewModel.makeViewModelsFromVocas()
             }.disposed(by: disposeBag)
+        
+        // 셀 삭제를 위한 델리게이트 설정
+        tableView.rx.setDelegate(self).disposed(by: disposeBag)
     }
 }
 
-//extension EditViewController: UITableViewDelegate, UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return vocaCount
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: EditTableViewCell.identifier, for: indexPath) as! EditTableViewCell
-//        if let word = voca.vocas[indexPath.row]?.keys.first, let meaning = voca.vocas[indexPath.row]?.values.first {
-//            cell.wordTextField.text = word
-//            cell.meaningTextField.text = meaning
-//            cell.delegate = self
-//            return cell
-//        } else {
-//            cell.wordTextField.placeholder = "Word"
-//            cell.meaningTextField.placeholder = "Meaning"
-//            cell.delegate = self
-//            return cell
-//        }
-//    }
-//
-//    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, _) in
-//            self.vocaCount -= 1
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//            self.voca.vocas.removeAll()
-//            for i in 0..<self.vocaCount {
-//                guard let cell = tableView.cellForRow(at: IndexPath.init(row: i, section: 0)) as? EditTableViewCell else{
-//                    return
-//                }
-//                self.voca.vocas[i] = [cell.wordTextField.text!: cell.meaningTextField.text!]
-//            }
-//            tableView.reloadData()
-//        }
-//        return UISwipeActionsConfiguration(actions: [deleteAction])
-//    }
-//
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 100
-//    }
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        //tableView.deselectRow(at: indexPath, animated: true)
-//        guard let cell = tableView.cellForRow(at: indexPath) as? EditTableViewCell else {
-//            return
-//        }
-//        // 선택된 cell의 row를 가져올 필요가 있어서 cell에 textfield를 컨텐트뷰에서 빼고 그냥 뷰에 넣었음.
-//        selectedRow = indexPath.row
-//
-//        // 당장은 제스쳐에 의한 touchXPos가 입력이 되지만 제스쳐와 didselect사이에서 뭐가 빠른지 모르겠음
-//        // touchXPos가 제대로 들어오고 난 다음에 아래 코드들이 실행되도록 만들어야함
-//        //print(touchXPos)
-//
-//        if touchXPos > tableView.bounds.width / 2 {
-//            cell.meaningTextField.becomeFirstResponder()
-//            cell.wordTextField.resignFirstResponder()
-//        } else {
-//            cell.wordTextField.becomeFirstResponder()
-//            cell.meaningTextField.resignFirstResponder()
-//        }
-//    }
-//
-//    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-//        guard let cell = tableView.cellForRow(at: indexPath) as? EditTableViewCell else {
-//            return
-//        }
-//        voca.vocas[selectedRow] = [cell.wordTextField.text! : cell.meaningTextField.text!]
-//    }
-//}
-
-//extension EditViewController: EditTableViewFooterDelegate {
-//    func addLine() {
-////        //vocaCount += 1
-////        let indexPath: IndexPath = IndexPath.init(row: vocaCount - 1, section: 0)
-////        tableView.insertRows(at: [indexPath], with: .top)
-////        tableView.scrollToRow(at: indexPath , at: .top, animated: true)
-////        //voca.vocas[vocaCount - 1] = [ : ]
-//    }
-//}
+// 셀 삭제를 위한 스와이프 액션
+extension EditViewController: UITableViewDelegate
+{
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, _) in
+            VocaManager.shared.vocas.remove(at: indexPath.row)
+            self?.viewModel.makeViewModelsFromVocas()
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+}
+    
 
 // 키보드가 텍스트필드를 가려서 추가한 델리게이트, 애니메이션
 
