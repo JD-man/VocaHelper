@@ -24,7 +24,7 @@ class WordsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewConfigure()
-        rxConfigure()
+        rxConfigure()        
     }
     
     override func viewDidLayoutSubviews() {

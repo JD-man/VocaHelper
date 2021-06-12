@@ -27,9 +27,11 @@ class EditViewController: UIViewController {
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
-        tableView.rowHeight = 100        
+        tableView.rowHeight = 100
         return tableView
     }()
+    
+    private var gesture = UITapGestureRecognizer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,31 +53,34 @@ class EditViewController: UIViewController {
         
         let footer = EditTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
         tableView.tableFooterView = footer
+                
+        gesture = UITapGestureRecognizer(target: self, action: #selector(didTapTable))
+        gesture.cancelsTouchesInView = false        
+        tableView.addGestureRecognizer(gesture)
         view.addSubview(tableView)
     }
     
-//    @objc private func didTapTable() {
-//        touchXPos = gesture.location(in: tableView).x
-//    }
+    @objc private func didTapTable() {
+        touchXPos = gesture.location(in: tableView).x
+    }
     
     private func rxConfigure() {
         // 단어장에 단어표시
         viewModel.vocaSubject
             .bind(to: tableView.rx.items(cellIdentifier: EditTableViewCell.identifier,
-                                         cellType: EditTableViewCell.self)) {row, item, cell in
+                                         cellType: EditTableViewCell.self)) { row, item, cell in
                 cell.wordTextField.text = item.word
                 cell.meaningTextField.text = item.meaning
+                
             }.disposed(by: disposeBag)
         
         // 뒤로가기 버튼
         navigationItem.leftBarButtonItem?.rx.tap
             .bind() { [weak self] in
-                guard let tableView = self?.tableView,
-                      let fileName = self?.fileName else {
+                guard let fileName = self?.fileName else {
                     return
                 }
-                self?.viewModel.makeVocas(tableView: tableView, fileName: fileName, isNewLine: false)
-                self?.tabBarController?.tabBar.isHidden.toggle()
+                VocaManager.shared.saveVocas(fileName: fileName, isNewLine: false)
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
         
@@ -91,10 +96,40 @@ class EditViewController: UIViewController {
                     let fileName = self?.fileName else {
                     return
                 }
-                self?.viewModel.addNewLine(tableView: tableView, fileName: fileName, isNewLine: true)                
+                VocaManager.shared.saveVocas(fileName: fileName, isNewLine: true)
+                self?.viewModel.makeViewModels(fileName: fileName)
+                let indexPath = IndexPath.init(row: tableView.numberOfRows(inSection: 0) - 1, section: 0)
+                self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
             }.disposed(by: disposeBag)
         
-        
+        tableView.rx.itemSelected
+            .bind() { [weak self] indexPath in
+                guard let cell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell,
+                      let width = self?.tableView.frame.size.width,
+                      let touchXPos = self?.touchXPos,
+                      let disposeBag = self?.disposeBag else {
+                    return
+                }
+                if touchXPos < width / 2{
+                    print(VocaManager.shared.vocas[indexPath.row].word)
+                    cell.wordTextField.becomeFirstResponder()
+                    cell.wordTextField.rx.controlEvent(.editingDidEnd)
+                        .bind() {
+                            VocaManager.shared.vocas[indexPath.row].word = cell.wordTextField.text ?? ""
+                            VocaManager.shared.saveVocas(fileName: self?.fileName ?? "" , isNewLine: false)
+                            self?.viewModel.makeViewModelsFromVocas()
+                        }.disposed(by: disposeBag)
+                }
+                else {
+                    cell.meaningTextField.becomeFirstResponder()
+                    cell.meaningTextField.rx.controlEvent(.editingDidEnd)
+                        .bind() {
+                            VocaManager.shared.vocas[indexPath.row].meaning = cell.meaningTextField.text ?? ""
+                            VocaManager.shared.saveVocas(fileName: self?.fileName ?? "" , isNewLine: false)
+                            self?.viewModel.makeViewModelsFromVocas()
+                        }.disposed(by: disposeBag)
+                }
+            }.disposed(by: disposeBag)
     }
 }
 

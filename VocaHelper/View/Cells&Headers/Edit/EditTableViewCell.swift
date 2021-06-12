@@ -84,32 +84,7 @@ class EditTableViewCell: UITableViewCell {
     }
     
     private func addSubViews() {
-        contentView.addSubview(wordTextField)
-        contentView.addSubview(meaningTextField)
-        let wordGesture = UITapGestureRecognizer()
-        wordGesture.addTarget(self, action: #selector(didTapWordCell))
-        wordGesture.cancelsTouchesInView = false
-        wordTextField.addGestureRecognizer(wordGesture)
-        
-        let meaningGesture = UITapGestureRecognizer()
-        meaningGesture.addTarget(self, action: #selector(didTapMeaningCell))
-        meaningGesture.cancelsTouchesInView = false
-        meaningTextField.addGestureRecognizer(meaningGesture)
-    }
-    
-    @objc private func didTapWordCell() {
-        guard let didTapWord = didTapWord else {
-            return
-        }
-        didTapWord()
-        wordTextField.becomeFirstResponder()
-    }
-    
-    @objc private func didTapMeaningCell() {
-        guard let didTapMeaning = didTapMeaning else {
-            return
-        }
-        didTapMeaning()
-        meaningTextField.becomeFirstResponder()
+        self.addSubview(wordTextField)
+        self.addSubview(meaningTextField)
     }
 }

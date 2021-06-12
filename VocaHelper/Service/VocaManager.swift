@@ -11,6 +11,8 @@ import RxSwift
 final class VocaManager {
     static let shared = VocaManager()
     static let directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    
+    var vocas: [Voca] = []
         
     let disposableBag = DisposeBag()
     
@@ -41,8 +43,8 @@ final class VocaManager {
     }
     
     /// Make voca from Filename
-    func makeVoca(fileName: String) -> Observable<[Voca]> {
-        return Observable<[Voca]>.create() {emitter in
+    func loadVocas(fileName: String) -> Observable<[Voca]> {
+        return Observable<[Voca]>.create() { [weak self] emitter in
             // 저장파일을 가져와야함
             let decoder = JSONDecoder()
             guard let directory = VocaManager.directoryURL else {
@@ -51,7 +53,8 @@ final class VocaManager {
             let path = directory.appendingPathComponent(fileName)
             do {
                 let data = try Data(contentsOf: path)
-                let vocaData  = try decoder.decode(VocaData.self, from: data)                
+                let vocaData  = try decoder.decode(VocaData.self, from: data)
+                self?.vocas = vocaData.vocas
                 emitter.onNext(vocaData.vocas)
             } catch {
                 print(error)
@@ -59,5 +62,25 @@ final class VocaManager {
             return Disposables.create()
         }
     }
-
+    
+    /// Make and Save VocaData
+    public func saveVocas(fileName: String, isNewLine: Bool) {
+        var vocaData = VocaData(vocas: vocas)
+        if isNewLine {
+            vocaData.vocas.append(Voca(id: vocaData.vocas.count, word: "", meaning: ""))            
+        }
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
+        do {
+            guard let directory = VocaManager.directoryURL else {
+                return
+            }
+            let path = directory.appendingPathComponent(fileName)
+            let data = try encoder.encode(vocaData)
+            try data.write(to: path)
+        } catch {
+            print(error)
+        }
+    }
 }
