@@ -27,54 +27,36 @@ class EditViewController: UIViewController {
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
-        tableView.rowHeight = 100
+        tableView.rowHeight = 100        
         return tableView
     }()
     
-    private let gesture = UITapGestureRecognizer()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
-        addSubViews()
-        addFooter()
+        viewConfigure()        
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
-        gesture.addTarget(self, action: #selector(didTapTable))
-        gesture.cancelsTouchesInView = false
-        tableView.addGestureRecognizer(gesture)
     }
     
-    private func configure() {
+    private func viewConfigure() {
         view.backgroundColor = .systemIndigo
         
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationItem.leftBarButtonItem?.image =  UIImage(systemName: "arrowshape.turn.up.backward")
         
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "highlighter"), style: .plain, target: self, action: #selector(didTapRightButton))
-    }
-    
-    private func addFooter() {
         let footer = EditTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
         tableView.tableFooterView = footer
-    }
-    
-    private func addSubViews() {
         view.addSubview(tableView)
     }
     
-    @objc private func didTapLeftButton() {
-        
-    }
-    
-    @objc private func didTapTable() {
-        touchXPos = gesture.location(in: tableView).x
-    }
+//    @objc private func didTapTable() {
+//        touchXPos = gesture.location(in: tableView).x
+//    }
     
     private func rxConfigure() {
         // 단어장에 단어표시
@@ -111,6 +93,8 @@ class EditViewController: UIViewController {
                 }
                 self?.viewModel.addNewLine(tableView: tableView, fileName: fileName, isNewLine: true)                
             }.disposed(by: disposeBag)
+        
+        
     }
 }
 

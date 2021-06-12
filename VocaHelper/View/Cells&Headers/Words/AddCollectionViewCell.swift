@@ -11,7 +11,7 @@ class AddCollectionViewCell: UICollectionViewCell {
     
     static let identifier: String = "AddCollectionViewCell"
     
-    public var didTapped: (() -> Void)?
+    public var didTap: (() -> Void)?
     
     public let button: UIButton = {
         let button = UIButton()
@@ -49,9 +49,9 @@ class AddCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func didTapButton() {
-        guard let didTapped = didTapped else {
+        guard let didTap = didTap else {
             return
         }
-        didTapped()
+        didTap()
     }
 }

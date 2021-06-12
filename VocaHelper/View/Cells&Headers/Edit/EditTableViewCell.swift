@@ -7,18 +7,20 @@
 
 import UIKit
 
-protocol EditTableViewCellDelegate: AnyObject {
-    func keyboardWillAppear()
-    func keyboardWillDisappear()
-    func reload(word: String, meaning: String)
-}
+//protocol EditTableViewCellDelegate: AnyObject {
+//    func keyboardWillAppear()
+//    func keyboardWillDisappear()
+//    func reload(word: String, meaning: String)
+//}
 
 class EditTableViewCell: UITableViewCell {
     
     static let identifier: String = "EditTableViewCell"
-    
-    weak var delegate: EditTableViewCellDelegate?
     private var isKeyboardMove: Bool = false
+    
+    public var didTapWord: (() -> Void)?
+    public var didTapMeaning: (() -> Void)?
+    
     
     let wordTextField: UITextField = {
         let textfield = UITextField()
@@ -73,9 +75,6 @@ class EditTableViewCell: UITableViewCell {
                                                                y: self.bounds.height/2 - height/2,
                                                                width: width,
                                                                height: height)
-        
-        wordTextField.delegate = self
-        meaningTextField.delegate = self
     }
     
     override func prepareForReuse() {
@@ -85,39 +84,32 @@ class EditTableViewCell: UITableViewCell {
     }
     
     private func addSubViews() {
-        self.addSubview(wordTextField)
-        self.addSubview(meaningTextField)
-    }
-}
-
-extension EditTableViewCell: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        if self.frame.origin.y >= 300 {
-            delegate?.keyboardWillAppear()
-            isKeyboardMove = true
-        }
-        textField.placeholder = ""
-    }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if isKeyboardMove{
-            delegate?.keyboardWillDisappear()
-            isKeyboardMove = false
-        }
+        contentView.addSubview(wordTextField)
+        contentView.addSubview(meaningTextField)
+        let wordGesture = UITapGestureRecognizer()
+        wordGesture.addTarget(self, action: #selector(didTapWordCell))
+        wordGesture.cancelsTouchesInView = false
+        wordTextField.addGestureRecognizer(wordGesture)
         
-        if textField == wordTextField, textField.text == "" {
-            wordTextField.placeholder = "Word"
-        } else {
-            meaningTextField.placeholder = "Meaning"
-        }
-        delegate?.reload(word: wordTextField.text!, meaning: meaningTextField.text!)
+        let meaningGesture = UITapGestureRecognizer()
+        meaningGesture.addTarget(self, action: #selector(didTapMeaningCell))
+        meaningGesture.cancelsTouchesInView = false
+        meaningTextField.addGestureRecognizer(meaningGesture)
     }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == wordTextField {
-            wordTextField.resignFirstResponder()
-            meaningTextField.becomeFirstResponder()
-        } else {
-            meaningTextField.resignFirstResponder()            
+    
+    @objc private func didTapWordCell() {
+        guard let didTapWord = didTapWord else {
+            return
         }
-        return true
+        didTapWord()
+        wordTextField.becomeFirstResponder()
+    }
+    
+    @objc private func didTapMeaningCell() {
+        guard let didTapMeaning = didTapMeaning else {
+            return
+        }
+        didTapMeaning()
+        meaningTextField.becomeFirstResponder()
     }
 }

@@ -18,4 +18,8 @@ class VocaViewModel {
         self.word = word
         self.meaning = meaning
     }
+    
+    func didTapCell() {
+        
+    }
 }

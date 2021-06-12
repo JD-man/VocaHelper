@@ -68,7 +68,7 @@ class WordsViewController: UIViewController {
                                                              for: IndexPath(row:row, section: 0)) as? AddCollectionViewCell else {
                         return UICollectionViewCell()
                     }
-                    cell.didTapped = { item.didTapAddButton() }
+                    cell.didTap = { item.didTapAddButton() }
                     return cell
                 }
                 else {
@@ -78,7 +78,7 @@ class WordsViewController: UIViewController {
                               return UICollectionViewCell()
                           }
                     cell.label.text = item.changeToRealName(fileName: item.fileName)
-                    cell.didTapped = { item.didTapWordButton(view: strongSelf) }
+                    cell.didTap = { item.didTapWordButton(view: strongSelf) }
                     return cell
                 }
             }.disposed(by: disposeBag)
