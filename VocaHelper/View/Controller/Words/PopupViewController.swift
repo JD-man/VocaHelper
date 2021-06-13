@@ -139,7 +139,12 @@ class PopupViewController: UIViewController {
             self?.practiceButton.backgroundColor = .systemGray4
             self?.practiceButton.backgroundColor = .systemBackground
         }
-        
+        guard let practiceClosure = practiceClosure,
+              let exitClosure = exitClosure else {
+            return
+        }
+        exitClosure()
+        practiceClosure()
     }
 
     @objc private func didTapTestButton() {
@@ -147,7 +152,7 @@ class PopupViewController: UIViewController {
             self?.testButton.backgroundColor = .systemGray4
             self?.testButton.backgroundColor = .systemBackground
         }
-        //delegate?.didTapTest()
+        
     }
 
     @objc private func didTapDeleteButton() {
@@ -155,7 +160,10 @@ class PopupViewController: UIViewController {
             self?.deleteButton.backgroundColor = .systemGray4
             self?.deleteButton.backgroundColor = .systemBackground
         }
-        //delegate?.didTapDelete()
+        guard let deleteClosure = deleteClosure else {
+            return
+        }
+        deleteClosure()
     }
 
     @objc private func didTapExitButton() {

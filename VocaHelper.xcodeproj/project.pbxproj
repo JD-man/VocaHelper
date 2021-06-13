@@ -11,9 +11,9 @@
 		89014771263BC0000054962A /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89014770263BC0000054962A /* ResultTableViewCell.swift */; };
 		89014773263BD5C60054962A /* ResultTableViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89014772263BD5C60054962A /* ResultTableViewFooter.swift */; };
 		89086EFE2634305B0078BC8F /* VocaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89086EFD2634305B0078BC8F /* VocaData.swift */; };
-		8925EDEB26745CB70029F8AC /* WordsViewModelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEA26745CB70029F8AC /* WordsViewModelList.swift */; };
+		8925EDEB26745CB70029F8AC /* WordsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEA26745CB70029F8AC /* WordsCell.swift */; };
 		8925EDEF26747F2B0029F8AC /* VocaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */; };
-		8925EDF126749ABE0029F8AC /* VocaViewModelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDF026749ABE0029F8AC /* VocaViewModelList.swift */; };
+		8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDF026749ABE0029F8AC /* EditCell.swift */; };
 		895AAB442633C6D400532021 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB432633C6D400532021 /* PopupViewController.swift */; };
 		895AAB4A2633F90900532021 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB492633F90900532021 /* EditViewController.swift */; };
 		895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */; };
@@ -41,9 +41,9 @@
 		89014770263BC0000054962A /* ResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
 		89014772263BD5C60054962A /* ResultTableViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewFooter.swift; sourceTree = "<group>"; };
 		89086EFD2634305B0078BC8F /* VocaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaData.swift; sourceTree = "<group>"; };
-		8925EDEA26745CB70029F8AC /* WordsViewModelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsViewModelList.swift; sourceTree = "<group>"; };
+		8925EDEA26745CB70029F8AC /* WordsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsCell.swift; sourceTree = "<group>"; };
 		8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaViewModel.swift; sourceTree = "<group>"; };
-		8925EDF026749ABE0029F8AC /* VocaViewModelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaViewModelList.swift; sourceTree = "<group>"; };
+		8925EDF026749ABE0029F8AC /* EditCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCell.swift; sourceTree = "<group>"; };
 		895AAB432633C6D400532021 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		895AAB492633F90900532021 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewCell.swift; sourceTree = "<group>"; };
@@ -104,7 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				89F2E6012673A87300890828 /* WordsViewModel.swift */,
-				8925EDEA26745CB70029F8AC /* WordsViewModelList.swift */,
+				8925EDEA26745CB70029F8AC /* WordsCell.swift */,
 			);
 			path = Words;
 			sourceTree = "<group>";
@@ -113,7 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */,
-				8925EDF026749ABE0029F8AC /* VocaViewModelList.swift */,
+				8925EDF026749ABE0029F8AC /* EditCell.swift */,
 			);
 			path = Voca;
 			sourceTree = "<group>";
@@ -403,7 +403,7 @@
 				89A42696263928F800555CCD /* PracticeViewController.swift in Sources */,
 				89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */,
 				89A42699263956B900555CCD /* BlindUIView.swift in Sources */,
-				8925EDF126749ABE0029F8AC /* VocaViewModelList.swift in Sources */,
+				8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */,
 				89C897EB263D13630066FD39 /* SearchResultsTableViewController.swift in Sources */,
 				89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */,
 				89651FC12632C0EE00949DEB /* SearchViewController.swift in Sources */,
@@ -422,7 +422,7 @@
 				895AAB442633C6D400532021 /* PopupViewController.swift in Sources */,
 				895AAB4A2633F90900532021 /* EditViewController.swift in Sources */,
 				8925EDEF26747F2B0029F8AC /* VocaViewModel.swift in Sources */,
-				8925EDEB26745CB70029F8AC /* WordsViewModelList.swift in Sources */,
+				8925EDEB26745CB70029F8AC /* WordsCell.swift in Sources */,
 				895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

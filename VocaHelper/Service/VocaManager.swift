@@ -13,14 +13,18 @@ final class VocaManager {
     static let directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     
     var vocas: [Voca] = []
+    lazy var vocasCount = vocas.count
+    
+    var fileNames: [String] = []
+    lazy var fileCount = fileNames.count
         
     let disposableBag = DisposeBag()
     
     /// Get Name of files which is saved in phone storage
-    func fileLoad() -> Observable<[String]> {
+    func loadFile() -> Observable<[String]> {
         return Observable.create() { emitter in
             let fileManager = FileManager.default
-            guard let directory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            guard let directory = VocaManager.directoryURL else {
                 return Disposables.create()
             }
             do {
@@ -33,6 +37,8 @@ final class VocaManager {
                 }
                 fileNames.sort()
                 fileNames.append("ButtonCell")
+                VocaManager.shared.fileNames = fileNames
+                
                 emitter.onNext(fileNames)
             }
             catch {
@@ -41,6 +47,46 @@ final class VocaManager {
             return Disposables.create()
         }
     }
+    
+    /// Make file which is saved in phone storage
+    func makeFile() {
+        
+        fileNames.popLast()
+        fileNames.append("\(Date())Name")
+        fileNames.append("ButtonCell")
+        
+        // 빈 파일 하나 추가
+        let newVocaData = VocaData(vocas: [Voca(word: "word", meaning: "meaning")])
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        do {
+            //print(directory)
+            guard let directory = VocaManager.directoryURL else {
+                return
+            }
+            let path = directory.appendingPathComponent("\(Date())Name")
+            let data = try encoder.encode(newVocaData)
+            try data.write(to: path)
+        }
+        catch {
+            print(error)
+        }
+    }
+    
+    func deleteFile(fileName: String) {
+        guard let index = VocaManager.shared.fileNames.firstIndex(of: fileName),
+              let directory = VocaManager.directoryURL else{
+            return
+        }
+        let path = directory.appendingPathComponent(fileName)
+        fileNames.remove(at: index)
+        if let error = try? FileManager.default.removeItem(atPath: path.path) {
+            print(error)
+        } else {
+            return
+        }
+    }
+
     
     /// Make voca from Filename
     func loadVocas(fileName: String) -> Observable<[Voca]> {

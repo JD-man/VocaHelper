@@ -14,7 +14,7 @@ class WordsViewController: UIViewController {
     
     private var collectionView:  UICollectionView?
     
-    public var viewModels = WordsViewModelList()
+    public var viewModels = WordsViewModel()
     private let disposeBag = DisposeBag()
     
     // 파일개수
@@ -24,7 +24,8 @@ class WordsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewConfigure()
-        rxConfigure()        
+        rxConfigure()
+        print(VocaManager.directoryURL)
     }
     
     override func viewDidLayoutSubviews() {
@@ -57,6 +58,7 @@ class WordsViewController: UIViewController {
     }
     
     private func rxConfigure() {
+        
         guard let collectionView = collectionView else {
             return
         }
@@ -68,7 +70,7 @@ class WordsViewController: UIViewController {
                                                              for: IndexPath(row:row, section: 0)) as? AddCollectionViewCell else {
                         return UICollectionViewCell()
                     }
-                    cell.didTap = { item.didTapAddButton() }
+                    cell.didTap = { self?.viewModels.makeNewViewModels(isAddButton: true) }
                     return cell
                 }
                 else {
@@ -81,7 +83,7 @@ class WordsViewController: UIViewController {
                     cell.didTap = { item.didTapWordButton(view: strongSelf) }
                     return cell
                 }
-            }.disposed(by: disposeBag)
+            }.disposed(by: disposeBag)        
     }
 }
 

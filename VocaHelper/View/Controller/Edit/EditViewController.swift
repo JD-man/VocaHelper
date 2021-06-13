@@ -17,13 +17,16 @@ class EditViewController: UIViewController {
     }
     
     public var fileName: String = ""
-    lazy var viewModel = VocaViewModelList(fileName: fileName)    
+    lazy var viewModel = VocaViewModel(fileName: fileName)    
     let disposeBag = DisposeBag()
     
     //private var vocaCount: Int = 0
     private var selectedRow: Int?
+    private var selectedCell: EditTableViewCell?
     
     private var touchXPos : CGFloat = 0
+    
+    private var isKeyboardMoving: Bool = false
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -63,7 +66,7 @@ class EditViewController: UIViewController {
     
     private func rxConfigure() {
         // 단어장에 단어표시
-        viewModel.vocaSubject
+        viewModel.editCellSubject
             .bind(to: tableView.rx.items(cellIdentifier: EditTableViewCell.identifier,
                                          cellType: EditTableViewCell.self)) { row, item, cell in
                 cell.wordTextField.text = item.word
@@ -74,46 +77,19 @@ class EditViewController: UIViewController {
         // 뒤로가기 버튼
         navigationItem.leftBarButtonItem?.rx.tap
             .bind() { [weak self] in
-                guard let tableView = self?.tableView,
-                      let fileName = self?.fileName else {
-                    return
-                }
-                if let row = self?.selectedRow {
-                    guard let cell = tableView.cellForRow(at: IndexPath.init(row: row, section: 0)) as? EditTableViewCell else {
-                        return
-                    }
-                    VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
-                    VocaManager.shared.vocas[row].meaning = cell.wordTextField.text ?? ""
-                }
-                VocaManager.shared.saveVocas(fileName: fileName)
+                self?.viewModel.didTapBackButton(row: self?.selectedRow, cell: self?.selectedCell, fileName: self?.fileName ?? "")
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
         
         
         // 추가하기 버튼
-        guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
-            return
+        if let footer = tableView.tableFooterView as? EditTableViewFooter {
+            footer.addButton.rx.tap
+                .bind() { [weak self] in
+                    self?.viewModel.didTapAddButton(row: self?.selectedRow, cell: self?.selectedCell, fileName: self?.fileName ?? "")
+                    self?.tableView.scrollToRow(at: IndexPath.init(row: VocaManager.shared.vocas.count - 1, section: 0), at: .top, animated: true)
+                }.disposed(by: disposeBag)
         }
-        
-        footer.addButton.rx.tap
-            .bind() { [weak self] in
-                guard let tableView = self?.tableView,
-                      let fileName = self?.fileName else {
-                    return
-                }
-                if let row = self?.selectedRow {
-                    guard let cell = tableView.cellForRow(at: IndexPath.init(row: row, section: 0)) as? EditTableViewCell else {
-                        return
-                    }
-                    VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
-                    VocaManager.shared.vocas[row].meaning = cell.wordTextField.text ?? ""
-                }
-                VocaManager.shared.vocas.append(Voca(word: "", meaning: ""))
-                self?.viewModel.makeViewModelsFromVocas()
-                let indexPath = IndexPath.init(row: tableView.numberOfRows(inSection: 0) - 1, section: 0)
-                self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
-                VocaManager.shared.saveVocas(fileName: fileName)
-            }.disposed(by: disposeBag)
         
         gesture.rx.event
             .bind { [weak self] in
@@ -123,30 +99,13 @@ class EditViewController: UIViewController {
         tableView.rx.itemSelected
             .bind() { [weak self] indexPath in
                 self?.selectedRow = indexPath.row
-                guard let cell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell,
-                      let width = self?.tableView.frame.size.width,
-                      let touchXPos = self?.touchXPos else {
-                    return
-                }
-                if touchXPos < width / 2{
-                    print(VocaManager.shared.vocas.count)
-                    cell.wordTextField.becomeFirstResponder()
-                }
-                else {
-                    cell.meaningTextField.becomeFirstResponder()
-                }
+                self?.selectedCell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell                
+                self?.viewModel.cellSelected(cell: self?.selectedCell, width: self?.tableView.frame.size.width, touchXPos: self?.touchXPos)
             }.disposed(by: disposeBag)
         
         tableView.rx.itemDeselected
             .bind() { [weak self] indexPath in
-                guard let cell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell,
-                      let word = cell.wordTextField.text,
-                      let meaning = cell.meaningTextField.text else {
-                    return
-                }
-                VocaManager.shared.vocas[indexPath.row].word = word
-                VocaManager.shared.vocas[indexPath.row].meaning = meaning
-                self?.viewModel.makeViewModelsFromVocas()
+                self?.viewModel.cellDeselected(row: self?.selectedRow, cell: self?.selectedCell)
             }.disposed(by: disposeBag)
         
         // 셀 삭제를 위한 델리게이트 설정
@@ -161,6 +120,8 @@ extension EditViewController: UITableViewDelegate
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, _) in
             VocaManager.shared.vocas.remove(at: indexPath.row)
             self?.viewModel.makeViewModelsFromVocas()
+            self?.selectedRow = nil
+            self?.selectedCell = nil
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
