@@ -130,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				89A42695263928F800555CCD /* PracticeViewController.swift */,
+				89A42698263956B900555CCD /* BlindUIView.swift */,
 			);
 			path = Practice;
 			sourceTree = "<group>";
@@ -204,7 +205,6 @@
 			children = (
 				89651FB62632BF2500949DEB /* Controller */,
 				89651FC32632C4A700949DEB /* Cells&Headers */,
-				89A42698263956B900555CCD /* BlindUIView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";

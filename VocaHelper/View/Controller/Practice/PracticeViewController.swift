@@ -21,9 +21,6 @@ class PracticeViewController: UIViewController {
     
     private var index = 0
     
-    private var prevTouch: CGFloat = 0
-    private var currTouch: CGFloat = 0
-    
     private let wordLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .label
