@@ -9,6 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+
 class EditViewController: UIViewController {
     
     deinit {
@@ -20,7 +21,7 @@ class EditViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     //private var vocaCount: Int = 0
-    private var selectedRow: Int = 0
+    private var selectedRow: Int?
     
     private var touchXPos : CGFloat = 0
     
@@ -53,7 +54,7 @@ class EditViewController: UIViewController {
         
         let footer = EditTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
         tableView.tableFooterView = footer
-                
+        
         gesture = UITapGestureRecognizer()
         gesture.cancelsTouchesInView = false        
         tableView.addGestureRecognizer(gesture)
@@ -73,8 +74,16 @@ class EditViewController: UIViewController {
         // 뒤로가기 버튼
         navigationItem.leftBarButtonItem?.rx.tap
             .bind() { [weak self] in
-                guard let fileName = self?.fileName else {
+                guard let tableView = self?.tableView,
+                      let fileName = self?.fileName else {
                     return
+                }
+                if let row = self?.selectedRow {
+                    guard let cell = tableView.cellForRow(at: IndexPath.init(row: row, section: 0)) as? EditTableViewCell else {
+                        return
+                    }
+                    VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
+                    VocaManager.shared.vocas[row].meaning = cell.wordTextField.text ?? ""
                 }
                 VocaManager.shared.saveVocas(fileName: fileName)
                 self?.navigationController?.popViewController(animated: true)
@@ -89,8 +98,15 @@ class EditViewController: UIViewController {
         footer.addButton.rx.tap
             .bind() { [weak self] in
                 guard let tableView = self?.tableView,
-                    let fileName = self?.fileName else {
+                      let fileName = self?.fileName else {
                     return
+                }
+                if let row = self?.selectedRow {
+                    guard let cell = tableView.cellForRow(at: IndexPath.init(row: row, section: 0)) as? EditTableViewCell else {
+                        return
+                    }
+                    VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
+                    VocaManager.shared.vocas[row].meaning = cell.wordTextField.text ?? ""
                 }
                 VocaManager.shared.vocas.append(Voca(word: "", meaning: ""))
                 self?.viewModel.makeViewModelsFromVocas()
@@ -106,6 +122,7 @@ class EditViewController: UIViewController {
         
         tableView.rx.itemSelected
             .bind() { [weak self] indexPath in
+                self?.selectedRow = indexPath.row
                 guard let cell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell,
                       let width = self?.tableView.frame.size.width,
                       let touchXPos = self?.touchXPos else {
@@ -148,7 +165,7 @@ extension EditViewController: UITableViewDelegate
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
-    
+
 
 // 키보드가 텍스트필드를 가려서 추가한 델리게이트, 애니메이션
 
