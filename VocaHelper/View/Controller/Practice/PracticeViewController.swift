@@ -125,9 +125,11 @@ class PracticeViewController: UIViewController {
     }
     
     private func rxConfigure() {
-        viewModel.setupPracticeSubject()
+        viewModel.buttonCountSubject
+            .subscribe()
+            .disposed(by: disposeBag)
         
-        viewModel.practiceCellSubject
+        viewModel.practiceCellObservable
             .subscribe(onNext: { [weak self] in
                 self?.wordLabel.text = $0.word
                 self?.meaningLabel.text = $0.meaning

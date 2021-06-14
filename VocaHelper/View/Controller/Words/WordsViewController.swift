@@ -17,15 +17,11 @@ class WordsViewController: UIViewController {
     public var viewModels = WordsViewModel()
     private let disposeBag = DisposeBag()
     
-    // 파일개수
-    private var fileNames: [String] = []
-    private var fileCount: Int = 0
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewConfigure()
         rxConfigure()
-        print(VocaManager.directoryURL)
+        //print(VocaManager.directoryURL?.absoluteString)
     }
     
     override func viewDidLayoutSubviews() {

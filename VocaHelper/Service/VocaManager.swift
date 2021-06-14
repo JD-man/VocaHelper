@@ -51,7 +51,7 @@ final class VocaManager {
     /// Make file which is saved in phone storage
     func makeFile() {
         
-        fileNames.popLast()
+        _ = fileNames.popLast()
         fileNames.append("\(Date())Name")
         fileNames.append("ButtonCell")
         

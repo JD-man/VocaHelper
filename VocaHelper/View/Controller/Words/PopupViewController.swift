@@ -152,7 +152,12 @@ class PopupViewController: UIViewController {
             self?.testButton.backgroundColor = .systemGray4
             self?.testButton.backgroundColor = .systemBackground
         }
-        
+        guard let exitClosure = exitClosure,
+              let testClosure = testClosure else {
+            return
+        }
+        exitClosure()
+        testClosure()
     }
 
     @objc private func didTapDeleteButton() {

@@ -12,9 +12,37 @@ class VocaViewModel {
     public var editCellSubject = BehaviorSubject<[EditCell]>(value: [])
     
     public lazy var buttonCountSubject = BehaviorSubject<Int>(value: 0)
-    public lazy var practiceCellSubject = BehaviorSubject<Voca>(value: Voca(word: "TestWord", meaning: "TestMeaning"))
-        
     
+    public lazy var practiceCellObservable = buttonCountSubject.map {
+        return Voca(word: VocaManager.shared.vocas[$0].word, meaning: VocaManager.shared.vocas[$0].meaning)
+    }
+    
+    private lazy var suffledVocas = VocaManager.shared.vocas.shuffled()
+    public lazy var realAnswer: [String] = []
+    public lazy var userAnswer: [String] = []
+    
+    public lazy var testCellObservable: Observable<[String]> = buttonCountSubject.map { [weak self] in
+        let word = self?.suffledVocas[$0].word ?? "Not exist Word"
+        let meaning = self?.suffledVocas[$0].meaning ?? "Not exist Meaning"
+        var wrongAnswers: [String] = []
+        while wrongAnswers.count <= 3 {
+            let wrongAnswer = self?.suffledVocas.randomElement()?.meaning ?? "Not exist Meaning"
+            if  wrongAnswer != meaning && !wrongAnswers.contains(wrongAnswer)  {
+                wrongAnswers.append(wrongAnswer)
+            }
+        }
+        
+        self?.realAnswer.append(word)
+        wrongAnswers.append(meaning)
+        var questionArr = wrongAnswers.shuffled()
+        questionArr.append(word)
+        return questionArr
+    }
+    
+    public lazy var resultCellSubject = BehaviorSubject<[ResultCell]>(value: [])
+    
+    
+    //public lazy var testCellSubject = BehaviorSubject<>()
     
     private let disposeBag = DisposeBag()
     
@@ -89,12 +117,20 @@ class VocaViewModel {
         makeViewModelsFromVocas()
     }
     
-    // MARK: - For SearchBar
+    // MARK: - For Test
     
-    public func setupPracticeSubject() {
-        buttonCountSubject
-            .subscribe(onNext: { [weak self] in
-                self?.practiceCellSubject.onNext(VocaManager.shared.vocas[$0])
-            }).disposed(by: disposeBag)
+    public func makeResultCellSubject() {
+//        zip(realAnswer, userAnswer).map { <#(String, String)#> in
+//            <#code#>
+//        }
+    }
+    
+    public func presentResultVC(view: TestViewController) {
+        let resultVC = ResultViewController()
+        resultVC.modalPresentationStyle = .fullScreen
+        resultVC.userAnswers = userAnswer
+        resultVC.realAnswers = realAnswer
+        resultVC.presentingView = view
+        view.present(resultVC, animated: true, completion: nil)
     }
 }

@@ -21,13 +21,15 @@ class WordsCell {
     }
     
     // 단어장 터치시 동작
-    func didTapWordButton(view: WordsViewController) {
+    func didTapWordButton(view: WordsViewController) {        
         let popupVC = PopupViewController()
         popupVC.modalPresentationStyle = .overCurrentContext
         popupVC.textField.text = changeToRealName(fileName: fileName)
         view.tabBarController?.tabBar.isHidden.toggle()
         
         // 팝업뷰 버튼 동작 설정
+        
+        // Edit 버튼 터치
         popupVC.editClosure = { [weak self, weak view] in
             let editVC = EditViewController()
             editVC.navigationItem.title = self?.changeToRealName(fileName: self?.fileName ?? "")
@@ -36,6 +38,7 @@ class WordsCell {
             view?.tabBarController?.tabBar.isHidden.toggle()
         }
         
+        // Practice 버튼 터치
         popupVC.practiceClosure = { [weak self, weak view] in
             let practiceVC = PracticeViewController()
             practiceVC.navigationItem.title = self?.changeToRealName(fileName: self?.fileName ?? "")
@@ -44,6 +47,17 @@ class WordsCell {
             view?.tabBarController?.tabBar.isHidden.toggle()
         }
         
+        // Test 버튼 터치
+        
+        popupVC.testClosure = { [weak self, weak view] in
+            let testVC = TestViewController()
+            testVC.navigationItem.title = self?.changeToRealName(fileName: self?.fileName ?? "")
+            testVC.fileName = self?.fileName ?? ""
+            view?.navigationController?.pushViewController(testVC, animated: true)
+            view?.tabBarController?.tabBar.isHidden.toggle()
+        }
+        
+        // Delete 버튼 터치
         popupVC.deleteClosure = { [weak self, weak popupVC, weak view] in
             VocaManager.shared.deleteFile(fileName: self?.fileName ?? "")
             view?.viewModels.makeNewViewModels(isAddButton: false)
@@ -51,6 +65,7 @@ class WordsCell {
             popupVC?.dismiss(animated: true, completion: nil)
         }
         
+        // Exit 버튼 터치
         popupVC.exitClosure = { [weak popupVC, weak self, weak view] in
             guard let fileName = popupVC?.textField.text else {
                 return
