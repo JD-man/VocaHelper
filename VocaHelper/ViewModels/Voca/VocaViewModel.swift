@@ -17,22 +17,23 @@ class VocaViewModel {
         return Voca(word: VocaManager.shared.vocas[$0].word, meaning: VocaManager.shared.vocas[$0].meaning)
     }
     
-    private lazy var suffledVocas = VocaManager.shared.vocas.shuffled()
-    public lazy var realAnswer: [String] = []
+    private lazy var shuffledVocas = VocaManager.shared.vocas.shuffled()
+    
+    //public lazy var realAnswer: [String] = []
     public lazy var userAnswer: [String] = []
     
     public lazy var testCellObservable: Observable<[String]> = buttonCountSubject.map { [weak self] in
-        let word = self?.suffledVocas[$0].word ?? "Not exist Word"
-        let meaning = self?.suffledVocas[$0].meaning ?? "Not exist Meaning"
+        let word = self?.shuffledVocas[$0].word ?? "Not exist Word"
+        let meaning = self?.shuffledVocas[$0].meaning ?? "Not exist Meaning"
         var wrongAnswers: [String] = []
         while wrongAnswers.count <= 3 {
-            let wrongAnswer = self?.suffledVocas.randomElement()?.meaning ?? "Not exist Meaning"
+            let wrongAnswer = self?.shuffledVocas.randomElement()?.meaning ?? "Not exist Meaning"
             if  wrongAnswer != meaning && !wrongAnswers.contains(wrongAnswer)  {
                 wrongAnswers.append(wrongAnswer)
             }
         }
         
-        self?.realAnswer.append(word)
+        //self?.realAnswer.append(meaning)
         wrongAnswers.append(meaning)
         var questionArr = wrongAnswers.shuffled()
         questionArr.append(word)
@@ -120,17 +121,21 @@ class VocaViewModel {
     // MARK: - For Test
     
     public func makeResultCellSubject() {
-//        zip(realAnswer, userAnswer).map { <#(String, String)#> in
-//            <#code#>
-//        }
+        let resultTable = zip(shuffledVocas, userAnswer).map {
+            return ResultCell(realAnswer: $0.0.word, userAnswer: $0.1, score: $0.0.meaning == $0.1 ? "정답" : "오답")
+        }
+        resultCellSubject.onNext(resultTable)
+        
+        // 다시 시험보는것을 대비한 답안지우기, 단어들 섞기
+        userAnswer = []
+        shuffledVocas.shuffle()
     }
     
     public func presentResultVC(view: TestViewController) {
         let resultVC = ResultViewController()
         resultVC.modalPresentationStyle = .fullScreen
-        resultVC.userAnswers = userAnswer
-        resultVC.realAnswers = realAnswer
         resultVC.presentingView = view
+        resultVC.viewModel = view.viewModel
         view.present(resultVC, animated: true, completion: nil)
     }
 }

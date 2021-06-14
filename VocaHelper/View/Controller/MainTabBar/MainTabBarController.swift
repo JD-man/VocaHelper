@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class MainTabBarController: UITabBarController {
+    
+    let disposeBag = DisposeBag()
     
     let wordsNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WordsViewController())
@@ -33,6 +37,10 @@ class MainTabBarController: UITabBarController {
     }
     
     private func configure() {
-        setViewControllers([wordsNavVC, searchNavVC], animated: true)        
+        setViewControllers([wordsNavVC, searchNavVC], animated: true)
+        self.rx.didSelect
+            .bind() {
+                VocaManager.shared.makeAllVocasForSearch(title: $0.tabBarItem.title ?? "")
+            }.disposed(by: disposeBag)
     }
 }

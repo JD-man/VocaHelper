@@ -17,6 +17,10 @@ final class VocaManager {
     
     var fileNames: [String] = []
     lazy var fileCount = fileNames.count
+    
+    
+    // 검색을 위한 모든 단어장 데이터, 메모리에 남아있지않게 검색이 끝나면 nil을 넣어 해제해줘야한다.
+    var allVocasForSearch: [VocaData]?
         
     let disposableBag = DisposeBag()
     
@@ -73,6 +77,8 @@ final class VocaManager {
         }
     }
     
+    
+    /// Delete VocaFile from Storage
     func deleteFile(fileName: String) {
         guard let index = VocaManager.shared.fileNames.firstIndex(of: fileName),
               let directory = VocaManager.directoryURL else{
@@ -85,6 +91,31 @@ final class VocaManager {
         } else {
             return
         }
+    }
+    
+    func makeAllVocasForSearch(title: String) {
+        if title == "Search" {
+            allVocasForSearch = fileNames.filter {$0 != "ButtonCell"}.map {
+                let decoder = JSONDecoder()
+                guard let directory = VocaManager.directoryURL else {
+                    return VocaData(vocas: [])
+                }
+                let path = directory.appendingPathComponent($0)
+                var vocaData: VocaData = VocaData(vocas: [])
+                do {
+                    let data = try Data(contentsOf: path)
+                    vocaData  = try decoder.decode(VocaData.self, from: data)
+                    return vocaData
+                } catch {
+                    print(error)
+                }
+                return vocaData
+            }
+        }
+        else {
+            allVocasForSearch = nil
+        }
+        print(allVocasForSearch?.count)
     }
 
     

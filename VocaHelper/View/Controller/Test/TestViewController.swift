@@ -16,7 +16,7 @@ class TestViewController: UIViewController {
     }
     
     public var fileName: String = ""
-    private lazy var viewModel = VocaViewModel(fileName: fileName)
+    public lazy var viewModel = VocaViewModel(fileName: fileName)
     private let disposeBag = DisposeBag()
     public var index = 0
     
@@ -123,7 +123,7 @@ class TestViewController: UIViewController {
                     self?.index += 1
                     self?.viewModel.userAnswer.append(button.titleLabel?.text ?? "")
                     if self?.index ?? 0 >= VocaManager.shared.vocasCount {
-                        self?.index -= 1
+                        self?.index = 0
                         let alert = UIAlertController(title: "마지막 문제입니다.", message: "결과화면이 표시됩니다.", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { [weak self] _ in
                             guard let strongSelf = self else {
@@ -133,7 +133,9 @@ class TestViewController: UIViewController {
                         }))
                         self?.present(alert, animated: true, completion: nil)
                     }
-                    self?.viewModel.buttonCountSubject.onNext(self?.index ?? 0)
+                    else {
+                        self?.viewModel.buttonCountSubject.onNext(self?.index ?? 0)
+                    }                    
                 }.disposed(by: disposeBag)
         }
         

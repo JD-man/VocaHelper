@@ -6,15 +6,18 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class ResultViewController: UIViewController {
     
-    public var userAnswers: [String] = []
-    public var realAnswers: [String] = []
+    deinit {
+        print("resultVC deinit")
+    }
     
     public weak var presentingView: TestViewController?
-    
-    private var scoreArray: [String] = []
+    public var viewModel: VocaViewModel!
+    private let disposeBag = DisposeBag()
     
     private let resultTableView: UITableView = {
         let tableView = UITableView()
@@ -26,9 +29,9 @@ class ResultViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemTeal        
-        view.addSubview(resultTableView)
-        makeScore()
+        view.addSubview(resultTableView)        
         addFooter()
+        rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
@@ -36,27 +39,8 @@ class ResultViewController: UIViewController {
         resultTableView.frame = view.bounds
     }
     
-    private func makeScore() {
-        for (i, userAnswer) in userAnswers.enumerated() {
-            if userAnswer == realAnswers[i] {
-                scoreArray.append("정답")
-            } else {
-                scoreArray.append("오답")
-            }
-        }
-    }
-    
     private func addFooter() {
         let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
-        let score: Int = scoreArray.filter { score in
-            if score == "정답" {
-                return true
-            } else {
-                return false
-            }
-        }.count
-        footer.scoreLabel.text = "점수 : " + String(score) + " / " + String(userAnswers.count)
-        footer.delegate = self
         resultTableView.tableFooterView = footer
     }
     
@@ -64,44 +48,48 @@ class ResultViewController: UIViewController {
         presentingView?.navigationController?.popToRootViewController(animated: true)
         presentingView?.tabBarController?.tabBar.isHidden = false
     }
-}
-
-
-//extension ResultViewController: UITableViewDelegate, UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return userAnswers.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let cell = resultTableView.dequeueReusableCell(withIdentifier: ResultTableViewCell.identifier, for: indexPath) as? ResultTableViewCell else {
-//            return UITableViewCell()
-//        }
-//        let realAnswer = realAnswers[indexPath.row]
-//        let userAnswer = userAnswers[indexPath.row]
-//        let score = scoreArray[indexPath.row]
-//        cell.wordLabel.text = realAnswer
-//        cell.userAnswerLabel.text = userAnswer
-//        cell.resultLabel.text = score
-//
-//        if score == "정답" {
-//            cell.resultLabel.textColor = .systemTeal
-//        } else {
-//            cell.resultLabel.textColor = .systemPink
-//        }
-//        return cell
-//    }
-//
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 70
-//    }
-//}
-
-extension ResultViewController: ResultTableViewFooterDelegate {
-    func didTapTest() {
-        self.dismiss(animated: true, completion: nil)
-    }
     
-    func didTapHome() {
-        self.dismiss(animated: true,completion: toRoot)
+    private func rxConfigure() {
+        
+        viewModel.makeResultCellSubject()
+        
+        viewModel.resultCellSubject
+            .bind(to: resultTableView.rx.items(cellIdentifier: ResultTableViewCell.identifier,
+                                               cellType: ResultTableViewCell.self)) { row, item, cell in                
+                cell.wordLabel.text = item.realAnswer
+                cell.userAnswerLabel.text = item.userAnswer
+                cell.resultLabel.text = item.score
+                cell.resultLabel.textColor = item.score == "정답" ? .systemTeal : .systemPink
+            }.disposed(by: disposeBag)
+        
+                
+        // Footer 설정
+        guard let footer = resultTableView.tableFooterView as? ResultTableViewFooter else {
+            return
+        }
+        
+        viewModel.resultCellSubject
+            .map { cell -> [Int] in
+                let wrongCount = cell.filter { resultCell in return resultCell.score == "오답" }.count
+                let answerCount = cell.filter { resultCell in return resultCell.score == "정답" }.count
+                return [answerCount, wrongCount]
+            }.subscribe(onNext: {
+                footer.scoreLabel.text = " 정답/오답 : \($0[0]) / \($0[1])"
+            })
+            .disposed(by: disposeBag)
+        
+        footer.homeButton.rx.tap
+            .bind() { [weak self] in
+                print("home")
+                self?.dismiss(animated: true, completion: {
+                    self?.presentingView?.navigationController?.popToRootViewController(animated: true)
+                })
+            }.disposed(by: disposeBag)
+        
+        footer.testButton.rx.tap
+            .bind() { [weak self] in
+                print("test")
+                self?.dismiss(animated: true, completion: {self?.viewModel.buttonCountSubject.onNext(0)})
+            }.disposed(by: disposeBag)
     }
 }

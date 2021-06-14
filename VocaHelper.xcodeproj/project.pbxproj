@@ -30,6 +30,7 @@
 		89A42696263928F800555CCD /* PracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42695263928F800555CCD /* PracticeViewController.swift */; };
 		89A42699263956B900555CCD /* BlindUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42698263956B900555CCD /* BlindUIView.swift */; };
 		89A789EC26774846004B5A54 /* ResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A789EB26774846004B5A54 /* ResultCell.swift */; };
+		89A789EF26777385004B5A54 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A789EE26777385004B5A54 /* SearchViewModel.swift */; };
 		89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B15C7D263A7F1B007C29E1 /* TestViewController.swift */; };
 		89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C744BD263AE2A30013D620 /* ResultViewController.swift */; };
 		89C897EB263D13630066FD39 /* SearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */; };
@@ -63,6 +64,7 @@
 		89A42695263928F800555CCD /* PracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewController.swift; sourceTree = "<group>"; };
 		89A42698263956B900555CCD /* BlindUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindUIView.swift; sourceTree = "<group>"; };
 		89A789EB26774846004B5A54 /* ResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCell.swift; sourceTree = "<group>"; };
+		89A789EE26777385004B5A54 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		89B15C7D263A7F1B007C29E1 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		89C744BD263AE2A30013D620 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 		89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsTableViewController.swift; sourceTree = "<group>"; };
@@ -265,6 +267,14 @@
 			path = Words;
 			sourceTree = "<group>";
 		};
+		89A789ED26777366004B5A54 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				89A789EE26777385004B5A54 /* SearchViewModel.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		89F2E5FD2673A76A00890828 /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -276,6 +286,7 @@
 		89F2E6002673A83E00890828 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				89A789ED26777366004B5A54 /* Search */,
 				8925EDED26747F190029F8AC /* Voca */,
 				8925EDEC26745CCD0029F8AC /* Words */,
 			);
@@ -421,6 +432,7 @@
 				89014773263BD5C60054962A /* ResultTableViewFooter.swift in Sources */,
 				89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */,
 				89014771263BC0000054962A /* ResultTableViewCell.swift in Sources */,
+				89A789EF26777385004B5A54 /* SearchViewModel.swift in Sources */,
 				89086EFE2634305B0078BC8F /* VocaData.swift in Sources */,
 				89F2E5FF2673A79E00890828 /* VocaManager.swift in Sources */,
 				895AAB442633C6D400532021 /* PopupViewController.swift in Sources */,
