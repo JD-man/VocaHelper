@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 class SearchViewModel {
-    public var searchResultSubject = BehaviorSubject<[String]>(value: [])
+    public var searchResultSubject = BehaviorSubject<[Voca]>(value: [])
     
     public func makeSearchResultSubject(word: String) {
         
@@ -17,15 +17,9 @@ class SearchViewModel {
             return
         }
         
-        let filteredResults: [[String]] = allVocas.map { vocadata in
-            let vocas = vocadata.vocas
-            let mapped = vocas.map { $0.word }.filter { $0.contains(word)}
-            return mapped
-        }
-        
-        let flatMapped = filteredResults.flatMap {$0}
+        let filteredResults: [Voca] = allVocas.map { $0.vocas.filter { $0.word.contains(word) } }.flatMap {$0}
         
         // 테스트용
-        searchResultSubject.onNext(flatMapped)
+        searchResultSubject.onNext(filteredResults)
     }
 }

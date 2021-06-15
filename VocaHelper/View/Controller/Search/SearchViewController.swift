@@ -54,7 +54,7 @@ class SearchViewController: UIViewController {
         
         viewModel.searchResultSubject
             .bind(to: tableView.rx.items(cellIdentifier: "cell", cellType: UITableViewCell.self)) { row, item, cell in
-                cell.textLabel?.text = item
+                cell.textLabel?.text = item.word + " : " + item.meaning
             }.disposed(by: disposeBag)
     }
 }
