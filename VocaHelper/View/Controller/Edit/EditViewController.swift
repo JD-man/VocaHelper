@@ -79,6 +79,7 @@ class EditViewController: UIViewController {
             .bind() { [weak self] in
                 self?.viewModel.didTapBackButton(row: self?.selectedRow, cell: self?.selectedCell, fileName: self?.fileName ?? "")
                 self?.navigationController?.popViewController(animated: true)
+                self?.tabBarController?.tabBar.isHidden.toggle()
             }.disposed(by: disposeBag)
         
         

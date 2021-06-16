@@ -9,6 +9,7 @@ import Foundation
 
 struct VocaData: Codable {
     // 테스트
+    var fileName: String
     var vocas: [Voca]
 }
 

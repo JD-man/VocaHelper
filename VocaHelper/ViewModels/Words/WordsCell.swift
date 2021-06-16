@@ -21,7 +21,8 @@ class WordsCell {
     }
     
     // 단어장 터치시 동작
-    func didTapWordButton(view: WordsViewController) {        
+    func didTapWordButton(view: WordsViewController) {
+        VocaManager.shared.loadVocasLocal(fileName: fileName)
         let popupVC = PopupViewController()
         popupVC.modalPresentationStyle = .overCurrentContext
         popupVC.textField.text = changeToRealName(fileName: fileName)
@@ -78,7 +79,7 @@ class WordsCell {
             guard let directory = VocaManager.directoryURL else {
                 return
             }
-            let prevName = directory.appendingPathComponent(self?.fileName ?? "").path
+            let prevName = directory.appendingPathComponent(realName).path
             let currName = directory.appendingPathComponent(currRealName).path
 
             do {
@@ -86,6 +87,7 @@ class WordsCell {
             } catch {
                 print(error)
             }
+            VocaManager.shared.saveVocas(fileName: currRealName)
             self?.fileName = currRealName
             view?.viewModels.makeViewModels()
             

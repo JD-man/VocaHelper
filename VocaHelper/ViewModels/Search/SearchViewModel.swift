@@ -8,8 +8,14 @@
 import Foundation
 import RxSwift
 
+struct ResultTableCell {
+    let fileName: String
+    let word: String
+    let meaning: String
+}
+
 class SearchViewModel {
-    public var searchResultSubject = BehaviorSubject<[Voca]>(value: [])
+    public var searchResultSubject = BehaviorSubject<[ResultTableCell]>(value: [])
     
     public func makeSearchResultSubject(word: String) {
         
@@ -17,9 +23,24 @@ class SearchViewModel {
             return
         }
         
-        let filteredResults: [Voca] = allVocas.map { $0.vocas.filter { $0.word.contains(word) } }.flatMap {$0}
+        // [VocaData] => [[FilteredVocas]] => [[ResultTableCell]] -> flat
+        let filteredResults: [[ResultTableCell]] = allVocas.map {
+            let fileName = $0.fileName
+            let filteredVocas =  $0.vocas.filter { $0.word.contains(word) }
+            let cell = filteredVocas.map { ResultTableCell(fileName: fileName, word: $0.word, meaning: $0.meaning)}
+            return cell }
+        
+        let flat = filteredResults.flatMap{$0}
         
         // 테스트용
-        searchResultSubject.onNext(filteredResults)
+        searchResultSubject.onNext(flat)
+    }
+    
+    public func didTapResultCell(fileName: String, view: SearchViewController) {
+        VocaManager.shared.loadVocasLocal(fileName: fileName)
+        let editVC = EditViewController()
+        editVC.fileName = fileName
+        editVC.navigationItem.title = String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
+        view.navigationController?.pushViewController(editVC, animated: true)
     }
 }

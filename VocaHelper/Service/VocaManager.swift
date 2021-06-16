@@ -54,13 +54,14 @@ final class VocaManager {
     
     /// Make file which is saved in phone storage
     func makeFile() {
+        let newFileName = "\(Date())Name"
         
         _ = fileNames.popLast()
-        fileNames.append("\(Date())Name")
+        fileNames.append(newFileName)
         fileNames.append("ButtonCell")
         
         // 빈 파일 하나 추가
-        let newVocaData = VocaData(vocas: [Voca(word: "word", meaning: "meaning")])
+        let newVocaData = VocaData(fileName: newFileName, vocas: [Voca(word: "word", meaning: "meaning")])
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         do {
@@ -68,7 +69,7 @@ final class VocaManager {
             guard let directory = VocaManager.directoryURL else {
                 return
             }
-            let path = directory.appendingPathComponent("\(Date())Name")
+            let path = directory.appendingPathComponent(newFileName)
             let data = try encoder.encode(newVocaData)
             try data.write(to: path)
         }
@@ -98,10 +99,10 @@ final class VocaManager {
             allVocasForSearch = fileNames.filter {$0 != "ButtonCell"}.map {
                 let decoder = JSONDecoder()
                 guard let directory = VocaManager.directoryURL else {
-                    return VocaData(vocas: [])
+                    return VocaData(fileName: "", vocas: [])
                 }
                 let path = directory.appendingPathComponent($0)
-                var vocaData: VocaData = VocaData(vocas: [])
+                var vocaData: VocaData = VocaData(fileName: "", vocas: [])
                 do {
                     let data = try Data(contentsOf: path)
                     vocaData  = try decoder.decode(VocaData.self, from: data)
@@ -115,34 +116,37 @@ final class VocaManager {
         else {
             allVocasForSearch = nil
         }
-        print(allVocasForSearch?.count)
     }
 
     
     /// Make voca from Filename
-    func loadVocas(fileName: String) -> Observable<[Voca]> {
+    public func loadVocas(fileName: String) -> Observable<[Voca]> {
         return Observable<[Voca]>.create() { [weak self] emitter in
             // 저장파일을 가져와야함
-            let decoder = JSONDecoder()
-            guard let directory = VocaManager.directoryURL else {
-                return Disposables.create()
-            }
-            let path = directory.appendingPathComponent(fileName)
-            do {
-                let data = try Data(contentsOf: path)
-                let vocaData  = try decoder.decode(VocaData.self, from: data)
-                self?.vocas = vocaData.vocas
-                emitter.onNext(vocaData.vocas)
-            } catch {
-                print(error)
-            }
+            //self?.loadVocasLocal(fileName: fileName)
+            emitter.onNext(self?.vocas ?? [Voca]())
             return Disposables.create()
+        }
+    }
+    
+    public func loadVocasLocal(fileName: String) {
+        let decoder = JSONDecoder()
+        guard let directory = VocaManager.directoryURL else {
+            return
+        }
+        let path = directory.appendingPathComponent(fileName)
+        do {
+            let data = try Data(contentsOf: path)
+            let vocaData  = try decoder.decode(VocaData.self, from: data)
+            vocas = vocaData.vocas
+        } catch {
+            print(error)
         }
     }
     
     /// Make and Save VocaData
     public func saveVocas(fileName: String) {
-        let vocaData = VocaData(vocas: vocas)        
+        let vocaData = VocaData(fileName: fileName, vocas: vocas)        
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         

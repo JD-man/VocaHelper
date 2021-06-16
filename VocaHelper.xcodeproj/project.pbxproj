@@ -18,6 +18,7 @@
 		895AAB4A2633F90900532021 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB492633F90900532021 /* EditViewController.swift */; };
 		895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */; };
 		895AAB572634165800532021 /* EditTableViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB562634165800532021 /* EditTableViewFooter.swift */; };
+		895F2B352679B07C0067F618 /* SearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895F2B342679B07C0067F618 /* SearchResultTableViewCell.swift */; };
 		89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651F9C2632BE4900949DEB /* AppDelegate.swift */; };
 		89651F9F2632BE4900949DEB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651F9E2632BE4900949DEB /* SceneDelegate.swift */; };
 		89651FA62632BE4A00949DEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89651FA52632BE4A00949DEB /* Assets.xcassets */; };
@@ -33,7 +34,6 @@
 		89A789EF26777385004B5A54 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A789EE26777385004B5A54 /* SearchViewModel.swift */; };
 		89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B15C7D263A7F1B007C29E1 /* TestViewController.swift */; };
 		89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C744BD263AE2A30013D620 /* ResultViewController.swift */; };
-		89C897EB263D13630066FD39 /* SearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */; };
 		89F2E5FF2673A79E00890828 /* VocaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F2E5FE2673A79E00890828 /* VocaManager.swift */; };
 		89F2E6022673A87300890828 /* WordsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F2E6012673A87300890828 /* WordsViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +50,7 @@
 		895AAB492633F90900532021 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewCell.swift; sourceTree = "<group>"; };
 		895AAB562634165800532021 /* EditTableViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewFooter.swift; sourceTree = "<group>"; };
+		895F2B342679B07C0067F618 /* SearchResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableViewCell.swift; sourceTree = "<group>"; };
 		89651F992632BE4900949DEB /* VocaHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocaHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89651F9C2632BE4900949DEB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		89651F9E2632BE4900949DEB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -67,7 +68,6 @@
 		89A789EE26777385004B5A54 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		89B15C7D263A7F1B007C29E1 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		89C744BD263AE2A30013D620 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
-		89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		89F2E5FE2673A79E00890828 /* VocaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaManager.swift; sourceTree = "<group>"; };
 		89F2E6012673A87300890828 /* WordsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsViewModel.swift; sourceTree = "<group>"; };
 		9BDBCFBC40A6D583B3BB29F4 /* Pods-VocaHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VocaHelper.release.xcconfig"; path = "Target Support Files/Pods-VocaHelper/Pods-VocaHelper.release.xcconfig"; sourceTree = "<group>"; };
@@ -158,6 +158,14 @@
 			path = Edit;
 			sourceTree = "<group>";
 		};
+		895F2B332679B04A0067F618 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				895F2B342679B07C0067F618 /* SearchResultTableViewCell.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		89651F902632BE4900949DEB = {
 			isa = PBXGroup;
 			children = (
@@ -243,7 +251,6 @@
 			isa = PBXGroup;
 			children = (
 				89651FC02632C0EE00949DEB /* SearchViewController.swift */,
-				89C897EA263D13630066FD39 /* SearchResultsTableViewController.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -251,6 +258,7 @@
 		89651FC32632C4A700949DEB /* Cells&Headers */ = {
 			isa = PBXGroup;
 			children = (
+				895F2B332679B04A0067F618 /* Search */,
 				8901476F263BBFE70054962A /* Test */,
 				895AAB4D2633F9F700532021 /* Edit */,
 				89651FCA2632D32800949DEB /* Words */,
@@ -418,7 +426,6 @@
 				89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */,
 				89A42699263956B900555CCD /* BlindUIView.swift in Sources */,
 				8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */,
-				89C897EB263D13630066FD39 /* SearchResultsTableViewController.swift in Sources */,
 				89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */,
 				89651FC12632C0EE00949DEB /* SearchViewController.swift in Sources */,
 				89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */,
@@ -439,6 +446,7 @@
 				895AAB4A2633F90900532021 /* EditViewController.swift in Sources */,
 				8925EDEF26747F2B0029F8AC /* VocaViewModel.swift in Sources */,
 				8925EDEB26745CB70029F8AC /* WordsCell.swift in Sources */,
+				895F2B352679B07C0067F618 /* SearchResultTableViewCell.swift in Sources */,
 				895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
