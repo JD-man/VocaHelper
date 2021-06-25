@@ -15,20 +15,32 @@ class MainTabBarController: UITabBarController {
     
     let wordsNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WordsViewController())
-        nav.tabBarItem.title = "Words"
+        nav.title = "Words"
+        nav.tabBarItem.title = nil
         nav.tabBarItem.image = UIImage(systemName: "book")
         return nav
     }()
     
     let searchNavVC: UINavigationController = {
-        let nav = UINavigationController(rootViewController: SearchViewController())
-        nav.tabBarItem.title = "Search"
+        let nav = UINavigationController(rootViewController: SearchViewController())        
+        nav.title = "Search"
+        nav.tabBarItem.title = nil
         nav.tabBarItem.image = UIImage(systemName: "magnifyingglass")
         return nav
     }()
     
+    let launchView: UIView = {
+        guard let launchScreen = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController(),
+              let launchView = launchScreen.view else {
+            return UIView()
+        }
+        return launchView
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        showLaunchScreen(1, 0.5)
         configure()        
     }
     
@@ -36,11 +48,20 @@ class MainTabBarController: UITabBarController {
         super.viewDidLayoutSubviews()
     }
     
+    private func showLaunchScreen(_ sleepTime: UInt32, _ duration: TimeInterval) {
+        view.addSubview(launchView)
+        launchView.frame = view.bounds
+        sleep(sleepTime)
+        UIView.animate(withDuration: duration) { [weak self] in
+            self?.launchView.alpha = 0.0
+        }
+    }
+    
     private func configure() {
         setViewControllers([wordsNavVC, searchNavVC], animated: true)
-        self.rx.didSelect
+        rx.didSelect
             .bind() {
-                VocaManager.shared.makeAllVocasForSearch(title: $0.tabBarItem.title ?? "")
+                VocaManager.shared.makeAllVocasForSearch(title: $0.title ?? "")
             }.disposed(by: disposeBag)
     }
 }

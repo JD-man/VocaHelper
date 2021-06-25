@@ -26,9 +26,10 @@ class SearchViewModel {
         // [VocaData] => [[FilteredVocas]] => [[ResultTableCell]] -> flat
         let filteredResults: [[ResultTableCell]] = allVocas.map {
             let fileName = $0.fileName
-            let filteredVocas =  $0.vocas.filter { $0.word.contains(word) }
+            let filteredVocas =  $0.vocas.filter { $0.word.lowercased().contains(word) }
             let cell = filteredVocas.map { ResultTableCell(fileName: fileName, word: $0.word, meaning: $0.meaning)}
-            return cell }
+            return cell
+        }
         
         let flat = filteredResults.flatMap{$0}
         
