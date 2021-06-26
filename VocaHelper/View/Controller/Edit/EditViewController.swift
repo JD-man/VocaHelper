@@ -17,14 +17,19 @@ class EditViewController: UIViewController {
     }
     
     public var fileName: String = ""
+    
     lazy var viewModel = VocaViewModel(fileName: fileName)    
     let disposeBag = DisposeBag()
     
-    //private var vocaCount: Int = 0
+    private var prevTitle: String = ""
     private var selectedRow: Int?
+    private var prevSelectedRow: Int = 0
     private var selectedCell: EditTableViewCell?
     
     private var touchXPos : CGFloat = 0
+    private var touchYPos : CGFloat = 0
+    
+    private var prevViewY: CGFloat = 0
     
     private var isKeyboardMoving: Bool = false
     
@@ -32,6 +37,8 @@ class EditViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
         tableView.rowHeight = 100
+        //tableView.automaticallyAdjustsScrollIndicatorInsets = false
+        //tableView.keyboardDismissMode = .onDrag
         return tableView
     }()
     
@@ -39,6 +46,7 @@ class EditViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        registerKeyboardNotification()
         viewConfigure()        
         rxConfigure()
     }
@@ -48,12 +56,17 @@ class EditViewController: UIViewController {
         tableView.frame = view.bounds
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    
     private func viewConfigure() {
         view.backgroundColor = .systemIndigo
         
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationItem.leftBarButtonItem?.image =  UIImage(systemName: "arrowshape.turn.up.backward")
+        
         
         let footer = EditTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
         tableView.tableFooterView = footer
@@ -64,6 +77,24 @@ class EditViewController: UIViewController {
         view.addSubview(tableView)
     }
     
+    private func registerKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(willShowKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    
+    @objc private func willShowKeyboard(_ notification: Notification) {
+        guard let info = notification.userInfo,
+              let rect = info["UIKeyboardFrameEndUserInfoKey"] as? CGRect else {
+            return
+        }
+        if prevSelectedRow != selectedRow && touchYPos > (rect.minY - 30 - view.frame.origin.y) {            
+            prevViewY = view.frame.origin.y
+            view.frame.origin.y -= rect.height
+            navigationItem.leftBarButtonItem?.isEnabled = false
+            title = ""
+        }
+        prevSelectedRow = selectedRow ?? 0
+    }
+    
     private func rxConfigure() {
         // 단어장에 단어표시
         viewModel.editCellSubject
@@ -71,7 +102,8 @@ class EditViewController: UIViewController {
                                          cellType: EditTableViewCell.self)) { row, item, cell in
                 cell.wordTextField.text = item.word
                 cell.meaningTextField.text = item.meaning
-                
+                cell.wordTextField.delegate = self
+                cell.meaningTextField.delegate = self
             }.disposed(by: disposeBag)
         
         // 뒤로가기 버튼
@@ -95,12 +127,13 @@ class EditViewController: UIViewController {
         gesture.rx.event
             .bind { [weak self] in
                 self?.touchXPos = $0.location(in: self?.tableView).x
+                self?.touchYPos = $0.location(in: self?.view).y
             }.disposed(by: disposeBag)
         
         tableView.rx.itemSelected
             .bind() { [weak self] indexPath in
                 self?.selectedRow = indexPath.row
-                self?.selectedCell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell                
+                self?.selectedCell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell
                 self?.viewModel.cellSelected(cell: self?.selectedCell, width: self?.tableView.frame.size.width, touchXPos: self?.touchXPos)
             }.disposed(by: disposeBag)
         
@@ -113,6 +146,7 @@ class EditViewController: UIViewController {
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
     }
 }
+
 
 // 셀 삭제를 위한 스와이프 액션
 extension EditViewController: UITableViewDelegate
@@ -128,26 +162,14 @@ extension EditViewController: UITableViewDelegate
     }
 }
 
-
-// 키보드가 텍스트필드를 가려서 추가한 델리게이트, 애니메이션
-
-//extension EditViewController: EditTableViewCellDelegate {
-//
-//    // 텍스트를 수정했을때 datasource를 수정해야하므로 vocas를 변경한다
-//    func reload(word: String, meaning: String) {
-//        //voca.vocas[selectedRow] = [word : meaning]
-//    }
-//
-//    func keyboardWillAppear() {
-//        UIView.animate(withDuration: 0.3) {
-//            self.view.frame.origin.y -= 250
-//        }
-//    }
-//
-//    func keyboardWillDisappear() {
-//        UIView.animate(withDuration: 0.3) {
-//            self.view.frame.origin.y += 250
-//        }
-//    }
-//}
-
+extension EditViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.frame.origin.y = prevViewY
+        textField.resignFirstResponder()
+        prevSelectedRow = 0
+        prevViewY = view.frame.origin.y
+        navigationItem.leftBarButtonItem?.isEnabled = true
+        title = String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
+        return true
+    }
+}

@@ -116,7 +116,7 @@ final class VocaManager {
         else {
             allVocasForSearch = nil
         }
-        print(allVocasForSearch)
+        //print(allVocasForSearch)
     }
 
     

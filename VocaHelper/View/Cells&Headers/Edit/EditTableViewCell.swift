@@ -7,12 +7,6 @@
 
 import UIKit
 
-//protocol EditTableViewCellDelegate: AnyObject {
-//    func keyboardWillAppear()
-//    func keyboardWillDisappear()
-//    func reload(word: String, meaning: String)
-//}
-
 class EditTableViewCell: UITableViewCell {
     
     static let identifier: String = "EditTableViewCell"

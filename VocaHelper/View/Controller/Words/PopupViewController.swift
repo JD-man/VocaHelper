@@ -10,7 +10,7 @@ import UIKit
 class PopupViewController: UIViewController {
     
     deinit {
-        print("deinit")
+        print("deinit PopUpView")
     }
     
     public var editClosure: (() -> Void)?
