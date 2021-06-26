@@ -87,8 +87,8 @@ class EditViewController: UIViewController {
             return
         }
         if prevSelectedRow != selectedRow && touchYPos > (rect.minY - 30 - view.frame.origin.y) {            
-            prevViewY = view.frame.origin.y
-            view.frame.origin.y -= rect.height
+            prevViewY = tableView.frame.origin.y
+            tableView.frame.origin.y -= rect.height
             navigationItem.leftBarButtonItem?.isEnabled = false
             title = ""
         }
@@ -164,12 +164,15 @@ extension EditViewController: UITableViewDelegate
 
 extension EditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        view.frame.origin.y = prevViewY
-        textField.resignFirstResponder()
-        prevSelectedRow = 0
-        prevViewY = view.frame.origin.y
+        UIView.animate(withDuration: 0.15) { [weak self] in
+            self?.tableView.frame.origin.y = self?.prevViewY ?? 0
+        }
+        prevViewY = tableView.frame.origin.y
         navigationItem.leftBarButtonItem?.isEnabled = true
+        prevSelectedRow = 0
         title = String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
+        
+        textField.resignFirstResponder()
         return true
     }
 }
