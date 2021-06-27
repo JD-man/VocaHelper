@@ -87,9 +87,15 @@ class EditViewController: UIViewController {
         if prevSelectedRow != selectedRow && touchYPos > (rect.minY - 30 - view.frame.origin.y) {            
             prevViewY = tableView.frame.origin.y
             tableView.frame.origin.y -= rect.height
-            navigationItem.leftBarButtonItem?.isEnabled = false
             title = ""
         }
+        
+        navigationItem.leftBarButtonItem?.isEnabled = false
+        guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
+            return
+        }
+        footer.isUserInteractionEnabled = false
+        footer.addButton.tintColor = .systemGray
         prevSelectedRow = selectedRow ?? 0
     }
     
@@ -97,17 +103,17 @@ class EditViewController: UIViewController {
         // 단어장에 단어표시
         viewModel.editCellSubject
             .bind(to: tableView.rx.items(cellIdentifier: EditTableViewCell.identifier,
-                                         cellType: EditTableViewCell.self)) { row, item, cell in
+                                         cellType: EditTableViewCell.self)) { [weak self] row, item, cell in
                 cell.wordTextField.text = item.word
                 cell.meaningTextField.text = item.meaning
-                cell.wordTextField.delegate = self
-                cell.meaningTextField.delegate = self
+                cell.wordTextField.delegate = self ?? nil
+                cell.meaningTextField.delegate = self ?? nil
             }.disposed(by: disposeBag)
         
         // 뒤로가기 버튼
         navigationItem.leftBarButtonItem?.rx.tap
             .bind() { [weak self] in
-                self?.viewModel.didTapBackButton(row: self?.selectedRow, cell: self?.selectedCell, fileName: self?.fileName ?? "")
+                self?.viewModel.didTapBackButton(fileName: self?.fileName ?? "")
                 self?.navigationController?.popViewController(animated: true)
                 self?.tabBarController?.tabBar.isHidden.toggle()
             }.disposed(by: disposeBag)
@@ -117,7 +123,7 @@ class EditViewController: UIViewController {
         if let footer = tableView.tableFooterView as? EditTableViewFooter {
             footer.addButton.rx.tap
                 .bind() { [weak self] in
-                    self?.viewModel.didTapAddButton(row: self?.selectedRow, cell: self?.selectedCell, fileName: self?.fileName ?? "")
+                    self?.viewModel.didTapAddButton(fileName: self?.fileName ?? "")
                     self?.tableView.scrollToRow(at: IndexPath.init(row: VocaManager.shared.vocas.count - 1, section: 0), at: .top, animated: true)
                 }.disposed(by: disposeBag)
         }
@@ -137,11 +143,17 @@ class EditViewController: UIViewController {
         
         tableView.rx.itemDeselected
             .bind() { [weak self] indexPath in
-                self?.viewModel.cellDeselected(row: self?.selectedRow, cell: self?.selectedCell)
+                self?.cellDeselected()
             }.disposed(by: disposeBag)
         
         // 셀 삭제를 위한 델리게이트 설정
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
+    }
+    
+    private func cellDeselected() {
+        self.viewModel.cellDeselected(row: selectedRow, cell: selectedCell)
+        self.selectedRow = nil
+        self.selectedCell = nil
     }
 }
 
@@ -169,8 +181,14 @@ extension EditViewController: UITextFieldDelegate {
         navigationItem.leftBarButtonItem?.isEnabled = true
         prevSelectedRow = 0
         title = String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
-        
         textField.resignFirstResponder()
+        guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
+            return false
+        }
+        footer.isUserInteractionEnabled = true
+        footer.addButton.tintColor = .systemGreen
+        //print(selectedRow)
+        cellDeselected()
         return true
     }
 }
