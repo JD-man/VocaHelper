@@ -25,7 +25,7 @@ class MainTabBarController: UITabBarController {
         let nav = UINavigationController(rootViewController: SearchViewController())        
         nav.title = "Search"
         nav.tabBarItem.title = nil
-        nav.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+        nav.tabBarItem.image = UIImage(systemName: "magnifyingglass.circle")
         return nav
     }()
     
@@ -58,9 +58,19 @@ class MainTabBarController: UITabBarController {
     }
     
     private func configure() {
+        tabBar.barTintColor = .systemBackground
+        tabBar.tintColor = .label
         setViewControllers([wordsNavVC, searchNavVC], animated: true)
         rx.didSelect
             .bind() {
+                switch $0.title ?? "" {
+                case "Words":
+                    $0.tabBarItem.image = UIImage(systemName: "book.fill")
+                case "Search":
+                    $0.tabBarItem.image = UIImage(systemName: "magnifyingglass.circle.fill")
+                default:
+                    print("Selected Tabbar Title is not exist")
+                }
                 VocaManager.shared.makeAllVocasForSearch(title: $0.title ?? "")
             }.disposed(by: disposeBag)
     }

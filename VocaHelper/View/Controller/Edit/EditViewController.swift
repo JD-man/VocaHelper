@@ -37,8 +37,6 @@ class EditViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
         tableView.rowHeight = 100
-        //tableView.automaticallyAdjustsScrollIndicatorInsets = false
-        //tableView.keyboardDismissMode = .onDrag
         return tableView
     }()
     
