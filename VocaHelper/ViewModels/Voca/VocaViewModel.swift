@@ -98,7 +98,8 @@ class VocaViewModel {
 //            VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
 //            VocaManager.shared.vocas[row].meaning = cell.meaningTextField.text ?? ""
 //        }
-        VocaManager.shared.vocas.append(Voca(idx: VocaManager.shared.vocas.count, word: "", meaning: ""))
+        let newIdx = VocaManager.shared.vocas.count
+        VocaManager.shared.vocas.append(Voca(idx: newIdx, word: "", meaning: ""))
         VocaManager.shared.saveVocas(fileName: fileName)
         makeViewModelsFromVocas()
     }
