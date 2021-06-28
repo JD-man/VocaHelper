@@ -9,12 +9,12 @@ import Foundation
 import RxSwift
 
 class VocaViewModel {    
-    public var editCellSubject = BehaviorSubject<[EditCell]>(value: [])
+    public var editCellSubject = BehaviorSubject<[SectionOfEditCell]>(value: [])
     
     public lazy var buttonCountSubject = BehaviorSubject<Int>(value: 0)
     
     public lazy var practiceCellObservable = buttonCountSubject.map {
-        return Voca(word: VocaManager.shared.vocas[$0].word, meaning: VocaManager.shared.vocas[$0].meaning)
+        return Voca(idx: VocaManager.shared.vocas[$0].idx, word: VocaManager.shared.vocas[$0].word, meaning: VocaManager.shared.vocas[$0].meaning)
     }
     
     private lazy var shuffledVocas = VocaManager.shared.vocas.shuffled()
@@ -58,18 +58,26 @@ class VocaViewModel {
         VocaManager.shared.loadVocas(fileName: fileName)
             .map {
                 $0.map {
-                    return EditCell(word: $0.word, meaning: $0.meaning)
+                    EditCell(identity: $0.idx, word: $0.word, meaning: $0.meaning)
+                }.map {
+                    SectionOfEditCell(idx: $0.identity, items: [$0])
                 }
             }.subscribe(onNext: { [weak self] in
                 self?.editCellSubject.onNext($0)
             }).disposed(by: disposeBag)
     }
     
+    public func didDeleteCell(section: Int) {
+        VocaManager.shared.vocas.remove(at: section)
+    }
+    
     /// Load ViewModel From VocaData Vocas
     public func makeViewModelsFromVocas() {
-        let newViewModels: [EditCell] = VocaManager.shared.vocas
+        let newViewModels: [SectionOfEditCell] = VocaManager.shared.vocas
             .map {
-                return EditCell(word: $0.word, meaning: $0.meaning)
+                return EditCell(identity: $0.idx, word: $0.word, meaning: $0.meaning)
+            }.map {
+                SectionOfEditCell(idx: $0.identity, items: [$0])
             }
         editCellSubject.onNext(newViewModels)
     }
@@ -90,7 +98,7 @@ class VocaViewModel {
 //            VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
 //            VocaManager.shared.vocas[row].meaning = cell.meaningTextField.text ?? ""
 //        }
-        VocaManager.shared.vocas.append(Voca(word: "", meaning: ""))
+        VocaManager.shared.vocas.append(Voca(idx: VocaManager.shared.vocas.count, word: "", meaning: ""))
         VocaManager.shared.saveVocas(fileName: fileName)
         makeViewModelsFromVocas()
     }
@@ -109,8 +117,8 @@ class VocaViewModel {
         }
     }
     
-    public func cellDeselected(row: Int?, cell: EditTableViewCell?) {
-        guard let row = row,
+    public func cellDeselected(section: Int?, cell: EditTableViewCell?) {
+        guard let row = section,
               let cell = cell else {
             return
         }

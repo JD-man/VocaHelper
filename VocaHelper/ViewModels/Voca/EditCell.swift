@@ -7,13 +7,31 @@
 
 import Foundation
 import RxSwift
+import RxDataSources
 
-class EditCell {    
+struct EditCell: Equatable, IdentifiableType{
+    typealias Identity = Int
+    var identity: Int
+    
     var word: String
     var meaning: String
+}
+
+struct SectionOfEditCell {
+    var idx: Int
+    var items: [Item]
+}
+
+extension SectionOfEditCell: AnimatableSectionModelType {
+    typealias Identity = Int
+    typealias Item = EditCell
     
-    init (word: String, meaning: String) {
-        self.word = word
-        self.meaning = meaning
+    var identity: Int {
+        return idx
+    }
+    
+    init(original: SectionOfEditCell, items: [EditCell]) {
+        self = original
+        self.items = items
     }
 }

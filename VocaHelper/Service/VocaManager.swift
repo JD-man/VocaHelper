@@ -61,7 +61,7 @@ final class VocaManager {
         fileNames.append("ButtonCell")
         
         // 빈 파일 하나 추가
-        let newVocaData = VocaData(fileName: newFileName, vocas: [Voca(word: "word", meaning: "meaning")])
+        let newVocaData = VocaData(fileName: newFileName, vocas: [Voca(idx: vocas.count, word: "word", meaning: "meaning")])
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         do {

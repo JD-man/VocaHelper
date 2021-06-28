@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
-
+import RxDataSources
 
 class EditViewController: UIViewController {
     
@@ -22,8 +22,8 @@ class EditViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     private var prevTitle: String = ""
-    private var selectedRow: Int?
-    private var prevSelectedRow: Int = 0
+    private var selectedSection: Int?
+    private var prevSelectedSection: Int = 0
     private var selectedCell: EditTableViewCell?
     
     private var touchXPos : CGFloat = 0
@@ -84,7 +84,7 @@ class EditViewController: UIViewController {
               let rect = info["UIKeyboardFrameEndUserInfoKey"] as? CGRect else {
             return
         }
-        if prevSelectedRow != selectedRow && touchYPos > (rect.minY - 30 - view.frame.origin.y) {            
+        if prevSelectedSection != selectedSection && touchYPos > (rect.minY - 30 - view.frame.origin.y) {            
             prevViewY = tableView.frame.origin.y
             tableView.frame.origin.y -= rect.height
             title = ""
@@ -96,19 +96,39 @@ class EditViewController: UIViewController {
         }
         footer.isUserInteractionEnabled = false
         footer.addButton.tintColor = .systemGray
-        prevSelectedRow = selectedRow ?? 0
+        prevSelectedSection = selectedSection ?? 0
     }
     
     private func rxConfigure() {
         // 단어장에 단어표시
+//        viewModel.editCellSubject
+//            .bind(to: tableView.rx.items(cellIdentifier: EditTableViewCell.identifier,
+//                                         cellType: EditTableViewCell.self)) { [weak self] row, item, cell in
+//                cell.wordTextField.text = item.word
+//                cell.meaningTextField.text = item.meaning
+//                cell.wordTextField.delegate = self ?? nil
+//                cell.meaningTextField.delegate = self ?? nil
+//            }.disposed(by: disposeBag)
+        
+        let dataSource = RxTableViewSectionedAnimatedDataSource<SectionOfEditCell>(animationConfiguration: AnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)) { [weak self] dataSource, tableView, indexPath, item in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: EditTableViewCell.identifier, for: indexPath) as? EditTableViewCell else {
+                return UITableViewCell()
+            }
+            cell.wordTextField.text = item.word
+            cell.meaningTextField.text = item.meaning
+            cell.wordTextField.delegate = self ?? nil
+            cell.meaningTextField.delegate = self ?? nil
+            return cell
+        }
+        
+        dataSource.canEditRowAtIndexPath = { dataSource, indexPath in
+            return true
+        }
+        
         viewModel.editCellSubject
-            .bind(to: tableView.rx.items(cellIdentifier: EditTableViewCell.identifier,
-                                         cellType: EditTableViewCell.self)) { [weak self] row, item, cell in
-                cell.wordTextField.text = item.word
-                cell.meaningTextField.text = item.meaning
-                cell.wordTextField.delegate = self ?? nil
-                cell.meaningTextField.delegate = self ?? nil
-            }.disposed(by: disposeBag)
+            .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+        
         
         // 뒤로가기 버튼
         navigationItem.leftBarButtonItem?.rx.tap
@@ -124,7 +144,7 @@ class EditViewController: UIViewController {
             footer.addButton.rx.tap
                 .bind() { [weak self] in
                     self?.viewModel.didTapAddButton(fileName: self?.fileName ?? "")
-                    self?.tableView.scrollToRow(at: IndexPath.init(row: VocaManager.shared.vocas.count - 1, section: 0), at: .top, animated: true)
+                    self?.tableView.scrollToRow(at: IndexPath.init(row: 0, section: VocaManager.shared.vocas.count - 1), at: .top, animated: true)
                 }.disposed(by: disposeBag)
         }
         
@@ -136,7 +156,7 @@ class EditViewController: UIViewController {
         
         tableView.rx.itemSelected
             .bind() { [weak self] indexPath in
-                self?.selectedRow = indexPath.row
+                self?.selectedSection = indexPath.section
                 self?.selectedCell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell
                 self?.viewModel.cellSelected(cell: self?.selectedCell, width: self?.tableView.frame.size.width, touchXPos: self?.touchXPos)
             }.disposed(by: disposeBag)
@@ -151,8 +171,8 @@ class EditViewController: UIViewController {
     }
     
     private func cellDeselected() {
-        self.viewModel.cellDeselected(row: selectedRow, cell: selectedCell)
-        self.selectedRow = nil
+        self.viewModel.cellDeselected(section: selectedSection, cell: selectedCell)
+        self.selectedSection = nil
         self.selectedCell = nil
     }
 }
@@ -163,9 +183,9 @@ extension EditViewController: UITableViewDelegate
 {
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, _) in
-            VocaManager.shared.vocas.remove(at: indexPath.row)
+            self?.viewModel.didDeleteCell(section: indexPath.section)
             self?.viewModel.makeViewModelsFromVocas()
-            self?.selectedRow = nil
+            self?.selectedSection = nil
             self?.selectedCell = nil
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
@@ -179,9 +199,10 @@ extension EditViewController: UITextFieldDelegate {
         }
         prevViewY = tableView.frame.origin.y
         navigationItem.leftBarButtonItem?.isEnabled = true
-        prevSelectedRow = 0
+        prevSelectedSection = 0
         title = String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
         textField.resignFirstResponder()
+        tableView.deselectRow(at: IndexPath(row: 0, section: selectedSection ?? 0), animated: false)
         guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
             return false
         }
