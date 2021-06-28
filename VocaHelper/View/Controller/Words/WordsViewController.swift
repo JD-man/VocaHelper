@@ -12,7 +12,7 @@ import RxDataSources
 
 class WordsViewController: UIViewController {
     
-    private var collectionView:  UICollectionView?
+    private var collectionView: UICollectionView?
     
     public var viewModels = WordsViewModel()
     private let disposeBag = DisposeBag()
@@ -21,7 +21,7 @@ class WordsViewController: UIViewController {
         super.viewDidLoad()
         viewConfigure()
         rxConfigure()
-        print(VocaManager.directoryURL?.absoluteString)
+        //print(VocaManager.directoryURL?.absoluteString)
     }
     
     override func viewDidLayoutSubviews() {
@@ -48,38 +48,34 @@ class WordsViewController: UIViewController {
         collectionView?.backgroundColor = .systemBackground
         
         
-        guard let collectionView = collectionView else {
-            return
-        }
-        view.addSubview(collectionView)
+        view.addSubview(collectionView!)
     }
     
     private func rxConfigure() {
         
-        guard let collectionView = collectionView else {
-            return
+        let dataSource = RxCollectionViewSectionedAnimatedDataSource<SectionOfWordsCell>  { [weak self] dataSource, cv, indexPath, item in
+            if item.fileName != "ButtonCell" {
+                guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier,
+                                                         for: indexPath) as? WordsCollectionViewCell,
+                      let strongSelf = self else {
+                    return UICollectionViewCell()
+                }
+                cell.label.text = item.changeToRealName(fileName: item.fileName)
+                cell.didTap = { item.didTapWordButton(view: strongSelf) }
+                return cell
+            }
+            else {
+                guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: AddCollectionViewCell.identifier,
+                                                         for: indexPath) as? AddCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                cell.didTap = { self?.viewModels.makeNewViewModels(isAddButton: true) }
+                return cell
+            }
         }
         
         viewModels.fileNameSubject
-            .bind(to: collectionView.rx.items) { [weak self] cv, row, item in
-                if item.fileName == "ButtonCell" {
-                    guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: AddCollectionViewCell.identifier,
-                                                             for: IndexPath(row:row, section: 0)) as? AddCollectionViewCell else {
-                        return UICollectionViewCell()
-                    }
-                    cell.didTap = { self?.viewModels.makeNewViewModels(isAddButton: true) }
-                    return cell
-                }
-                else {
-                    guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier,
-                                                             for: IndexPath(row:row, section: 0)) as? WordsCollectionViewCell,
-                          let strongSelf = self else {
-                              return UICollectionViewCell()
-                          }
-                    cell.label.text = item.changeToRealName(fileName: item.fileName)
-                    cell.didTap = { item.didTapWordButton(view: strongSelf) }
-                    return cell
-                }
-            }.disposed(by: disposeBag)        
+            .bind(to: collectionView!.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
     }
 }

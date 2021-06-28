@@ -56,9 +56,8 @@ final class VocaManager {
     func makeFile() {
         let newFileName = "\(Date())Name"
         
-        _ = fileNames.popLast()
-        fileNames.append(newFileName)
-        fileNames.append("ButtonCell")
+        let insertIdx = fileNames.count - 1
+        fileNames.insert(newFileName, at: insertIdx)
         
         // 빈 파일 하나 추가
         let newVocaData = VocaData(fileName: newFileName, vocas: [Voca(idx: vocas.count, word: "word", meaning: "meaning")])

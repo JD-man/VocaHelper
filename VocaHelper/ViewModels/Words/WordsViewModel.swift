@@ -10,7 +10,7 @@ import RxSwift
 
 class WordsViewModel {
     
-    var fileNameSubject = BehaviorSubject<[WordsCell]>(value: [])
+    var fileNameSubject = BehaviorSubject<[SectionOfWordsCell]>(value: [])
     let disposeBag = DisposeBag()
     
     init() {
@@ -18,26 +18,31 @@ class WordsViewModel {
     }
     
     func makeViewModels() {
+        var idx: Int = -1
         VocaManager().loadFile()
             .map {
                 $0.map {
-                    return WordsCell(fileName: $0)
+                    idx += 1
+                    return WordsCell(identity: idx, fileName: $0)
                 }
             }.subscribe(onNext: { [weak self] in
-                self?.fileNameSubject.onNext($0)
+                self?.fileNameSubject.onNext([SectionOfWordsCell.init(idx: 0, items: $0)])
             }).disposed(by: disposeBag)
     }
     
     // 추가버튼 터치시 동작
     func makeNewViewModels(isAddButton: Bool) {
+        var idx: Int = -1
         if isAddButton {
             VocaManager.shared.makeFile()
-        }        
+        }
+        
         let newWordCell = VocaManager.shared.fileNames
-            .map {
-                return WordsCell(fileName: $0)
+            .map { fileName -> WordsCell in
+                idx += 1
+                return WordsCell(identity: idx, fileName: fileName)
             }
-        fileNameSubject.onNext(newWordCell)
+        fileNameSubject.onNext([SectionOfWordsCell.init(idx: 0, items: newWordCell)])
     }
 }
 

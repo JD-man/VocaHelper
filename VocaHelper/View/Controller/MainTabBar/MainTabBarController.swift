@@ -71,7 +71,7 @@ class MainTabBarController: UITabBarController {
                 default:
                     print("Selected Tabbar Title is not exist")
                 }
-                VocaManager.shared.makeAllVocasForSearch(title: $0.title ?? "")
+                VocaManager.shared.makeAllVocasForSearch(title: $0.title ?? "")                
             }.disposed(by: disposeBag)
     }
 }

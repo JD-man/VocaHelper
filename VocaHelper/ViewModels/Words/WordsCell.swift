@@ -7,12 +7,21 @@
 
 import Foundation
 import RxSwift
+import RxDataSources
 
-class WordsCell {
+class WordsCell: Equatable, IdentifiableType {
+    static func == (lhs: WordsCell, rhs: WordsCell) -> Bool {
+        if lhs.identity == rhs.identity { return false }
+        else {return true}
+    }
     
+    typealias Identity = Int
+    
+    var identity: Int
     var fileName: String
     
-    init(fileName: String) {
+    init(identity: Int, fileName: String) {
+        self.identity = identity
         self.fileName = fileName
     }
     
@@ -96,5 +105,24 @@ class WordsCell {
         }
         // 팝업뷰 띄우기
         view.present(popupVC, animated: true, completion: nil)
+    }
+}
+
+struct SectionOfWordsCell {
+    var idx: Int
+    var items: [Item]
+}
+
+extension SectionOfWordsCell : AnimatableSectionModelType {
+    typealias Item = WordsCell
+    typealias Identity = Int
+    
+    var identity: Int {
+        return idx
+    }
+    
+    init(original: SectionOfWordsCell, items: [WordsCell]) {
+        self = original
+        self.items = items
     }
 }
