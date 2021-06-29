@@ -17,7 +17,7 @@ struct ResultTableCell {
 class SearchViewModel {
     public var searchResultSubject = BehaviorSubject<[ResultTableCell]>(value: [])
     
-    public func makeSearchResultSubject(word: String) {
+    public func makeSearchResultSubject(word: String, tableView: UITableView!, noResultView: UILabel!) {
         
         guard let allVocas = VocaManager.shared.allVocasForSearch else {
             return
@@ -32,9 +32,16 @@ class SearchViewModel {
         }
         
         let flat = filteredResults.flatMap{$0}
+        if flat.count == 0 {
+            noResultView.isHidden = false
+            tableView.isHidden = true
+        }
+        else {
+            noResultView.isHidden.toggle()
+            tableView.isHidden.toggle()
+            searchResultSubject.onNext(flat)
+        }
         
-        // 테스트용
-        searchResultSubject.onNext(flat)
     }
     
     public func didTapResultCell(fileName: String, view: SearchViewController) {

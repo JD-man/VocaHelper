@@ -54,7 +54,7 @@ class WordsViewController: UIViewController {
     private func rxConfigure() {
         
         let dataSource = RxCollectionViewSectionedAnimatedDataSource<SectionOfWordsCell>  { [weak self] dataSource, cv, indexPath, item in
-            if item.fileName != "ButtonCell" {
+            if item.fileName != "ButtonCell" {                
                 guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier,
                                                          for: indexPath) as? WordsCollectionViewCell,
                       let strongSelf = self else {
@@ -72,6 +72,8 @@ class WordsViewController: UIViewController {
                 cell.didTap = { self?.viewModels.makeNewViewModels(isAddButton: true) }
                 return cell
             }
+            
+            
         }
         
         viewModels.fileNameSubject

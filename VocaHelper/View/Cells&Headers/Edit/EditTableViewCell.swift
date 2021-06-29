@@ -28,7 +28,7 @@ class EditTableViewCell: UITableViewCell {
         textfield.clipsToBounds = true
         textfield.layer.cornerRadius = 10
         textfield.layer.borderWidth = 1.5
-        textfield.backgroundColor = .systemIndigo
+        textfield.backgroundColor = UIColor(red: 93/255, green: 163/255, blue: 178/255, alpha: 1.0)
         textfield.textColor = .systemBackground
         return textfield
     }()
@@ -43,7 +43,7 @@ class EditTableViewCell: UITableViewCell {
         textfield.returnKeyType = .done
         textfield.clipsToBounds = true
         textfield.layer.cornerRadius = 10
-        textfield.layer.borderWidth = 1.5
+        textfield.layer.borderWidth = 1.5        
         return textfield
     }()
     

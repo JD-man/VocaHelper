@@ -10,6 +10,8 @@ import RxSwift
 import RxDataSources
 
 class WordsCell: Equatable, IdentifiableType {
+    
+    // ==일때 false로 해야 파일추가가 제대로 된다. addbutton의 identity가 바뀌어서 그런듯.
     static func == (lhs: WordsCell, rhs: WordsCell) -> Bool {
         if lhs.identity == rhs.identity { return false }
         else {return true}
