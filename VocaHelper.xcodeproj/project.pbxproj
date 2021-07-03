@@ -14,6 +14,7 @@
 		8925EDEB26745CB70029F8AC /* WordsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEA26745CB70029F8AC /* WordsCell.swift */; };
 		8925EDEF26747F2B0029F8AC /* VocaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */; };
 		8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDF026749ABE0029F8AC /* EditCell.swift */; };
+		8936FB9326907692007F7753 /* ResultTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8936FB9226907692007F7753 /* ResultTableViewHeader.swift */; };
 		895AAB442633C6D400532021 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB432633C6D400532021 /* PopupViewController.swift */; };
 		895AAB4A2633F90900532021 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB492633F90900532021 /* EditViewController.swift */; };
 		895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */; };
@@ -46,6 +47,7 @@
 		8925EDEA26745CB70029F8AC /* WordsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsCell.swift; sourceTree = "<group>"; };
 		8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaViewModel.swift; sourceTree = "<group>"; };
 		8925EDF026749ABE0029F8AC /* EditCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCell.swift; sourceTree = "<group>"; };
+		8936FB9226907692007F7753 /* ResultTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewHeader.swift; sourceTree = "<group>"; };
 		895AAB432633C6D400532021 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		895AAB492633F90900532021 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewCell.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			children = (
 				89014770263BC0000054962A /* ResultTableViewCell.swift */,
 				89014772263BD5C60054962A /* ResultTableViewFooter.swift */,
+				8936FB9226907692007F7753 /* ResultTableViewHeader.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -434,6 +437,7 @@
 				89651FBE2632C0DF00949DEB /* WordsViewController.swift in Sources */,
 				89F2E6022673A87300890828 /* WordsViewModel.swift in Sources */,
 				895AAB572634165800532021 /* EditTableViewFooter.swift in Sources */,
+				8936FB9326907692007F7753 /* ResultTableViewHeader.swift in Sources */,
 				89651FC52632C4D700949DEB /* WordsCollectionViewCell.swift in Sources */,
 				89651FB42632BEA300949DEB /* MainTabBarController.swift in Sources */,
 				89014773263BD5C60054962A /* ResultTableViewFooter.swift in Sources */,

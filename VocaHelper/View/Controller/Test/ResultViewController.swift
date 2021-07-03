@@ -41,7 +41,9 @@ class ResultViewController: UIViewController {
     
     private func addFooter() {
         let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
+        let header = ResultTableViewHeader(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 60))
         resultTableView.tableFooterView = footer
+        resultTableView.tableHeaderView = header
     }
     
     private func toRoot() {
@@ -58,8 +60,7 @@ class ResultViewController: UIViewController {
                                                cellType: ResultTableViewCell.self)) { row, item, cell in                
                 cell.wordLabel.text = item.realAnswer
                 cell.userAnswerLabel.text = item.userAnswer
-                cell.resultLabel.text = item.score
-                cell.resultLabel.textColor = item.score == "정답" ? .systemTeal : .systemPink
+                cell.userAnswerLabel.textColor = item.score == "정답" ? .systemTeal : .systemPink
             }.disposed(by: disposeBag)
         
                 
