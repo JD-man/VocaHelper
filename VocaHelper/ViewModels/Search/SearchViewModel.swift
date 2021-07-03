@@ -41,7 +41,6 @@ class SearchViewModel {
             tableView.isHidden.toggle()
             searchResultSubject.onNext(flat)
         }
-        
     }
     
     public func didTapResultCell(fileName: String, view: SearchViewController) {

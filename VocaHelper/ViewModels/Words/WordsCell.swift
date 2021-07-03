@@ -62,6 +62,12 @@ class WordsCell: Equatable, IdentifiableType {
         // Test 버튼 터치
         
         popupVC.testClosure = { [weak self, weak view] in
+            guard VocaManager.shared.vocas.count >= 5 else {
+                let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+                view?.present(alert, animated: true, completion: nil)
+                return
+            }
             let testVC = TestViewController()
             testVC.navigationItem.title = self?.changeToRealName(fileName: self?.fileName ?? "")
             testVC.fileName = self?.fileName ?? ""

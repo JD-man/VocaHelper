@@ -30,7 +30,7 @@ class WordsViewController: UIViewController {
     }
     
     private func viewConfigure() {
-        title = "Words"
+        title = "단어장"
         navigationController?.navigationBar.prefersLargeTitles = true
         
         
@@ -72,8 +72,6 @@ class WordsViewController: UIViewController {
                 cell.didTap = { self?.viewModels.makeNewViewModels(isAddButton: true) }
                 return cell
             }
-            
-            
         }
         
         viewModels.fileNameSubject

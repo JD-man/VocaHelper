@@ -7,14 +7,7 @@
 
 import UIKit
 
-protocol ResultTableViewFooterDelegate: AnyObject {
-    func didTapTest()
-    func didTapHome()
-}
-
 class ResultTableViewFooter: UIView {
-
-    weak var delegate: ResultTableViewFooterDelegate?
     
     let scoreLabel: UILabel = {
         let label = UILabel()
@@ -29,7 +22,10 @@ class ResultTableViewFooter: UIView {
         let button = UIButton()
         button.setTitle("다시하기", for: .normal)
         button.setTitleColor(.label, for: .normal)
-        button.backgroundColor = .systemBackground
+        button.backgroundColor = .label
+        button.setTitleColor(.systemBackground, for: .normal)
+        button.layer.masksToBounds = true
+        button.clipsToBounds = true
         return button
     }()
     
@@ -37,7 +33,10 @@ class ResultTableViewFooter: UIView {
         let button = UIButton()
         button.setTitle("홈화면으로", for: .normal)
         button.setTitleColor(.label, for: .normal)
-        button.backgroundColor = .systemBackground
+        button.backgroundColor = .label
+        button.setTitleColor(.systemBackground, for: .normal)
+        button.layer.masksToBounds = true
+        button.clipsToBounds = true
         return button
     }()
     
@@ -52,25 +51,17 @@ class ResultTableViewFooter: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        scoreLabel.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height/2)
-        testButton.frame = CGRect(x: 0, y: self.bounds.height/2, width: self.bounds.width/2, height: self.bounds.height/2)
-        homeButton.frame = CGRect(x: self.bounds.width/2, y: self.bounds.height/2, width: self.bounds.width/2, height: self.bounds.height/2)
-        
-        testButton.addTarget(self, action: #selector(didTapTestButton), for: .touchUpInside)
-        homeButton.addTarget(self, action: #selector(didTapHomeButton), for: .touchUpInside)
+        let offset: CGFloat = 100
+        scoreLabel.frame = CGRect(x: 0, y: 10, width: self.bounds.width, height: self.bounds.height/4)
+        testButton.frame = CGRect(x: 0.5 * offset, y: self.bounds.height/2, width: self.bounds.width/2 - offset, height: self.bounds.height/4)
+        homeButton.frame = CGRect(x: self.bounds.width/2 + 0.5 * offset, y: self.bounds.height/2, width: self.bounds.width/2 - offset, height: self.bounds.height/4)
+        testButton.layer.cornerRadius = 10
+        homeButton.layer.cornerRadius = 10
     }
     
     private func addSubviews() {
         self.addSubview(scoreLabel)
         self.addSubview(testButton)
         self.addSubview(homeButton)
-    }
-    
-    @objc private func didTapTestButton() {
-        delegate?.didTapTest()
-    }
-    
-    @objc private func didTapHomeButton() {
-        delegate?.didTapHome()
     }
 }
