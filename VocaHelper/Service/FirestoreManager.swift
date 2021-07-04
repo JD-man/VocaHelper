@@ -15,7 +15,7 @@ final class FirestoreManager {
     let db = Firestore.firestore()
     
     public func getData() {
-        db.collection("testCollection").getDocuments { querySnapShot, error in
+        db.collection("testCollection").order(by: "UploadTime", descending: true).getDocuments { querySnapShot, error in
             if let error = error {
                 print(error)
             }
@@ -23,19 +23,32 @@ final class FirestoreManager {
                 guard let snapshot = querySnapShot else {
                     return
                 }
-                print(snapshot.documents[0].data())
+                print(snapshot.documents.forEach {print($0.documentID)})
             }
         }
     }
     
     public func putDocuments() {
-        let data: [String : String] = [
+        let dict: [String : String] = [
             "일" : "1",
             "이" : "2",
             "삼" : "3",
-            "사" : "4"
+            "사" : "4",
+            "오" : "5",
+            "육" : "6"
+        ]
+        let data: [String : Any] = [
+            "UploadTime" : "\(Date())",
+            "Data" : dict
         ]
         
-        db.collection("testCollection").addDocument(data: data)
+        db.collection("testCollection").document("z").setData(data) { err in
+            if let err = err {
+                print(err)
+            }
+            else {
+                print("upload!")
+            }
+        }
     }
 }
