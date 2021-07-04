@@ -6,7 +6,6 @@ VocaHelper/*.xcassets
 
 ### plist ###
 VocaHelper/GoogleService-Info.plist
-VocaHelper/Info.plist
 
 ### macOS ###
 # General
