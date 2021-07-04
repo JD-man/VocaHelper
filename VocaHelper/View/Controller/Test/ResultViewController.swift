@@ -83,6 +83,7 @@ class ResultViewController: UIViewController {
             .bind() { [weak self] in
                 print("home")
                 self?.dismiss(animated: true, completion: {
+                    self?.presentingView?.tabBarController?.tabBar.isHidden.toggle()
                     self?.presentingView?.navigationController?.popToRootViewController(animated: true)
                 })
             }.disposed(by: disposeBag)
