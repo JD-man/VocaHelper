@@ -13,7 +13,8 @@ class MainTabBarController: UITabBarController {
     
     let disposeBag = DisposeBag()
     
-    let tabbarImages: [String] = ["book", "magnifyingglass.circle"]
+    let tabbarImages: [String] = ["book", "magnifyingglass.circle", "network"]
+    let selectedTabbarImages: [String] = ["book.fill", "magnifyingglass.circle.fill", "network"]
     
     let wordsNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WordsViewController())
@@ -25,6 +26,13 @@ class MainTabBarController: UITabBarController {
     let searchNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: SearchViewController())        
         nav.title = "Search"
+        nav.tabBarItem.title = nil
+        return nav
+    }()
+    
+    let webNavVC: UINavigationController = {
+        let nav = UINavigationController(rootViewController: WebViewController())
+        nav.title = "Web"
         nav.tabBarItem.title = nil
         return nav
     }()
@@ -60,8 +68,8 @@ class MainTabBarController: UITabBarController {
     private func configure() {
         tabBar.barTintColor = .systemBackground
         tabBar.tintColor = .label
-        setViewControllers([wordsNavVC, searchNavVC], animated: true)
-        changeTabbarImage(title: "")
+        setViewControllers([wordsNavVC, searchNavVC, webNavVC], animated: true)
+        changeTabbarImage(title: "단어장")
         
         rx.didSelect
             .bind() { [weak self] in
@@ -73,7 +81,7 @@ class MainTabBarController: UITabBarController {
     private func changeTabbarImage(title: String) {
         for (i,cv) in viewControllers!.enumerated() {
             if cv.title == title {
-                cv.tabBarItem.image = UIImage(systemName: tabbarImages[i] + ".fill")
+                cv.tabBarItem.image = UIImage(systemName: selectedTabbarImages[i])                
             }
             else {
                 cv.tabBarItem.image = UIImage(systemName: tabbarImages[i])

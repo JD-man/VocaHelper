@@ -4,6 +4,9 @@
 ### Assets ###
 VocaHelper/*.xcassets
 
+### plist ###
+VocaHelper/*.plist
+
 ### macOS ###
 # General
 .DS_Store
