@@ -13,11 +13,12 @@ class MainTabBarController: UITabBarController {
     
     let disposeBag = DisposeBag()
     
+    let tabbarImages: [String] = ["book", "magnifyingglass.circle"]
+    
     let wordsNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WordsViewController())
-        nav.title = "Words"
+        nav.title = "단어장"
         nav.tabBarItem.title = nil
-        nav.tabBarItem.image = UIImage(systemName: "book")
         return nav
     }()
     
@@ -25,7 +26,6 @@ class MainTabBarController: UITabBarController {
         let nav = UINavigationController(rootViewController: SearchViewController())        
         nav.title = "Search"
         nav.tabBarItem.title = nil
-        nav.tabBarItem.image = UIImage(systemName: "magnifyingglass.circle")
         return nav
     }()
     
@@ -41,7 +41,7 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         showLaunchScreen(1, 0.5)
-        configure()        
+        configure()
     }
     
     override func viewDidLayoutSubviews() {
@@ -61,17 +61,23 @@ class MainTabBarController: UITabBarController {
         tabBar.barTintColor = .systemBackground
         tabBar.tintColor = .label
         setViewControllers([wordsNavVC, searchNavVC], animated: true)
+        changeTabbarImage(title: "")
+        
         rx.didSelect
-            .bind() {
-                switch $0.title ?? "" {
-                case "Words":
-                    $0.tabBarItem.image = UIImage(systemName: "book.fill")
-                case "Search":
-                    $0.tabBarItem.image = UIImage(systemName: "magnifyingglass.circle.fill")
-                default:
-                    print("Selected Tabbar Title is not exist")
-                }
+            .bind() { [weak self] in
+                self?.changeTabbarImage(title: $0.title ?? "")
                 VocaManager.shared.makeAllVocasForSearch(title: $0.title ?? "")                
             }.disposed(by: disposeBag)
+    }
+    
+    private func changeTabbarImage(title: String) {
+        for (i,cv) in viewControllers!.enumerated() {
+            if cv.title == title {
+                cv.tabBarItem.image = UIImage(systemName: tabbarImages[i] + ".fill")
+            }
+            else {
+                cv.tabBarItem.image = UIImage(systemName: tabbarImages[i])
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ class WordsViewController: UIViewController {
     }
     
     private func viewConfigure() {
-        title = "단어장"
+        //title = "단어장"
         navigationController?.navigationBar.prefersLargeTitles = true
         
         
