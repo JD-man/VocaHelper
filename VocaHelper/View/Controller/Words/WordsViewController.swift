@@ -30,10 +30,8 @@ class WordsViewController: UIViewController {
     }
     
     private func viewConfigure() {
-        //title = "단어장"
+        navigationItem.title = "단어장"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         layout.itemSize = CGSize(width: view.bounds.width/3-15, height: view.bounds.width/3-20)

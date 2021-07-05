@@ -38,6 +38,7 @@
 		89CC7BE42691E462009D008D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89CC7BE32691E462009D008D /* GoogleService-Info.plist */; };
 		89CC7BE72691EF46009D008D /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CC7BE62691EF46009D008D /* WebViewController.swift */; };
 		89CC7BE92691F458009D008D /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CC7BE82691F458009D008D /* FirestoreManager.swift */; };
+		89ED977D2693624500374FC8 /* WebTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ED977C2693624500374FC8 /* WebTableViewCell.swift */; };
 		89F2E5FF2673A79E00890828 /* VocaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F2E5FE2673A79E00890828 /* VocaManager.swift */; };
 		89F2E6022673A87300890828 /* WordsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F2E6012673A87300890828 /* WordsViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -76,6 +77,7 @@
 		89CC7BE32691E462009D008D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		89CC7BE62691EF46009D008D /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		89CC7BE82691F458009D008D /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
+		89ED977C2693624500374FC8 /* WebTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTableViewCell.swift; sourceTree = "<group>"; };
 		89F2E5FE2673A79E00890828 /* VocaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaManager.swift; sourceTree = "<group>"; };
 		89F2E6012673A87300890828 /* WordsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsViewModel.swift; sourceTree = "<group>"; };
 		9BDBCFBC40A6D583B3BB29F4 /* Pods-VocaHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VocaHelper.release.xcconfig"; path = "Target Support Files/Pods-VocaHelper/Pods-VocaHelper.release.xcconfig"; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				89CC7BE62691EF46009D008D /* WebViewController.swift */,
+				89ED977C2693624500374FC8 /* WebTableViewCell.swift */,
 			);
 			path = Web;
 			sourceTree = "<group>";
@@ -449,6 +452,7 @@
 				8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */,
 				89CC7BE92691F458009D008D /* FirestoreManager.swift in Sources */,
 				89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */,
+				89ED977D2693624500374FC8 /* WebTableViewCell.swift in Sources */,
 				89651FC12632C0EE00949DEB /* SearchViewController.swift in Sources */,
 				89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */,
 				89A789EC26774846004B5A54 /* ResultCell.swift in Sources */,

@@ -42,21 +42,23 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Search"
+        navigationItem.title = "단어찾기"
+        navigationController?.navigationBar.prefersLargeTitles = true
         searchBarConfigure()
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+        searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.maxY, width: view.bounds.size.width, height: 50)
+        tableView.frame = CGRect(x: 0, y: searchBar.frame.origin.y + searchBar.frame.size.height, width: view.bounds.size.width, height: view.bounds.size.height - searchBar.frame.size.height)
         noResultView.frame = view.bounds
     }
     
     private func searchBarConfigure() {
-        view.addSubview(tableView)
-        navigationItem.titleView = searchBar
         view.addSubview(noResultView)
+        view.addSubview(searchBar)
+        view.addSubview(tableView)
     }
     
     private func rxConfigure() {

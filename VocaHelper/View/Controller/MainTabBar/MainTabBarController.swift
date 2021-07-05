@@ -18,22 +18,19 @@ class MainTabBarController: UITabBarController {
     
     let wordsNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WordsViewController())
-        nav.title = "단어장"
-        nav.tabBarItem.title = nil
+        nav.navigationItem.title = "Words"
         return nav
     }()
     
     let searchNavVC: UINavigationController = {
-        let nav = UINavigationController(rootViewController: SearchViewController())        
-        nav.title = "Search"
-        nav.tabBarItem.title = nil
+        let nav = UINavigationController(rootViewController: SearchViewController())
+        nav.navigationItem.title = "Search"
         return nav
     }()
     
     let webNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WebViewController())
-        nav.title = "Web"
-        nav.tabBarItem.title = nil
+        nav.navigationItem.title = "Web"
         return nav
     }()
     
@@ -69,18 +66,19 @@ class MainTabBarController: UITabBarController {
         tabBar.barTintColor = .systemBackground
         tabBar.tintColor = .label
         setViewControllers([wordsNavVC, searchNavVC, webNavVC], animated: true)
-        changeTabbarImage(title: "단어장")
+        changeTabbarImage(title: "Words")
         
         rx.didSelect
-            .bind() { [weak self] in
-                self?.changeTabbarImage(title: $0.title ?? "")
-                VocaManager.shared.makeAllVocasForSearch(title: $0.title ?? "")                
+            .bind() { [weak self] in                
+                let title = $0.navigationItem.title ?? ""
+                self?.changeTabbarImage(title: title)
+                VocaManager.shared.makeAllVocasForSearch(title: title)
             }.disposed(by: disposeBag)
     }
     
     private func changeTabbarImage(title: String) {
         for (i,cv) in viewControllers!.enumerated() {
-            if cv.title == title {
+            if cv.navigationItem.title == title {
                 cv.tabBarItem.image = UIImage(systemName: selectedTabbarImages[i])                
             }
             else {
