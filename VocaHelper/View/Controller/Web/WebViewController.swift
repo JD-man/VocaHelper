@@ -100,16 +100,9 @@ class WebViewController: UIViewController {
                 print($0!)
             }.disposed(by: disposeBag)
         
-        wordsTableView.rx.itemSelected
-            .bind() { [weak self] in
-                self?.wordsTableView.deselectRow(at: $0, animated: false)
-                // 업로드된 단어장 띄우기
-                print("Table")
-            }.disposed(by: disposeBag)
-        
         Observable<[String]>.of(["단어장이름", "단어장이름", "단어장이름", "단어장이름", "단어장이름", "단어장이름"])
             .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) {indexPath, item, cell in
-                cell.titleLabel.text = String(item)
+                cell.titleLabel.text = String(item)                
             }.disposed(by: disposeBag)
         
         Observable.of(sortTitle)

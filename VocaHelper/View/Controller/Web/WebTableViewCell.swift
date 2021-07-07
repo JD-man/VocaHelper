@@ -11,6 +11,18 @@ class WebTableViewCell: UITableViewCell {
 
     static let identifier: String = "WebTableViewCell"
     
+    let backgroundButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .link
+        return button
+    }()
+    
+    let shadowView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.0, alpha: 0.3)
+        return view
+    }()
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "test"
@@ -21,12 +33,6 @@ class WebTableViewCell: UITableViewCell {
         return label
     }()
     
-    let backgroundButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .link
-        return button
-    }()
-    
     let writerLabel: UILabel = {
         let label = UILabel()
         label.text = "작성자 닉네임"
@@ -35,7 +41,6 @@ class WebTableViewCell: UITableViewCell {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.textAlignment = .right
-        
         return label
     }()
     
@@ -82,6 +87,8 @@ class WebTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundButton.layer.masksToBounds = true
         backgroundButton.layer.cornerRadius = 25
+        shadowView.layer.masksToBounds = true
+        shadowView.layer.cornerRadius = 25
     }
     
     required init?(coder: NSCoder) {
@@ -93,13 +100,20 @@ class WebTableViewCell: UITableViewCell {
         let backGroundOffsetX: CGFloat = 20
         let backGroundOffsetY: CGFloat = 25
         backgroundButton.frame = CGRect(x: backGroundOffsetX, y: backGroundOffsetY, width: frame.width - 2 * backGroundOffsetX, height: frame.height - 2 * backGroundOffsetY)
+        shadowView.frame = CGRect(x: backgroundButton.frame.minX + 5, y: backgroundButton.frame.minY + 5, width: backgroundButton.frame.width, height: backgroundButton.frame.height)
         gradientConfigure()
         cellConfigure()
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        titleLabel.text = nil
+        backgroundButton.layer.sublayers = nil
+        titleLabel.text = "초기화"
+        likeLabel.text = "초기화"
+        writerLabel.text = "초기화"
+        downloadLabel.text = "초기화"
+        descriptionLabel.text = "초기화"
+        likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
     }
     
     @objc private func didTapButton() {
@@ -108,7 +122,7 @@ class WebTableViewCell: UITableViewCell {
     
     private func gradientConfigure() {
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.systemIndigo.cgColor, UIColor.systemGray5.cgColor]
+        gradient.colors = [UIColor.tertiarySystemBackground.cgColor, UIColor.init(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: CGFloat.random(in: 0.0...1.0)).cgColor]
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
@@ -117,6 +131,7 @@ class WebTableViewCell: UITableViewCell {
     }
     
     private func cellConfigure() {
+        contentView.addSubview(shadowView)
         contentView.addSubview(backgroundButton)
         contentView.addSubview(titleLabel)
         contentView.addSubview(writerLabel)
@@ -128,8 +143,8 @@ class WebTableViewCell: UITableViewCell {
         
         
         backgroundButton.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
-        titleLabel.frame = CGRect(x: backgroundButton.frame.minX + 20, y: backgroundButton.frame.minY + 10, width: backgroundButton.frame.width / 2, height: 50)
-        descriptionLabel.frame = CGRect(x: titleLabel.frame.minX, y: titleLabel.frame.maxY + 5, width: bounds.width - (2 * titleLabel.frame.minX), height: 80)
+        titleLabel.frame = CGRect(x: backgroundButton.frame.minX + 20, y: backgroundButton.frame.minY + 15, width: backgroundButton.frame.width / 2, height: 50)
+        descriptionLabel.frame = CGRect(x: titleLabel.frame.minX, y: titleLabel.frame.maxY + 10, width: bounds.width - (2 * titleLabel.frame.minX), height: 70)
         
         writerLabel.frame = CGRect(x: descriptionLabel.frame.maxX - 120, y: backgroundButton.frame.maxY - 50, width: 120, height: 20)
         
