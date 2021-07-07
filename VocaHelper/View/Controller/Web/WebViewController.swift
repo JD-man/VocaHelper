@@ -12,6 +12,7 @@ import RxCocoa
 class WebViewController: UIViewController {
     
     let disposeBag = DisposeBag()
+    let sortTitle = ["다운순", "좋아요순"]
     
     let searchBar: UISearchBar = {
         let bar = UISearchBar()
@@ -58,12 +59,15 @@ class WebViewController: UIViewController {
     let wordsTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(WebTableViewCell.self, forCellReuseIdentifier: WebTableViewCell.identifier)
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 250
+        tableView.allowsSelection = false
         return tableView
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemTeal
+        view.backgroundColor = .systemGray6
         navigationItem.title = "다운받기"
         navigationController?.navigationBar.prefersLargeTitles = true
         configure()
@@ -77,7 +81,9 @@ class WebViewController: UIViewController {
         sortButton.frame = CGRect(x: 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 6, height: 30)
         loginStatusTextField.frame = CGRect(x: sortButton.frame.maxX + 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 1.5, height: 30)
         loginButton.frame = CGRect(x: loginStatusTextField.bounds.maxX - loginStatusTextField.bounds.width/4, y: loginStatusTextField.bounds.origin.y, width: loginStatusTextField.bounds.width/4, height: 30)
-        wordsTableView.frame = CGRect(x: 0, y: loginStatusTextField.frame.maxY + heightOffset, width: view.bounds.size.width, height: view.bounds.size.height - 80)
+        
+        
+        wordsTableView.frame = CGRect(x: 0, y: loginStatusTextField.frame.maxY + heightOffset, width: view.bounds.size.width, height: view.bounds.size.height - (loginStatusTextField.frame.maxY + heightOffset))
     }
     
     private func configure() {
@@ -91,22 +97,46 @@ class WebViewController: UIViewController {
     private func rxConfigure() {
         searchBar.rx.text
             .bind {
-                print($0)
+                print($0!)
             }.disposed(by: disposeBag)
         
-        Observable<String>.just("hi")
+        wordsTableView.rx.itemSelected
+            .bind() { [weak self] in
+                self?.wordsTableView.deselectRow(at: $0, animated: false)
+                // 업로드된 단어장 띄우기
+                print("Table")
+            }.disposed(by: disposeBag)
+        
+        Observable<[String]>.of(["단어장이름", "단어장이름", "단어장이름", "단어장이름", "단어장이름", "단어장이름"])
             .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) {indexPath, item, cell in
-                //cell.titleLabel.text = String(item)
+                cell.titleLabel.text = String(item)
             }.disposed(by: disposeBag)
         
-        Observable.of(["다운순", "좋아요순"])
+        Observable.of(sortTitle)
             .bind(to: sortPickerView.rx.itemTitles) {
                 return $1
             }.disposed(by: disposeBag)
         
+        sortPickerView.rx.itemSelected
+            .bind() { [weak self] in
+                self?.sortButton.setTitle(self?.sortTitle[$0.row], for: .normal)
+                // 정렬하기
+            }.disposed(by: disposeBag)
+        
         sortButton.rx.tap
             .bind { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                let contentView = UIViewController()
+                contentView.preferredContentSize = CGSize(width: strongSelf.view.bounds.size.width / 1.5, height: 100)
+                contentView.view = strongSelf.sortPickerView
                 
+                // UIAlertController의 key, value값을 이용함. 다른 클래스들의 key,value값은 뭐가있는지 찾아볼것.
+                actionSheet.setValue(contentView, forKey: "contentViewController")
+                actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler:  nil ))
+                strongSelf.present(actionSheet, animated: true, completion: nil)
             }.disposed(by: disposeBag)
     }
 }
