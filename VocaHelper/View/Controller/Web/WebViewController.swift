@@ -42,14 +42,17 @@ class WebViewController: UIViewController {
         return button
     }()
     
-    let loginStatusLabel: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = .systemBackground
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 10
-        label.text = "로그인 중이 아닙니다."
-        label.textAlignment = .center
-        return label
+    let loginStatusTextField: UITextField = {
+        let textField = UITextField()
+        textField.backgroundColor = .systemBackground
+        textField.layer.masksToBounds = true
+        textField.layer.cornerRadius = 10
+        textField.text = "로그인 중이 아닙니다."
+        textField.leftViewMode = .always
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        textField.isEnabled = false
+        textField.isUserInteractionEnabled = false
+        return textField
     }()
     
     let wordsTableView: UITableView = {
@@ -72,16 +75,16 @@ class WebViewController: UIViewController {
         let heightOffset: CGFloat = 15
         searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.maxY, width: view.bounds.size.width, height: 50)
         sortButton.frame = CGRect(x: 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 6, height: 30)
-        loginStatusLabel.frame = CGRect(x: sortButton.frame.maxX + 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 1.5, height: 30)
-        loginButton.frame = CGRect(x: loginStatusLabel.bounds.maxX - loginStatusLabel.bounds.width/4, y: loginStatusLabel.bounds.origin.y, width: loginStatusLabel.bounds.width/4, height: 30)
-        wordsTableView.frame = CGRect(x: 0, y: loginStatusLabel.frame.maxY + heightOffset, width: view.bounds.size.width, height: view.bounds.size.height - 80)
+        loginStatusTextField.frame = CGRect(x: sortButton.frame.maxX + 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 1.5, height: 30)
+        loginButton.frame = CGRect(x: loginStatusTextField.bounds.maxX - loginStatusTextField.bounds.width/4, y: loginStatusTextField.bounds.origin.y, width: loginStatusTextField.bounds.width/4, height: 30)
+        wordsTableView.frame = CGRect(x: 0, y: loginStatusTextField.frame.maxY + heightOffset, width: view.bounds.size.width, height: view.bounds.size.height - 80)
     }
     
     private func configure() {
         view.addSubview(searchBar)
         view.addSubview(sortButton)
-        loginStatusLabel.addSubview(loginButton)
-        view.addSubview(loginStatusLabel)
+        loginStatusTextField.addSubview(loginButton)
+        view.addSubview(loginStatusTextField)
         view.addSubview(wordsTableView)
     }
     
@@ -103,7 +106,6 @@ class WebViewController: UIViewController {
         
         sortButton.rx.tap
             .bind { [weak self] in
-                // 팝오버 컨트롤러를 공부하고 해야할듯
                 
             }.disposed(by: disposeBag)
     }
