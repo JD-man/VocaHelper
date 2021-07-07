@@ -30,20 +30,21 @@ class WebTableViewCell: UITableViewCell {
     let writerLabel: UILabel = {
         let label = UILabel()
         label.text = "작성자 닉네임"
-        label.font = .systemFont(ofSize: 15, weight: .light)
+        label.font = .systemFont(ofSize: 12, weight: .bold)
         label.textColor = .label
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
+        label.textAlignment = .right
+        
         return label
     }()
     
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "간단설명"
-        label.font = .systemFont(ofSize: 25, weight: .light)
+        label.text = "간단설명한 단어장 설명부분 간단설명한 단어장 설명부분 간단설명한 단어장 설명부분 "
+        label.font = .systemFont(ofSize: 18, weight: .medium)
         label.textColor = .label
         label.adjustsFontSizeToFitWidth = true
-        label.numberOfLines = 1
         return label
     }()
     
@@ -51,6 +52,30 @@ class WebTableViewCell: UITableViewCell {
         let button = UIButton()
         button.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
         return button
+    }()
+    
+    let likeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "888"
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.textAlignment = .right
+        return label
+    }()
+    
+    let downloadButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "arrow.down.square"), for: .normal)
+        return button
+    }()
+    
+    let downloadLabel: UILabel = {
+        let label = UILabel()
+        label.text = "777"
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.textAlignment = .right
+        return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -83,7 +108,7 @@ class WebTableViewCell: UITableViewCell {
     
     private func gradientConfigure() {
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.white.cgColor, UIColor.systemTeal.cgColor]
+        gradient.colors = [UIColor.systemIndigo.cgColor, UIColor.systemGray5.cgColor]
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
@@ -97,14 +122,24 @@ class WebTableViewCell: UITableViewCell {
         contentView.addSubview(writerLabel)
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(likeButton)
+        contentView.addSubview(likeLabel)
+        contentView.addSubview(downloadButton)
+        contentView.addSubview(downloadLabel)
+        
         
         backgroundButton.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
-        titleLabel.frame = CGRect(x: backgroundButton.frame.minX + 20, y: backgroundButton.frame.minY + 20, width: backgroundButton.frame.width / 2, height: 50)
-        writerLabel.frame = CGRect(x: titleLabel.frame.maxX + 10, y: titleLabel.frame.minY, width: backgroundButton.frame.width / 2 - 10, height: 50)
-        likeButton.frame = CGRect(x: writerLabel.frame.minX, y: backgroundButton.frame.maxY - 40, width: 30, height: 30)
+        titleLabel.frame = CGRect(x: backgroundButton.frame.minX + 20, y: backgroundButton.frame.minY + 10, width: backgroundButton.frame.width / 2, height: 50)
+        descriptionLabel.frame = CGRect(x: titleLabel.frame.minX, y: titleLabel.frame.maxY + 5, width: bounds.width - (2 * titleLabel.frame.minX), height: 80)
         
-        descriptionLabel.frame = CGRect(x: titleLabel.frame.minX, y: titleLabel.frame.maxY + 10, width: backgroundButton.frame.width - titleLabel.frame.minX * 2, height: backgroundButton.frame.height - (backgroundButton.frame.maxY - 40 + titleLabel.frame.maxY + 10))
-        descriptionLabel.backgroundColor = .black
+        writerLabel.frame = CGRect(x: descriptionLabel.frame.maxX - 120, y: backgroundButton.frame.maxY - 50, width: 120, height: 20)
         
+        likeButton.frame = CGRect(x: writerLabel.frame.minX, y: backgroundButton.frame.maxY - 35, width: 30, height: 30)
+        likeLabel.frame = CGRect(x: likeButton.frame.maxX, y: likeButton.frame.minY, width: 30, height: 30)
+        downloadButton.frame = CGRect(x: likeLabel.frame.maxX, y: likeButton.frame.minY, width: 30, height: 30)
+        downloadLabel.frame = CGRect(x: downloadButton.frame.maxX, y: likeButton.frame.minY, width: 30, height: 30)
+        
+        // top align
+        descriptionLabel.numberOfLines = 0
+        descriptionLabel.sizeToFit()
     }
 }

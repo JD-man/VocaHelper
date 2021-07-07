@@ -78,8 +78,8 @@ class WebViewController: UIViewController {
         super.viewDidLayoutSubviews()
         let heightOffset: CGFloat = 15
         searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.maxY, width: view.bounds.size.width, height: 50)
-        sortButton.frame = CGRect(x: 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 6, height: 30)
-        loginStatusTextField.frame = CGRect(x: sortButton.frame.maxX + 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 1.5, height: 30)
+        sortButton.frame = CGRect(x: 20, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 6, height: 30)
+        loginStatusTextField.frame = CGRect(x: view.bounds.maxX - view.bounds.size.width / 1.5 - 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 1.5, height: 30)
         loginButton.frame = CGRect(x: loginStatusTextField.bounds.maxX - loginStatusTextField.bounds.width/4, y: loginStatusTextField.bounds.origin.y, width: loginStatusTextField.bounds.width/4, height: 30)
         
         
@@ -130,7 +130,7 @@ class WebViewController: UIViewController {
                 }
                 let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 let contentView = UIViewController()
-                contentView.preferredContentSize = CGSize(width: strongSelf.view.bounds.size.width / 1.5, height: 100)
+                contentView.preferredContentSize = CGSize(width: strongSelf.view.bounds.size.width / 1.5, height: 150)
                 contentView.view = strongSelf.sortPickerView
                 
                 // UIAlertController의 key, value값을 이용함. 다른 클래스들의 key,value값은 뭐가있는지 찾아볼것.
