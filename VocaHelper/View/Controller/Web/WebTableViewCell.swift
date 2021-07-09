@@ -10,6 +10,7 @@ import UIKit
 class WebTableViewCell: UITableViewCell {
 
     static let identifier: String = "WebTableViewCell"
+    public var tapFunction: (() -> Void)?
     
     let backgroundButton: UIButton = {
         let button = UIButton()
@@ -117,7 +118,10 @@ class WebTableViewCell: UITableViewCell {
     }
     
     @objc private func didTapButton() {
-        print("Hh")
+        guard let tapFunc = tapFunction else {
+            return
+        }
+        tapFunc()
     }
     
     private func gradientConfigure() {

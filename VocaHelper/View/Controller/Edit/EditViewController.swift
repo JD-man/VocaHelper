@@ -31,8 +31,6 @@ class EditViewController: UIViewController {
     
     private var prevViewY: CGFloat = 0
     
-    private var isKeyboardMoving: Bool = false
-    
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
@@ -100,15 +98,6 @@ class EditViewController: UIViewController {
     }
     
     private func rxConfigure() {
-        // 단어장에 단어표시
-//        viewModel.editCellSubject
-//            .bind(to: tableView.rx.items(cellIdentifier: EditTableViewCell.identifier,
-//                                         cellType: EditTableViewCell.self)) { [weak self] row, item, cell in
-//                cell.wordTextField.text = item.word
-//                cell.meaningTextField.text = item.meaning
-//                cell.wordTextField.delegate = self ?? nil
-//                cell.meaningTextField.delegate = self ?? nil
-//            }.disposed(by: disposeBag)
         
         let dataSource = RxTableViewSectionedAnimatedDataSource<SectionOfEditCell>(animationConfiguration: AnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)) { [weak self] dataSource, tableView, indexPath, item in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: EditTableViewCell.identifier, for: indexPath) as? EditTableViewCell else {
@@ -118,6 +107,7 @@ class EditViewController: UIViewController {
             cell.meaningTextField.text = item.meaning
             cell.wordTextField.delegate = self ?? nil
             cell.meaningTextField.delegate = self ?? nil
+            cell.selectionStyle = .none
             return cell
         }
         

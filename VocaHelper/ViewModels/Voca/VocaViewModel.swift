@@ -148,4 +148,18 @@ class VocaViewModel {
         resultVC.viewModel = view.viewModel
         view.present(resultVC, animated: true, completion: nil)
     }
+    
+    
+    // MARK - For WebVocaViewController
+    public func pushWebVocaTestViewController(view: WebVocaViewController) {
+        guard VocaManager.shared.vocas.count >= 5 else {
+            let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+            view.present(alert, animated: true, completion: nil)
+            return
+        }
+        view.navigationController?.popViewController(animated: true)
+        let testVC = TestViewController()
+        view.navigationController?.pushViewController(testVC, animated: true)
+    }
 }

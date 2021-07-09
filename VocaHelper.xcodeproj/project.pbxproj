@@ -11,6 +11,9 @@
 		89014771263BC0000054962A /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89014770263BC0000054962A /* ResultTableViewCell.swift */; };
 		89014773263BD5C60054962A /* ResultTableViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89014772263BD5C60054962A /* ResultTableViewFooter.swift */; };
 		89086EFE2634305B0078BC8F /* VocaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89086EFD2634305B0078BC8F /* VocaData.swift */; };
+		890AAB5D26983444001E2CE1 /* WebData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890AAB5C26983444001E2CE1 /* WebData.swift */; };
+		890AAB6026983860001E2CE1 /* WebViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890AAB5F26983860001E2CE1 /* WebViewModel.swift */; };
+		890AAB6226985859001E2CE1 /* WebVocaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890AAB6126985859001E2CE1 /* WebVocaViewController.swift */; };
 		8925EDEB26745CB70029F8AC /* WordsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEA26745CB70029F8AC /* WordsCell.swift */; };
 		8925EDEF26747F2B0029F8AC /* VocaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */; };
 		8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDF026749ABE0029F8AC /* EditCell.swift */; };
@@ -48,6 +51,9 @@
 		89014770263BC0000054962A /* ResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
 		89014772263BD5C60054962A /* ResultTableViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewFooter.swift; sourceTree = "<group>"; };
 		89086EFD2634305B0078BC8F /* VocaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaData.swift; sourceTree = "<group>"; };
+		890AAB5C26983444001E2CE1 /* WebData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebData.swift; sourceTree = "<group>"; };
+		890AAB5F26983860001E2CE1 /* WebViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewModel.swift; sourceTree = "<group>"; };
+		890AAB6126985859001E2CE1 /* WebVocaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebVocaViewController.swift; sourceTree = "<group>"; };
 		8925EDEA26745CB70029F8AC /* WordsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsCell.swift; sourceTree = "<group>"; };
 		8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaViewModel.swift; sourceTree = "<group>"; };
 		8925EDF026749ABE0029F8AC /* EditCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCell.swift; sourceTree = "<group>"; };
@@ -113,6 +119,14 @@
 				8936FB9226907692007F7753 /* ResultTableViewHeader.swift */,
 			);
 			path = Test;
+			sourceTree = "<group>";
+		};
+		890AAB5E269835EE001E2CE1 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				890AAB5F26983860001E2CE1 /* WebViewModel.swift */,
+			);
+			path = Web;
 			sourceTree = "<group>";
 		};
 		8925EDEC26745CCD0029F8AC /* Words */ = {
@@ -199,8 +213,8 @@
 			isa = PBXGroup;
 			children = (
 				89F2E6002673A83E00890828 /* ViewModels */,
-				89F2E5FD2673A76A00890828 /* Service */,
-				89651FB82632BF3D00949DEB /* Model */,
+				89F2E5FD2673A76A00890828 /* Managers */,
+				89651FB82632BF3D00949DEB /* Models */,
 				89651FB72632BF2F00949DEB /* View */,
 				89651F9C2632BE4900949DEB /* AppDelegate.swift */,
 				89651F9E2632BE4900949DEB /* SceneDelegate.swift */,
@@ -235,12 +249,13 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		89651FB82632BF3D00949DEB /* Model */ = {
+		89651FB82632BF3D00949DEB /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				89086EFD2634305B0078BC8F /* VocaData.swift */,
+				890AAB5C26983444001E2CE1 /* WebData.swift */,
 			);
-			path = Model;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		89651FB92632BF4E00949DEB /* MainTabBar */ = {
@@ -301,22 +316,24 @@
 			children = (
 				89CC7BE62691EF46009D008D /* WebViewController.swift */,
 				89ED977C2693624500374FC8 /* WebTableViewCell.swift */,
+				890AAB6126985859001E2CE1 /* WebVocaViewController.swift */,
 			);
 			path = Web;
 			sourceTree = "<group>";
 		};
-		89F2E5FD2673A76A00890828 /* Service */ = {
+		89F2E5FD2673A76A00890828 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				89F2E5FE2673A79E00890828 /* VocaManager.swift */,
 				89CC7BE82691F458009D008D /* FirestoreManager.swift */,
 			);
-			path = Service;
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		89F2E6002673A83E00890828 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				890AAB5E269835EE001E2CE1 /* Web */,
 				89A789ED26777366004B5A54 /* Search */,
 				8925EDED26747F190029F8AC /* Voca */,
 				8925EDEC26745CCD0029F8AC /* Words */,
@@ -447,6 +464,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				89A42696263928F800555CCD /* PracticeViewController.swift in Sources */,
+				890AAB5D26983444001E2CE1 /* WebData.swift in Sources */,
 				89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */,
 				89A42699263956B900555CCD /* BlindUIView.swift in Sources */,
 				8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */,
@@ -468,6 +486,8 @@
 				89B15C7E263A7F1B007C29E1 /* TestViewController.swift in Sources */,
 				89014771263BC0000054962A /* ResultTableViewCell.swift in Sources */,
 				89A789EF26777385004B5A54 /* SearchViewModel.swift in Sources */,
+				890AAB6226985859001E2CE1 /* WebVocaViewController.swift in Sources */,
+				890AAB6026983860001E2CE1 /* WebViewModel.swift in Sources */,
 				89086EFE2634305B0078BC8F /* VocaData.swift in Sources */,
 				89F2E5FF2673A79E00890828 /* VocaManager.swift in Sources */,
 				895AAB442633C6D400532021 /* PopupViewController.swift in Sources */,

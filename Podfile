@@ -13,7 +13,8 @@ target 'VocaHelper' do
   # Firebase
 
   pod 'Firebase/Auth'
-  pod 'Firebase/Firestore'  
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift', '~> 7.0-beta'
 
   # Pods for VocaHelper
 

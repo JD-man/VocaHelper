@@ -16,8 +16,7 @@ class AddCollectionViewCell: UICollectionViewCell {
     public let button: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "folder.badge.plus"), for: .normal)
-        button.tintColor = .systemGreen
-        
+        button.tintColor = .systemGreen        
         return button
     }()
     

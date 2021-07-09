@@ -9,20 +9,21 @@ import Foundation
 import RxSwift
 import RxDataSources
 
-class WordsCell: Equatable, IdentifiableType {
+struct WordsCell: Equatable, IdentifiableType {
     
     // ==일때 false로 해야 파일추가가 제대로 된다. addbutton의 identity가 바뀌어서 그런듯.
+    // true로 설정하면 메모리누수가 일어나지 않는다. 추가버튼을 다른곳에 만들어야할듯.
     static func == (lhs: WordsCell, rhs: WordsCell) -> Bool {
-        if lhs.identity == rhs.identity { return false }
+        if lhs.identity == rhs.identity { return true }
         else {return true}
     }
     
-    typealias Identity = Int
+    typealias Identity = String
     
-    var identity: Int
+    var identity: String
     var fileName: String
     
-    init(identity: Int, fileName: String) {
+    init(identity: String, fileName: String) {
         self.identity = identity
         self.fileName = fileName
     }
@@ -42,26 +43,26 @@ class WordsCell: Equatable, IdentifiableType {
         // 팝업뷰 버튼 동작 설정
         
         // Edit 버튼 터치
-        popupVC.editClosure = { [weak self, weak view] in
+        popupVC.editClosure = { [weak view] in
             let editVC = EditViewController()
-            editVC.navigationItem.title = self?.changeToRealName(fileName: self?.fileName ?? "")
-            editVC.fileName = self?.fileName ?? ""
+            editVC.navigationItem.title = changeToRealName(fileName: fileName)
+            editVC.fileName = fileName
             view?.navigationController?.pushViewController(editVC, animated: true)
             view?.tabBarController?.tabBar.isHidden.toggle()
         }
         
         // Practice 버튼 터치
-        popupVC.practiceClosure = { [weak self, weak view] in
+        popupVC.practiceClosure = { [weak view] in
             let practiceVC = PracticeViewController()
-            practiceVC.navigationItem.title = self?.changeToRealName(fileName: self?.fileName ?? "")
-            practiceVC.fileName = self?.fileName ?? ""
+            practiceVC.navigationItem.title = changeToRealName(fileName: fileName)
+            practiceVC.fileName = fileName
             view?.navigationController?.pushViewController(practiceVC, animated: true)
             view?.tabBarController?.tabBar.isHidden.toggle()
         }
         
         // Test 버튼 터치
         
-        popupVC.testClosure = { [weak self, weak view] in
+        popupVC.testClosure = { [weak view] in
             guard VocaManager.shared.vocas.count >= 5 else {
                 let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
@@ -69,29 +70,29 @@ class WordsCell: Equatable, IdentifiableType {
                 return
             }
             let testVC = TestViewController()
-            testVC.navigationItem.title = self?.changeToRealName(fileName: self?.fileName ?? "")
-            testVC.fileName = self?.fileName ?? ""
+            testVC.navigationItem.title = changeToRealName(fileName: fileName)
+            testVC.fileName = fileName
             view?.navigationController?.pushViewController(testVC, animated: true)
             view?.tabBarController?.tabBar.isHidden.toggle()
         }
         
         // Delete 버튼 터치
-        popupVC.deleteClosure = { [weak self, weak popupVC, weak view] in
-            VocaManager.shared.deleteFile(fileName: self?.fileName ?? "")
+        popupVC.deleteClosure = { [weak popupVC, weak view] in
+            VocaManager.shared.deleteFile(fileName: fileName)
             view?.viewModels.makeNewViewModels(isAddButton: false)
             view?.tabBarController?.tabBar.isHidden.toggle()
             popupVC?.dismiss(animated: true, completion: nil)
         }
         
         // Exit 버튼 터치
-        popupVC.exitClosure = { [weak popupVC, weak self, weak view] in
-            guard let fileName = popupVC?.textField.text else {
+        popupVC.exitClosure = { [weak popupVC, weak view] in
+            guard let fileNameFromText = popupVC?.textField.text else {
                 return
             }
             //change file name
-            let realName = self?.fileName ?? ""
+            let realName = fileName
             let datePart = String(realName[realName.startIndex ..< realName.index(realName.startIndex, offsetBy: 25)])
-            let currRealName = datePart + fileName
+            let currRealName = datePart + fileNameFromText
             
             guard let directory = VocaManager.directoryURL else {
                 return
@@ -105,7 +106,6 @@ class WordsCell: Equatable, IdentifiableType {
                 print(error)
             }
             VocaManager.shared.saveVocas(fileName: currRealName)
-            self?.fileName = currRealName
             view?.viewModels.makeViewModels()
             
             view?.tabBarController?.tabBar.isHidden.toggle()

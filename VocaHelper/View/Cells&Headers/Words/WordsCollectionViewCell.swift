@@ -34,6 +34,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.backgroundColor = nil
         configure()
     }
     
@@ -64,9 +65,6 @@ class WordsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func didTapButton() {
-        guard let didTap = didTap else {
-            return
-        }
-        didTap()
+        didTap!()
     }
 }

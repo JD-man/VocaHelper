@@ -15,7 +15,7 @@ class WordsViewController: UIViewController {
     private var collectionView: UICollectionView?
     
     public var viewModels = WordsViewModel()
-    private let disposeBag = DisposeBag()
+    public var disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,12 +54,13 @@ class WordsViewController: UIViewController {
         let dataSource = RxCollectionViewSectionedAnimatedDataSource<SectionOfWordsCell>  { [weak self] dataSource, cv, indexPath, item in
             if item.fileName != "ButtonCell" {                
                 guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier,
-                                                         for: indexPath) as? WordsCollectionViewCell,
-                      let strongSelf = self else {
+                                                         for: indexPath) as? WordsCollectionViewCell else {
                     return UICollectionViewCell()
                 }
                 cell.label.text = item.changeToRealName(fileName: item.fileName)
-                cell.didTap = { item.didTapWordButton(view: strongSelf) }
+                cell.didTap = {
+                    item.didTapWordButton(view: self!)
+                }
                 return cell
             }
             else {
@@ -68,6 +69,7 @@ class WordsViewController: UIViewController {
                     return UICollectionViewCell()
                 }
                 cell.didTap = { self?.viewModels.makeNewViewModels(isAddButton: true) }
+                cell.backgroundColor = .clear
                 return cell
             }
         }

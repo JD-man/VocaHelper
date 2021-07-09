@@ -13,6 +13,8 @@ class WebViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     let sortTitle = ["다운순", "좋아요순"]
+    let viewModel = WebViewModel()
+    
     
     let searchBar: UISearchBar = {
         let bar = UISearchBar()
@@ -40,6 +42,7 @@ class WebViewController: UIViewController {
         button.setTitleColor(.systemBackground, for: .normal)
         button.backgroundColor = .link
         button.layer.masksToBounds = true
+        button.isEnabled = true
         return button
     }()
     
@@ -51,8 +54,8 @@ class WebViewController: UIViewController {
         textField.text = "로그인 중이 아닙니다."
         textField.leftViewMode = .always
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
-        textField.isEnabled = false
-        textField.isUserInteractionEnabled = false
+        //textField.isEnabled = false
+        //textField.isUserInteractionEnabled = false
         return textField
     }()
     
@@ -95,14 +98,26 @@ class WebViewController: UIViewController {
     }
     
     private func rxConfigure() {
+        loginButton.rx.tap
+            .bind {
+                FirestoreManager.shared.putDocuments()
+                print("hh")
+            }.disposed(by: disposeBag)
+        
         searchBar.rx.text
             .bind {
                 print($0!)
             }.disposed(by: disposeBag)
         
-        Observable<[String]>.of(["단어장이름", "단어장이름", "단어장이름", "단어장이름", "단어장이름", "단어장이름"])
-            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) {indexPath, item, cell in
-                cell.titleLabel.text = String(item)                
+        viewModel.webDataSubject
+            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
+                cell.titleLabel.text = item.title
+                cell.descriptionLabel.text = item.description
+                cell.writerLabel.text = item.writer
+                cell.downloadLabel.text = item.download
+                cell.likeLabel.text = item.like
+                
+                cell.tapFunction = { self?.viewModel.getWebVocas(vocas: item.vocas, view: self!) }
             }.disposed(by: disposeBag)
         
         Observable.of(sortTitle)
@@ -131,5 +146,7 @@ class WebViewController: UIViewController {
                 actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler:  nil ))
                 strongSelf.present(actionSheet, animated: true, completion: nil)
             }.disposed(by: disposeBag)
+        
+        
     }
 }
