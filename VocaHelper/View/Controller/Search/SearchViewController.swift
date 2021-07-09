@@ -56,19 +56,35 @@ class SearchViewController: UIViewController {
     }
     
     private func searchBarConfigure() {
-        view.addSubview(noResultView)
+        //view.addSubview(noResultView)
         view.addSubview(searchBar)
         view.addSubview(tableView)
+        
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))
+        toolBar.barStyle = .default
+        toolBar.items = [
+            UIBarButtonItem(title: "확인", style: .done, target: self, action: #selector(didTapBarbutton))
+        ]
+        toolBar.sizeToFit()
+        searchBar.searchTextField.inputAccessoryView = toolBar
+    }
+    
+    @objc private func didTapBarbutton() {
+        searchBar.searchTextField.endEditing(true)
     }
     
     private func rxConfigure() {
         // 서치바 -> 뷰모델
         // 뷰모델 -> 테이블뷰 바인드
         
-        searchBar.rx.text
+        // 키보드를 넣을때 word가 한번 더 방출된다. 그러면서 테이블뷰가 사라지는 버그가 발생함.
+        // 그래서 distinctUntilChanged()를 넣음. 연속으로 같은게 오면 무시하는 오퍼레이터라고함.
+        searchBar.rx.text.distinctUntilChanged()
             .bind() { [weak self] in
                 self?.viewModel.makeSearchResultSubject(word: $0!, tableView: self?.tableView, noResultView: self?.noResultView)
             }.disposed(by: disposeBag)
+        
+        
         
         viewModel.searchResultSubject
             .bind(to: tableView.rx.items(cellIdentifier: SearchResultTableViewCell.identifier,

@@ -28,6 +28,8 @@ class WebViewController: UIViewController {
         button.setTitle("다운순", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 10
         return button
     }()
     
@@ -42,6 +44,7 @@ class WebViewController: UIViewController {
         button.setTitleColor(.systemBackground, for: .normal)
         button.backgroundColor = .link
         button.layer.masksToBounds = true
+        button.layer.cornerRadius = 10
         button.isEnabled = true
         return button
     }()
@@ -54,8 +57,8 @@ class WebViewController: UIViewController {
         textField.text = "로그인 중이 아닙니다."
         textField.leftViewMode = .always
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
-        //textField.isEnabled = false
-        //textField.isUserInteractionEnabled = false
+        textField.isEnabled = false
+        textField.isUserInteractionEnabled = false
         return textField
     }()
     
@@ -82,8 +85,8 @@ class WebViewController: UIViewController {
         let heightOffset: CGFloat = 15
         searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.maxY, width: view.bounds.size.width, height: 50)
         sortButton.frame = CGRect(x: 20, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 6, height: 30)
-        loginStatusTextField.frame = CGRect(x: view.bounds.maxX - view.bounds.size.width / 1.5 - 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 1.5, height: 30)
-        loginButton.frame = CGRect(x: loginStatusTextField.bounds.maxX - loginStatusTextField.bounds.width/4, y: loginStatusTextField.bounds.origin.y, width: loginStatusTextField.bounds.width/4, height: 30)
+        loginStatusTextField.frame = CGRect(x: view.bounds.width / 2 - 100, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 2, height: 30)
+        loginButton.frame = CGRect(x: loginStatusTextField.frame.maxX  + 10, y: loginStatusTextField.frame.origin.y, width: loginStatusTextField.frame.width/4, height: 30)
         
         
         wordsTableView.frame = CGRect(x: 0, y: loginStatusTextField.frame.maxY + heightOffset, width: view.bounds.size.width, height: view.bounds.size.height - (loginStatusTextField.frame.maxY + heightOffset))
@@ -92,16 +95,17 @@ class WebViewController: UIViewController {
     private func configure() {
         view.addSubview(searchBar)
         view.addSubview(sortButton)
-        loginStatusTextField.addSubview(loginButton)
         view.addSubview(loginStatusTextField)
+        view.addSubview(loginButton)
         view.addSubview(wordsTableView)
     }
     
     private func rxConfigure() {
         loginButton.rx.tap
             .bind {
-                FirestoreManager.shared.putDocuments()
+                //FirestoreManager.shared.putDocuments()
                 print("hh")
+                // 로그인 기능 만들기
             }.disposed(by: disposeBag)
         
         searchBar.rx.text
@@ -109,6 +113,8 @@ class WebViewController: UIViewController {
                 print($0!)
             }.disposed(by: disposeBag)
         
+        
+        // RxDatasource로 변경해야함.
         viewModel.webDataSubject
             .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
                 cell.titleLabel.text = item.title
@@ -146,7 +152,5 @@ class WebViewController: UIViewController {
                 actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler:  nil ))
                 strongSelf.present(actionSheet, animated: true, completion: nil)
             }.disposed(by: disposeBag)
-        
-        
     }
 }

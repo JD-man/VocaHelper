@@ -25,7 +25,12 @@ final class FirestoreManager {
                     return
                 }
                 let webDatas: [WebData] =  snapshot.documents.map {
-                    var returnedData = WebData(date: "", title: "", description: "", writer: "", like: "", download: "", vocas: [Voca(idx: 0, word: "", meaning: "")])
+                    var returnedData = WebData(date: "",
+                                               title: "",
+                                               description: "",
+                                               writer: "", like: "",
+                                               download: "",
+                                               vocas: [Voca(idx: 0, word: "", meaning: "")])
                     do {
                         if let data = try $0.data(as : WebData.self) { returnedData = data }
                     } catch {
