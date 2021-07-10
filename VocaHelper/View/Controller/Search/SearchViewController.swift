@@ -12,7 +12,7 @@ import RxCocoa
 class SearchViewController: UIViewController {
     
     private let viewModel = SearchViewModel()
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -56,7 +56,7 @@ class SearchViewController: UIViewController {
     }
     
     private func searchBarConfigure() {
-        //view.addSubview(noResultView)
+        view.addSubview(noResultView)
         view.addSubview(searchBar)
         view.addSubview(tableView)
         

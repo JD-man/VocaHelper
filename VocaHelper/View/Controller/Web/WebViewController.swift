@@ -46,6 +46,8 @@ class WebViewController: UIViewController {
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 10
         button.isEnabled = true
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         return button
     }()
     
@@ -74,7 +76,7 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
-        navigationItem.title = "다운받기"
+        navigationItem.title = "찾아보기"
         navigationController?.navigationBar.prefersLargeTitles = true
         configure()
         rxConfigure()
@@ -92,65 +94,77 @@ class WebViewController: UIViewController {
         wordsTableView.frame = CGRect(x: 0, y: loginStatusTextField.frame.maxY + heightOffset, width: view.bounds.size.width, height: view.bounds.size.height - (loginStatusTextField.frame.maxY + heightOffset))
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(addStateObserver), name: NSNotification.Name("StateObserver"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     private func configure() {
         view.addSubview(searchBar)
         view.addSubview(sortButton)
         view.addSubview(loginStatusTextField)
         view.addSubview(loginButton)
         view.addSubview(wordsTableView)
+        
     }
     
     private func rxConfigure() {
         loginButton.rx.tap
-            .bind {
-                //FirestoreManager.shared.putDocuments()
-                print("hh")
-                // 로그인 기능 만들기
-            }.disposed(by: disposeBag)
-        
-        searchBar.rx.text
-            .bind {
-                print($0!)
-            }.disposed(by: disposeBag)
-        
-        
-        // RxDatasource로 변경해야함.
-        viewModel.webDataSubject
-            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
-                cell.titleLabel.text = item.title
-                cell.descriptionLabel.text = item.description
-                cell.writerLabel.text = item.writer
-                cell.downloadLabel.text = item.download
-                cell.likeLabel.text = item.like
-                
-                cell.tapFunction = { self?.viewModel.getWebVocas(vocas: item.vocas, view: self!) }
-            }.disposed(by: disposeBag)
-        
-        Observable.of(sortTitle)
-            .bind(to: sortPickerView.rx.itemTitles) {
-                return $1
-            }.disposed(by: disposeBag)
-        
-        sortPickerView.rx.itemSelected
-            .bind() { [weak self] in
-                self?.sortButton.setTitle(self?.sortTitle[$0.row], for: .normal)
-                // 정렬하기
-            }.disposed(by: disposeBag)
-        
-        sortButton.rx.tap
             .bind { [weak self] in
-                guard let strongSelf = self else {
-                    return
-                }
-                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                let contentView = UIViewController()
-                contentView.preferredContentSize = CGSize(width: strongSelf.view.bounds.size.width / 1.5, height: 150)
-                contentView.view = strongSelf.sortPickerView
-                
-                // UIAlertController의 key, value값을 이용함. 다른 클래스들의 key,value값은 뭐가있는지 찾아볼것.
-                actionSheet.setValue(contentView, forKey: "contentViewController")
-                actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler:  nil ))
-                strongSelf.present(actionSheet, animated: true, completion: nil)
+                //FirestoreManager.shared.putDocuments()
+                self?.viewModel.didTapLoginButtonInWebViewController(button: self?.loginButton ?? UIButton(), view: self!)
             }.disposed(by: disposeBag)
+        
+//        searchBar.rx.text
+//            .bind {
+//                print($0!)
+//            }.disposed(by: disposeBag)
+//
+//
+//        // RxDatasource로 변경해야함.
+//        viewModel.webDataSubject
+//            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
+//                cell.titleLabel.text = item.title
+//                cell.descriptionLabel.text = item.description
+//                cell.writerLabel.text = item.writer
+//                cell.downloadLabel.text = item.download
+//                cell.likeLabel.text = item.like
+//
+//                cell.tapFunction = { self?.viewModel.getWebVocas(vocas: item.vocas, view: self!) }
+//            }.disposed(by: disposeBag)
+//
+//        Observable.of(sortTitle)
+//            .bind(to: sortPickerView.rx.itemTitles) {
+//                return $1
+//            }.disposed(by: disposeBag)
+//
+//        sortPickerView.rx.itemSelected
+//            .bind() { [weak self] in
+//                self?.sortButton.setTitle(self?.sortTitle[$0.row], for: .normal)
+//                // 정렬하기
+//            }.disposed(by: disposeBag)
+//
+//        sortButton.rx.tap
+//            .bind { [weak self] in
+//                guard let strongSelf = self else {
+//                    return
+//                }
+//                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+//                let contentView = UIViewController()
+//                contentView.preferredContentSize = CGSize(width: strongSelf.view.bounds.size.width / 1.5, height: 150)
+//                contentView.view = strongSelf.sortPickerView
+//
+//                // UIAlertController의 key, value값을 이용함. 다른 클래스들의 key,value값은 뭐가있는지 찾아볼것.
+//                actionSheet.setValue(contentView, forKey: "contentViewController")
+//                actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler:  nil ))
+//                strongSelf.present(actionSheet, animated: true, completion: nil)
+//            }.disposed(by: disposeBag)
+    }
+    
+    @objc private func addStateObserver() {
+        viewModel.setLoginButton(textField: loginStatusTextField, button: loginButton)
     }
 }
