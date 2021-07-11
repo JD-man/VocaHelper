@@ -65,7 +65,7 @@ class WebVocaViewController: UIViewController {
         navigationItem.rightBarButtonItem?.rx.tap
             .bind { [weak self] in
                 print("hh")
-                self?.viewModel.pushWebVocaTestViewController(view: self!)
+                self?.viewModel.pushWebVocaExamViewController(view: self!)
             }.disposed(by: disposeBag)
     }
 }

@@ -26,7 +26,7 @@ class WebTableViewCell: UITableViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "test"
+        label.text = "data"
         label.font = .systemFont(ofSize: 30, weight: .semibold)
         label.textColor = .label
         label.adjustsFontSizeToFitWidth = true

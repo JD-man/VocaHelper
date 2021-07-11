@@ -32,6 +32,21 @@ final class AuthManager {
         }
     }
     
+    public func checkUserVeryfied() -> Bool {
+        guard let currentUser = Auth.auth().currentUser else {
+            print("유저없음")
+            return false
+        }
+        print(currentUser.email)
+        print(currentUser.isEmailVerified)
+        if currentUser.isEmailVerified {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    
     public func loginUser(email: String, password: String, completion: @escaping ((Bool) -> Void)) {
         Auth.auth().signIn(withEmail: email, password: password) { _, error in
             if let error = error {
@@ -50,5 +65,43 @@ final class AuthManager {
         } catch {
             print(error)
         }
+    }
+    
+    public func sendVerificationEmail(completion: @escaping ((Bool) -> Void)) {
+        Auth.auth().currentUser?.sendEmailVerification(completion: { error in
+            if let error = error {
+                print(error)
+                completion(false)
+            }
+            else {
+                completion(true)
+            }
+        })
+    }
+    
+    public func deleteCurrentUser() {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        currentUser.delete { error in
+            if let _ = error {
+                print("current user delete fail")
+            }
+            else {
+                print("current user delete")
+            }
+        }
+    }
+    
+    public func userReload(completion: @escaping ((Bool) -> Void)) {
+        Auth.auth().currentUser?.reload(completion: { error in
+            if let error = error {
+                print(error)
+                completion(false)
+            }
+            else {
+                completion(true)
+            }
+        })
     }
 }

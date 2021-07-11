@@ -15,7 +15,7 @@ class ResultViewController: UIViewController {
         print("resultVC deinit")
     }
     
-    public weak var presentingView: TestViewController?
+    public weak var presentingView: ExamViewController?
     public var viewModel: VocaViewModel!
     private let disposeBag = DisposeBag()
     
@@ -88,9 +88,8 @@ class ResultViewController: UIViewController {
                 })
             }.disposed(by: disposeBag)
         
-        footer.testButton.rx.tap
-            .bind() { [weak self] in
-                print("test")
+        footer.examButton.rx.tap
+            .bind() { [weak self] in                
                 self?.dismiss(animated: true, completion: {self?.viewModel.buttonCountSubject.onNext(0)})
             }.disposed(by: disposeBag)
     }

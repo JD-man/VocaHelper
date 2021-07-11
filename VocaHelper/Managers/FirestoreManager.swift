@@ -90,7 +90,7 @@ final class FirestoreManager {
                 }
                 var isChecked = false
                 for doc in snapShot.documents {
-                    if nickName == doc.documentID {
+                    if nickName == doc.data()["nickname"] as? String ?? "" {
                         isChecked = true
                         break
                     }
@@ -111,7 +111,7 @@ final class FirestoreManager {
                 }
                 var isChecked = false
                 for doc in snapShot.documents {
-                    if email == doc.data()["email"] as? String ?? "" {
+                    if email == doc.documentID {
                         isChecked = true
                         break
                     }
@@ -121,6 +121,3 @@ final class FirestoreManager {
         }
     }
 }
-    
-    
-

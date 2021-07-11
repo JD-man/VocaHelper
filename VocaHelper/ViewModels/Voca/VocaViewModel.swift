@@ -22,7 +22,7 @@ class VocaViewModel {
     //public lazy var realAnswer: [String] = []
     public lazy var userAnswer: [String] = []
     
-    public lazy var testCellObservable: Observable<[String]> = buttonCountSubject.map { [weak self] in
+    public lazy var examCellObservable: Observable<[String]> = buttonCountSubject.map { [weak self] in
         let word = self?.shuffledVocas[$0].word ?? "Not exist Word"
         let meaning = self?.shuffledVocas[$0].meaning ?? "Not exist Meaning"
         var wrongAnswers: [String] = []
@@ -128,7 +128,7 @@ class VocaViewModel {
         makeViewModelsFromVocas()
     }
     
-    // MARK: - For Test
+    // MARK: - For Exam
     
     public func makeResultCellSubject() {
         let resultTable = zip(shuffledVocas, userAnswer).map {
@@ -141,7 +141,7 @@ class VocaViewModel {
         shuffledVocas.shuffle()
     }
     
-    public func presentResultVC(view: TestViewController) {
+    public func presentResultVC(view: ExamViewController) {
         let resultVC = ResultViewController()
         resultVC.modalPresentationStyle = .fullScreen
         resultVC.presentingView = view
@@ -151,7 +151,7 @@ class VocaViewModel {
     
     
     // MARK - For WebVocaViewController
-    public func pushWebVocaTestViewController(view: WebVocaViewController) {
+    public func pushWebVocaExamViewController(view: WebVocaViewController) {
         guard VocaManager.shared.vocas.count >= 5 else {
             let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
@@ -159,7 +159,7 @@ class VocaViewModel {
             return
         }
         view.navigationController?.popViewController(animated: true)
-        let testVC = TestViewController()
-        view.navigationController?.pushViewController(testVC, animated: true)
+        let examVC = ExamViewController()
+        view.navigationController?.pushViewController(examVC, animated: true)
     }
 }

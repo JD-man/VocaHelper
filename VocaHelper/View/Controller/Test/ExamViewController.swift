@@ -1,5 +1,5 @@
 //
-//  TestViewController.swift
+//  ExamViewController.swift
 //  VocaHelper
 //
 //  Created by JD_MacMini on 2021/04/29.
@@ -9,10 +9,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class TestViewController: UIViewController {
+class ExamViewController: UIViewController {
     
     deinit {
-        print("testVC deinit")
+        print("examVC deinit")
     }
     
     public var fileName: String = ""
@@ -34,7 +34,7 @@ class TestViewController: UIViewController {
 
     private let question: UILabel = {
         let label = UILabel()
-        label.text = "test"
+        label.text = "Exam"
         label.textAlignment = .center
         label.backgroundColor = .systemIndigo
         label.adjustsFontSizeToFitWidth = true
@@ -109,7 +109,7 @@ class TestViewController: UIViewController {
             .subscribe()
             .disposed(by: disposeBag)
         
-        viewModel.testCellObservable
+        viewModel.examCellObservable
             .bind() { [weak self] in
                 self?.question.text = $0.last
                 for i in 0...4 {

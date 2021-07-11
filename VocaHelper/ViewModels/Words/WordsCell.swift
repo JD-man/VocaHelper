@@ -60,19 +60,19 @@ struct WordsCell: Equatable, IdentifiableType {
             view?.tabBarController?.tabBar.isHidden.toggle()
         }
         
-        // Test 버튼 터치
+        // Exam 버튼 터치
         
-        popupVC.testClosure = { [weak view] in
+        popupVC.examClosure = { [weak view] in
             guard VocaManager.shared.vocas.count >= 5 else {
                 let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
                 view?.present(alert, animated: true, completion: nil)
                 return
             }
-            let testVC = TestViewController()
-            testVC.navigationItem.title = changeToRealName(fileName: fileName)
-            testVC.fileName = fileName
-            view?.navigationController?.pushViewController(testVC, animated: true)
+            let examVC = ExamViewController()
+            examVC.navigationItem.title = changeToRealName(fileName: fileName)
+            examVC.fileName = fileName
+            view?.navigationController?.pushViewController(examVC, animated: true)
             view?.tabBarController?.tabBar.isHidden.toggle()
         }
         

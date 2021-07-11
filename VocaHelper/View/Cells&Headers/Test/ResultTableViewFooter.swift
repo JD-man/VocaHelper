@@ -18,7 +18,7 @@ class ResultTableViewFooter: UIView {
         return label
     }()
     
-    let testButton: UIButton = {
+    let examButton: UIButton = {
         let button = UIButton()
         button.setTitle("다시하기", for: .normal)
         button.setTitleColor(.label, for: .normal)
@@ -53,15 +53,15 @@ class ResultTableViewFooter: UIView {
         super.layoutSubviews()
         let offset: CGFloat = 100
         scoreLabel.frame = CGRect(x: 0, y: 10, width: self.bounds.width, height: self.bounds.height/4)
-        testButton.frame = CGRect(x: 0.5 * offset, y: self.bounds.height/2, width: self.bounds.width/2 - offset, height: self.bounds.height/4)
+        examButton.frame = CGRect(x: 0.5 * offset, y: self.bounds.height/2, width: self.bounds.width/2 - offset, height: self.bounds.height/4)
         homeButton.frame = CGRect(x: self.bounds.width/2 + 0.5 * offset, y: self.bounds.height/2, width: self.bounds.width/2 - offset, height: self.bounds.height/4)
-        testButton.layer.cornerRadius = 10
+        examButton.layer.cornerRadius = 10
         homeButton.layer.cornerRadius = 10
     }
     
     private func addSubviews() {
         self.addSubview(scoreLabel)
-        self.addSubview(testButton)
+        self.addSubview(examButton)
         self.addSubview(homeButton)
     }
 }

@@ -15,7 +15,7 @@ class PopupViewController: UIViewController {
     
     public var editClosure: (() -> Void)?
     public var practiceClosure: (() -> Void)?
-    public var testClosure: (() -> Void)?
+    public var examClosure: (() -> Void)?
     public var deleteClosure: (() -> Void)?
     public var exitClosure: (() -> Void)?
     
@@ -49,9 +49,9 @@ class PopupViewController: UIViewController {
         return button
     }()
     
-    let testButton: UIButton = {
+    let examButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Test", for: .normal)
+        button.setTitle("Exam", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         return button
@@ -91,8 +91,8 @@ class PopupViewController: UIViewController {
         textField.frame = CGRect(x: popupX, y: popupY, width: popupWidth, height: popupHeight)
         editButton.frame = CGRect(x: popupX, y: textField.frame.origin.y + +textField.bounds.height + 5, width: popupWidth, height: popupHeight)
         practiceButton.frame = CGRect(x: popupX, y: editButton.frame.origin.y + +editButton.bounds.height, width: popupWidth, height: popupHeight)
-        testButton.frame = CGRect(x: popupX, y: practiceButton.frame.origin.y + +practiceButton.bounds.height, width: popupWidth, height: popupHeight)
-        deleteButton.frame = CGRect(x: popupX, y: testButton.frame.origin.y + +testButton.bounds.height, width: popupWidth, height: popupHeight)
+        examButton.frame = CGRect(x: popupX, y: practiceButton.frame.origin.y + +practiceButton.bounds.height, width: popupWidth, height: popupHeight)
+        deleteButton.frame = CGRect(x: popupX, y: examButton.frame.origin.y + +examButton.bounds.height, width: popupWidth, height: popupHeight)
         exitButton.frame = CGRect(x: popupX, y: deleteButton.frame.origin.y + +deleteButton.bounds.height, width: popupWidth, height: popupHeight)
         
         addTarget()
@@ -108,7 +108,7 @@ class PopupViewController: UIViewController {
         view.addSubview(textField)
         view.addSubview(editButton)
         view.addSubview(practiceButton)
-        view.addSubview(testButton)
+        view.addSubview(examButton)
         view.addSubview(deleteButton)
         view.addSubview(exitButton)
     }
@@ -116,7 +116,7 @@ class PopupViewController: UIViewController {
     private func addTarget() {
         editButton.addTarget(self, action: #selector(didTapEditButton), for: .touchUpInside)
         practiceButton.addTarget(self, action: #selector(didTapPracticeButton), for: .touchUpInside)
-        testButton.addTarget(self, action: #selector(didTapTestButton), for: .touchUpInside)
+        examButton.addTarget(self, action: #selector(didTapExamButton), for: .touchUpInside)
         deleteButton.addTarget(self, action: #selector(didTapDeleteButton), for: .touchUpInside)
         exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
     }
@@ -147,17 +147,17 @@ class PopupViewController: UIViewController {
         practiceClosure()
     }
 
-    @objc private func didTapTestButton() {
+    @objc private func didTapExamButton() {
         UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.testButton.backgroundColor = .systemGray4
-            self?.testButton.backgroundColor = .systemBackground
+            self?.examButton.backgroundColor = .systemGray4
+            self?.examButton.backgroundColor = .systemBackground
         }
         guard let exitClosure = exitClosure,
-              let testClosure = testClosure else {
+              let examClosure = examClosure else {
             return
         }
         exitClosure()
-        testClosure()
+        examClosure()
     }
 
     @objc private func didTapDeleteButton() {

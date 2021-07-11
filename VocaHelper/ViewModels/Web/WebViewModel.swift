@@ -104,20 +104,52 @@ struct WebViewModel {
         AuthManager.shared.createNewUser(email: email, password: password) { isCreated in
             switch isCreated {
             case true:
-                FirestoreManager.shared.putUserDocuments(nickName: nickName, email: email) {
-                    let alert = UIAlertController(title: "가입이 완료됐습니다.", message: nil, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { [weak view] _ in
-                        UserDefaults.standard.set(nickName, forKey: "nickname")
-                        UserDefaults.standard.set(email, forKey: "email")
-                        NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
-                        view?.dismiss(animated: true, completion: nil)
-                    }))
-                    view.present(alert, animated: true, completion: nil)
-                }
+                AuthManager.shared.sendVerificationEmail { isEmailSent in
+                    switch isEmailSent {
+                    case true:
+                        let sendEmailAlert = UIAlertController(title: "인증메일이 전송되었습니다.", message: "인증을 완료한 후 확인을 눌러주세요", preferredStyle: .alert)
+                        sendEmailAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { [weak view] _ in
+                            AuthManager.shared.userReload { isReloaded in
+                                switch isReloaded {
+                                case true:
+                                    if AuthManager.shared.checkUserVeryfied() {
+                                        FirestoreManager.shared.putUserDocuments(nickName: nickName, email: email) {
+                                            let successAlert = UIAlertController(title: "가입이 완료됐습니다.", message: nil, preferredStyle: .alert)
+                                            successAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { [weak view] _ in
+                                                UserDefaults.standard.set(nickName, forKey: "nickname")
+                                                UserDefaults.standard.set(email, forKey: "email")
+                                                NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
+                                                view?.dismiss(animated: true, completion: nil)
+                                            }))
+                                            view?.present(successAlert, animated: true, completion: nil)
+                                        }
+                                    }
+                                    else {
+                                        let verificationFailalert = UIAlertController(title: "인증에 실패했습니다.", message: "가입을 다시 시도해주세요.", preferredStyle: .alert)
+                                        verificationFailalert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { _ in
+                                            AuthManager.shared.deleteCurrentUser()
+                                            AuthManager.shared.logoutUser()
+                                        }))
+                                        view?.present(verificationFailalert, animated: true, completion: nil)
+                                    }
+                                case false:
+                                    let reloadFailAlert = UIAlertController(title: "유저 정보 갱신에 실패했습니다.", message: "이런현상이 계속 발생하는 경우 문의해주세요.", preferredStyle: .alert)
+                                    reloadFailAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+                                    view?.present(reloadFailAlert, animated: true, completion: nil)
+                                }
+                            }
+                        }))
+                        view.present(sendEmailAlert, animated: true, completion: nil)
+                    case false:
+                        let sendEmailFailalert = UIAlertController(title: "이메일 전송이 실패했습니다.", message: "이런현상이 계속 발생하는 경우 문의해주세요.", preferredStyle: .alert)
+                        sendEmailFailalert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+                        view.present(sendEmailFailalert, animated: true, completion: nil)
+                    }
+                }                
             case false:
-                let alert = UIAlertController(title: "가입이 실패했습니다.", message: "닉네임과 이메일을 확인해주세요.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-                view.present(alert, animated: true, completion: nil)
+                let failAlert = UIAlertController(title: "가입이 실패했습니다.", message: "닉네임과 이메일을 확인해주세요.", preferredStyle: .alert)
+                failAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+                view.present(failAlert, animated: true, completion: nil)
             }
         }
     }
