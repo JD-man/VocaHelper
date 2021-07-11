@@ -63,8 +63,7 @@ class BlindUIView: UIView {
         )
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        gradient.frame = self.bounds
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {        
         UIView.animate(withDuration: 0.2) {
             self.frame = self.viewOriginFrame
         }

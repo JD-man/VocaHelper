@@ -114,7 +114,6 @@ class WebViewController: UIViewController {
     private func rxConfigure() {
         loginButton.rx.tap
             .bind { [weak self] in
-                //FirestoreManager.shared.putDocuments()
                 self?.viewModel.didTapLoginButtonInWebViewController(button: self?.loginButton ?? UIButton(), view: self!)
             }.disposed(by: disposeBag)
         
@@ -124,7 +123,6 @@ class WebViewController: UIViewController {
 //            }.disposed(by: disposeBag)
 //
 //
-//        // RxDatasource로 변경해야함.
 //        viewModel.webDataSubject
 //            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
 //                cell.titleLabel.text = item.title
