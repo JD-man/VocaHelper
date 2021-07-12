@@ -18,7 +18,7 @@ final class FirestoreManager {
     // MARK: - VocaCollection functions
     
     public func getVocaDocuments(completion: @escaping ([WebData]) -> Void ) {
-        db.collection("testCollection").order(by: "date", descending: true).getDocuments { querySnapShot, error in
+        db.collection("VocaCollection").order(by: "date", descending: true).getDocuments { querySnapShot, error in
             if let error = error {
                 print(error)
             }
@@ -45,12 +45,13 @@ final class FirestoreManager {
         }
     }
     
-    public func putVocaDocuments() {
-        let testVocas = [Voca(idx: 1, word: "test", meaning: "test")]
-        let testWebData = WebData(date: "\(Date())", title: "단어장2", description: "간단설명2", writer: "작성자2", like: "888", download: "777", vocas: testVocas)
-        
+    public func putVocaDocuments(fileName: String, title: String, description: String, vocas: [Voca]) {
+//        guard let writer = UserDefaults.standard.value(forKey: "nickname") as? String else {
+//            return
+//        }
+        let testWebData = WebData(date: "\(Date())", title: title, description: description, writer: "TesterA", like: "0", download: "0", vocas: vocas)
         do {
-            try db.collection("testCollection").document("NewData").setData(from: testWebData)
+            try db.collection("VocaCollection").document(fileName).setData(from: testWebData)
         } catch let error {
             print(error)
         }

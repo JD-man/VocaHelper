@@ -74,6 +74,15 @@ struct WebViewModel {
         }
     }
     
+    public func presentUploadModal(view: WebViewController) {
+        let uploadModal = UploadModalViewController()
+        uploadModal.viewModel = view.viewModel
+        uploadModal.modalPresentationStyle = .overCurrentContext
+        uploadModal.presenting = view
+        view.tabBarController?.tabBar.isHidden.toggle()
+        view.present(uploadModal, animated: false, completion: nil)
+    }
+    
     // MARK: - For LoginViewConroller
     
     public func didTapLoginButton(email: String, password: String, view: LoginViewController) {
@@ -190,7 +199,7 @@ struct WebViewModel {
         return String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
     }
     
-    public func makewebModalSubject() {
+    public func makeWebModalSubject() {
         var temp = VocaManager.shared.fileNames
         temp.removeLast()
         
@@ -198,5 +207,55 @@ struct WebViewModel {
             WordsCell(identity: $0, fileName: changeToRealName(fileName: $0))
         }
         webModalSubject.onNext([SectionOfWordsCell(idx: 0, items: cells)])
+    }
+    
+    public func handleAnimation(height: CGFloat, view: UploadModalViewController) {
+        let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 1) { [weak view] in
+            guard let handleView = view?.handleView else {
+                return
+            }
+            handleView.frame = CGRect(x: 0, y: height, width: handleView.frame.width, height: handleView.frame.height)
+        }
+        
+        if height ==  view.handleView.frame.height {
+            animator.addCompletion { [weak view] _ in
+                view?.dismiss(animated: false) {
+                    view?.presenting?.tabBarController?.tabBar.isHidden.toggle()
+                }
+            }
+        }
+        
+        animator.startAnimation()
+    }
+    
+    var startY: CGFloat = 0
+    public mutating func grabHandle(recognizer: UIPanGestureRecognizer, view: UploadModalViewController) {
+        switch recognizer.state {
+        case .began:
+            self.startY = view.handleView.frame.minY
+        case .changed:
+            var y = startY + recognizer.translation(in: view.handleView).y
+            if y <= view.maxHeight {
+                y = view.maxHeight
+            }
+            else if y >= view.minHeight {
+                y = view.minHeight
+            }
+            view.handleView.frame = CGRect(x: 0, y: y, width: view.handleView.frame.width, height: view.handleView.frame.height)
+        case .ended:
+            if recognizer.velocity(in: view.handleView).y >= 1800 {
+                handleAnimation(height: view.handleView.frame.height, view: view)
+            }
+        default:
+            break
+        }
+    }
+    
+    public func uploadVocas(fileIndex: Int) {
+        let fileName = VocaManager.shared.fileNames[fileIndex]
+        VocaManager.shared.loadVocasLocal(fileName: fileName)
+        
+        // alert띄우고 타이틀, 간단설명 적게 한 후에 OK하면 올리기
+        FirestoreManager.shared.putVocaDocuments(fileName: fileName, title: "UploadTitle", description: "Description", vocas: VocaManager.shared.vocas)
     }
 }

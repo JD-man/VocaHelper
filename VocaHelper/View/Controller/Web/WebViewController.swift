@@ -108,17 +108,13 @@ class WebViewController: UIViewController {
         view.addSubview(loginStatusTextField)
         view.addSubview(loginButton)
         view.addSubview(wordsTableView)
-        
     }
     
     private func rxConfigure() {
         loginButton.rx.tap
             .bind { [weak self] in
                 //self?.viewModel.didTapLoginButtonInWebViewController(button: self?.loginButton ?? UIButton(), view: self!)
-                
-                let uploadModal = UploadModalViewController()
-                uploadModal.viewModel = self?.viewModel
-                self?.present(uploadModal, animated: true, completion: nil)
+                self?.viewModel.presentUploadModal(view: self!)
             }.disposed(by: disposeBag)
         
 //        searchBar.rx.text

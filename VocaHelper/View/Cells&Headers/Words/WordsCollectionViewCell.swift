@@ -65,6 +65,9 @@ class WordsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func didTapButton() {
-        didTap!()
+        guard let didTap = didTap else {
+            return
+        }
+        didTap()
     }
 }

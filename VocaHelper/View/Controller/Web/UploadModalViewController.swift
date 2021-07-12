@@ -11,14 +11,28 @@ import RxCocoa
 import RxDataSources
 
 class UploadModalViewController: UIViewController {
+    deinit {
+        print("uploadmodal deinit")
+    }
     
     public var viewModel: WebViewModel?
     public var disposeBag = DisposeBag()
+    public var presenting: WebViewController?
     
     private var collectionView: UICollectionView?
     
-    private let handleView: UIView = {
+    private let blockView: UIView = {
         let view = UIView()
+        view.backgroundColor = UIColor(white: 0.1, alpha: 0.3)
+        return view
+    }()
+    
+    public let handleView: UIView = {
+        let view = UIView()
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 30
+        view.backgroundColor = .darkGray
+        
         return view
     }()
     
@@ -26,38 +40,37 @@ class UploadModalViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = .lightGray
         view.layer.masksToBounds = true
-        view.layer.cornerRadius = 15
+        view.layer.cornerRadius = 3
         return view
     }()
     
-    private let uploadButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("업로드", for: .normal)
-        button.backgroundColor = .systemTeal
-        return button
-    }()
+    private let panGesture = UIPanGestureRecognizer()
+    private let tapGesture = UITapGestureRecognizer()
     
-    private let backButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("취소", for: .normal)
-        button.backgroundColor = .systemPink
-        return button
-    }()
+    public var minHeight: CGFloat = 0
+    public var maxHeight: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewConfigure()
         rxConfigure()
-        //print(VocaManager.directoryURL?.absoluteString)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        blockView.frame = view.bounds
+        handleView.frame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: view.bounds.height)
+        handleImage.frame = CGRect(x: 0.5 * (handleView.bounds.width - 30), y: 10 , width: 30, height: 5)
+        collectionView?.frame = CGRect(x: 0, y: handleImage.frame.maxY + 10, width: handleView.frame.width, height: handleView.frame.height)
         
-        collectionView?.frame = view.bounds
+        //Animate View when viewDidLoad
+        minHeight = view.bounds.height * 0.7
+        maxHeight = view.bounds.height * 0.3
+        viewModel?.handleAnimation(height: minHeight, view: self)
     }
     
     private func viewConfigure() {
+        // CollectionView Layout Config
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         layout.itemSize = CGSize(width: view.bounds.width/3-15, height: view.bounds.width/3-20)
@@ -65,17 +78,21 @@ class UploadModalViewController: UIViewController {
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10
         
-        
+        // CollectionView Config
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)
         collectionView?.register(AddCollectionViewCell.self, forCellWithReuseIdentifier: AddCollectionViewCell.identifier)
         collectionView?.backgroundColor = .systemBackground
-                        
+        
+        // Add Gestures
+        blockView.addGestureRecognizer(tapGesture)
+        handleView.addGestureRecognizer(panGesture)
+        
+        // Add Subviews
+        handleView.addSubview(handleImage)
+        handleView.addSubview(collectionView!)
+        view.addSubview(blockView)
         view.addSubview(handleView)
-        view.addSubview(handleImage)
-        view.addSubview(collectionView!)
-        view.addSubview(uploadButton)
-        view.addSubview(backButton)
     }
     
     private func rxConfigure() {
@@ -84,7 +101,18 @@ class UploadModalViewController: UIViewController {
             return
         }
         
-        viewModel.makewebModalSubject()
+        viewModel.makeWebModalSubject()
+        
+        tapGesture.rx.event
+            .bind { [weak self] _ in
+                self?.viewModel?.handleAnimation(height: self?.handleView.frame.height ?? 0, view: self!)
+            }.disposed(by: disposeBag)
+        
+        panGesture.rx.event
+            .bind { [weak self] in
+                self?.viewModel?.grabHandle(recognizer: $0, view: self!)
+            }.disposed(by: disposeBag)
+        
         
         let dataSource = RxCollectionViewSectionedAnimatedDataSource<SectionOfWordsCell>  { [weak self] dataSource, cv, indexPath, item in
             guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier,
@@ -92,13 +120,18 @@ class UploadModalViewController: UIViewController {
                 return UICollectionViewCell()
             }
             cell.label.text = item.fileName
+            cell.button.isUserInteractionEnabled = false
             return cell
         }
-        
         
         viewModel.webModalSubject
             .bind(to: collectionView!.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
+        
+        collectionView!.rx.itemSelected
+            .bind { [weak self] indexPath in
+                self?.viewModel?.uploadVocas(fileIndex: indexPath.row)
+            }.disposed(by: disposeBag)
     }
 }
 
