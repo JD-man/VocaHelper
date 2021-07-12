@@ -30,12 +30,26 @@ class WebViewController: UIViewController {
         button.backgroundColor = .systemBackground
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 10
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         return button
     }()
     
     let sortPickerView: UIPickerView = {
         let pickerView = UIPickerView()
         return pickerView
+    }()
+    
+    let uploadButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("업로드", for: .normal)
+        button.setTitleColor(.label, for: .normal)
+        button.backgroundColor = .systemBackground
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 10
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        return button
     }()
     
     let loginButton: UIButton = {
@@ -47,7 +61,7 @@ class WebViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.isEnabled = true
         button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         return button
     }()
     
@@ -56,7 +70,7 @@ class WebViewController: UIViewController {
         textField.backgroundColor = .systemBackground
         textField.layer.masksToBounds = true
         textField.layer.cornerRadius = 10
-        textField.text = "로그인 중이 아닙니다."
+        textField.text = "로그아웃 상태입니다."
         textField.leftViewMode = .always
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         textField.isEnabled = false
@@ -86,11 +100,11 @@ class WebViewController: UIViewController {
         super.viewDidLayoutSubviews()
         let heightOffset: CGFloat = 15
         searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.maxY, width: view.bounds.size.width, height: 50)
-        sortButton.frame = CGRect(x: 20, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 6, height: 30)
-        loginStatusTextField.frame = CGRect(x: view.bounds.width / 2 - 100, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 2, height: 30)
-        loginButton.frame = CGRect(x: loginStatusTextField.frame.maxX  + 10, y: loginStatusTextField.frame.origin.y, width: loginStatusTextField.frame.width/4, height: 30)
         
-        
+        loginStatusTextField.frame = CGRect(x: 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 2, height: 30)
+        loginButton.frame = CGRect(x: loginStatusTextField.frame.maxX  + 10, y: loginStatusTextField.frame.minY, width: loginStatusTextField.frame.width/4, height: 30)
+        uploadButton.frame = CGRect(x: loginButton.frame.maxX + 10, y: loginStatusTextField.frame.minY, width: loginButton.frame.width, height: loginButton.frame.height)
+        sortButton.frame = CGRect(x: uploadButton.frame.maxX + 10, y: loginStatusTextField.frame.minY, width: loginButton.frame.width, height: loginButton.frame.height)
         wordsTableView.frame = CGRect(x: 0, y: loginStatusTextField.frame.maxY + heightOffset, width: view.bounds.size.width, height: view.bounds.size.height - (loginStatusTextField.frame.maxY + heightOffset))
     }
     
@@ -104,62 +118,67 @@ class WebViewController: UIViewController {
     
     private func configure() {
         view.addSubview(searchBar)
-        view.addSubview(sortButton)
         view.addSubview(loginStatusTextField)
         view.addSubview(loginButton)
+        view.addSubview(sortButton)
+        view.addSubview(uploadButton)
         view.addSubview(wordsTableView)
     }
     
     private func rxConfigure() {
         loginButton.rx.tap
             .bind { [weak self] in
-                //self?.viewModel.didTapLoginButtonInWebViewController(button: self?.loginButton ?? UIButton(), view: self!)
+                self?.viewModel.didTapLoginButtonInWebViewController(button: self?.loginButton ?? UIButton(), view: self!)
+            }.disposed(by: disposeBag)
+        
+        uploadButton.rx.tap
+            .bind { [weak self] in
                 self?.viewModel.presentUploadModal(view: self!)
             }.disposed(by: disposeBag)
         
-//        searchBar.rx.text
-//            .bind {
-//                print($0!)
-//            }.disposed(by: disposeBag)
-//
-//
-//        viewModel.webDataSubject
-//            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
-//                cell.titleLabel.text = item.title
-//                cell.descriptionLabel.text = item.description
-//                cell.writerLabel.text = item.writer
-//                cell.downloadLabel.text = item.download
-//                cell.likeLabel.text = item.like
-//
-//                cell.tapFunction = { self?.viewModel.getWebVocas(vocas: item.vocas, view: self!) }
-//            }.disposed(by: disposeBag)
-//
-//        Observable.of(sortTitle)
-//            .bind(to: sortPickerView.rx.itemTitles) {
-//                return $1
-//            }.disposed(by: disposeBag)
-//
-//        sortPickerView.rx.itemSelected
-//            .bind() { [weak self] in
-//                self?.sortButton.setTitle(self?.sortTitle[$0.row], for: .normal)
-//                // 정렬하기
-//            }.disposed(by: disposeBag)
-//
-//        sortButton.rx.tap
-//            .bind { [weak self] in
-//                guard let strongSelf = self else {
-//                    return
-//                }
-//                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-//                let contentView = UIViewController()
-//                contentView.preferredContentSize = CGSize(width: strongSelf.view.bounds.size.width / 1.5, height: 150)
-//                contentView.view = strongSelf.sortPickerView
-//
-//                // UIAlertController의 key, value값을 이용함. 다른 클래스들의 key,value값은 뭐가있는지 찾아볼것.
-//                actionSheet.setValue(contentView, forKey: "contentViewController")
-//                actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler:  nil ))
-//                strongSelf.present(actionSheet, animated: true, completion: nil)
-//            }.disposed(by: disposeBag)
+        searchBar.rx.text
+            .bind {
+                print($0!)
+            }.disposed(by: disposeBag)
+
+
+        viewModel.webDataSubject
+            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
+                cell.titleLabel.text = item.title
+                cell.descriptionLabel.text = item.description
+                cell.writerLabel.text = item.writer
+                cell.downloadLabel.text = item.download
+                cell.likeLabel.text = item.like
+
+                cell.tapFunction = { self?.viewModel.getWebVocas(vocas: item.vocas, view: self!) }
+            }.disposed(by: disposeBag)
+
+        Observable.of(sortTitle)
+            .bind(to: sortPickerView.rx.itemTitles) {
+                return $1
+            }.disposed(by: disposeBag)
+
+        sortPickerView.rx.itemSelected
+            .bind() { [weak self] in
+                self?.sortButton.setTitle(self?.sortTitle[$0.row], for: .normal)
+                // 정렬하기
+            }.disposed(by: disposeBag)
+
+        sortButton.rx.tap
+            .bind { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                let contentView = UIViewController()
+                contentView.preferredContentSize = CGSize(width: strongSelf.view.bounds.size.width / 1.5, height: 150)
+                contentView.view = strongSelf.sortPickerView
+
+                // UIAlertController의 key, value값을 이용함. 다른 클래스들의 key,value값은 뭐가있는지 찾아볼것.
+                actionSheet.setValue(contentView, forKey: "contentViewController")
+                actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler:  nil ))
+                strongSelf.present(actionSheet, animated: true, completion: nil)
+            }.disposed(by: disposeBag)
     }
     
     @objc private func addStateObserver() {

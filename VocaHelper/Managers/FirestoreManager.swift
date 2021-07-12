@@ -45,38 +45,95 @@ final class FirestoreManager {
         }
     }
     
-    public func putVocaDocuments(fileName: String, title: String, description: String, vocas: [Voca]) {
-//        guard let writer = UserDefaults.standard.value(forKey: "nickname") as? String else {
-//            return
-//        }
-        let testWebData = WebData(date: "\(Date())", title: title, description: description, writer: "TesterA", like: "0", download: "0", vocas: vocas)
-        do {
-            try db.collection("VocaCollection").document(fileName).setData(from: testWebData)
-        } catch let error {
-            print(error)
+    public func putVocaDocuments(fileName: String, title: String, description: String, vocas: [Voca],
+                                 completion: @escaping ((Bool) -> Void)) {
+        guard let writer = UserDefaults.standard.value(forKey: "nickname") as? String,
+              let email = UserDefaults.standard.value(forKey: "email")  as? String else{
+            return
+        }
+        
+        var uploadName = writer + " - " + title
+        let testWebData = WebData(date: "\(Date())", title: title, description: description, writer: writer, like: "0", download: "0", vocas: vocas)
+        getUserUpload(email: email) { [weak self] result in
+            switch result {
+            case .success(let uploads):
+                let existNum = uploads.filter { $0.starts(with: uploadName)}.count
+                if  existNum > 0 {
+                    uploadName += "(" + "\(existNum)" + ")"
+                }
+                do {
+                    try self?.db.collection("VocaCollection").document(uploadName).setData(from: testWebData, completion: { error in
+                        if let error = error {
+                            print(error)
+                            completion(false)
+                        }
+                        else {
+                            self?.db.collection("UserCollection").document(email).updateData(["upload" : FieldValue.arrayUnion([uploadName])], completion: { error in
+                                if let error = error {
+                                    print(error)
+                                    completion(false)
+                                }
+                                else {
+                                    completion(true)
+                                }
+                            })
+                        }
+                    })
+                } catch {
+                    print(error)
+                    completion(false)
+                }
+            case .failure(let error):
+                print(error)
+                completion(false)
+            }
         }
     }
     
     // MARK: - UserCollection functions
     
-    public func putUserDocuments(nickName: String, email: String, completion: (() -> Void)) {
+    public func putUserDocuments(nickName: String, email: String, completion: ((Bool) -> Void)) {
         let newUser = UserData(nickname: nickName, upload: [])
         do {
             try db.collection("UserCollection").document(email).setData(from: newUser)
-            completion()
+            completion(true)
         } catch {
             print(error)
+            completion(false)
         }
     }
     
-    public func getUserNickName(email: String, completion: @escaping ((String) -> Void)) {
+    public func getUserNickName(email: String, completion: @escaping ((Result<String, Error>) -> Void)) {
         db.collection("UserCollection").document(email).getDocument { snapshot, error in
-            guard let snapshot = snapshot,
-                  let dictionary = snapshot.data(),
-                  let nickName = dictionary["nickname"] as? String else {
-                return
+            if let error = error {
+                print(error)
+                completion(.failure(error))
             }
-            completion(nickName)
+            else {
+                guard let snapshot = snapshot,
+                      let dictionary = snapshot.data(),
+                      let nickName = dictionary["nickname"] as? String else {
+                    return
+                }
+                completion(.success(nickName))
+            }
+        }
+    }
+    
+    public func getUserUpload(email: String, completion: @escaping ((Result<[String], Error>) -> Void)) {
+        db.collection("UserCollection").document(email).getDocument { snapshot, error in
+            if let error = error {
+                print(error)
+                completion(.failure(error))
+            }
+            else{
+                guard let snapshot = snapshot,
+                      let dictionary = snapshot.data(),
+                      let uploads = dictionary["upload"] as? [String] else {
+                    return
+                }
+                completion(.success(uploads))
+            }
         }
     }
     

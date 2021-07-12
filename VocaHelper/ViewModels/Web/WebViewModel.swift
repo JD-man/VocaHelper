@@ -58,9 +58,14 @@ struct WebViewModel {
                 return
             }
             guard let nickName = UserDefaults.standard.value(forKey: "nickname") as? String else {
-                FirestoreManager.shared.getUserNickName(email: email) { nickName in
-                    textField.text = nickName
-                    UserDefaults.standard.set(nickName, forKey: "nickname")
+                FirestoreManager.shared.getUserNickName(email: email) { result in
+                    switch result {
+                    case .success(let nickName):
+                        textField.text = nickName
+                        UserDefaults.standard.set(nickName, forKey: "nickname")
+                    case .failure(_):
+                        textField.text = "유저 정보를 가져오는데 실패했습니다."
+                    }
                 }
                 return
             }
@@ -75,12 +80,19 @@ struct WebViewModel {
     }
     
     public func presentUploadModal(view: WebViewController) {
-        let uploadModal = UploadModalViewController()
-        uploadModal.viewModel = view.viewModel
-        uploadModal.modalPresentationStyle = .overCurrentContext
-        uploadModal.presenting = view
-        view.tabBarController?.tabBar.isHidden.toggle()
-        view.present(uploadModal, animated: false, completion: nil)
+        if AuthManager.shared.checkUserLoggedIn() {
+            let uploadModal = UploadModalViewController()
+            uploadModal.viewModel = view.viewModel
+            uploadModal.modalPresentationStyle = .overCurrentContext
+            uploadModal.presenting = view
+            view.tabBarController?.tabBar.isHidden.toggle()
+            view.present(uploadModal, animated: false, completion: nil)
+        }
+        else {
+            let alert = UIAlertController(title: "로그인 중이 아닙니다!", message: "로그인 후 업로드가 가능합니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+            view.present(alert, animated: true, completion: nil)
+        }
     }
     
     // MARK: - For LoginViewConroller
@@ -124,15 +136,22 @@ struct WebViewModel {
                                 switch isReloaded {
                                 case true:
                                     if AuthManager.shared.checkUserVeryfied() {
-                                        FirestoreManager.shared.putUserDocuments(nickName: nickName, email: email) {
-                                            let successAlert = UIAlertController(title: "가입이 완료됐습니다.", message: nil, preferredStyle: .alert)
-                                            successAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { [weak view] _ in
-                                                UserDefaults.standard.set(nickName, forKey: "nickname")
-                                                UserDefaults.standard.set(email, forKey: "email")
-                                                NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
-                                                view?.dismiss(animated: true, completion: nil)
-                                            }))
-                                            view?.present(successAlert, animated: true, completion: nil)
+                                        FirestoreManager.shared.putUserDocuments(nickName: nickName, email: email) { isUserPut in
+                                            switch isUserPut {
+                                            case true:
+                                                let successAlert = UIAlertController(title: "가입이 완료됐습니다.", message: nil, preferredStyle: .alert)
+                                                successAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { [weak view] _ in
+                                                    UserDefaults.standard.set(nickName, forKey: "nickname")
+                                                    UserDefaults.standard.set(email, forKey: "email")
+                                                    NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
+                                                    view?.dismiss(animated: true, completion: nil)
+                                                }))
+                                                view?.present(successAlert, animated: true, completion: nil)
+                                            case false:
+                                                let failAlert = UIAlertController(title: "유저 정보를 입력하는데 실패했습니다.", message: "계속 이런 현상이 나타나면 문의해주세요.", preferredStyle: .alert)
+                                                failAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+                                                view?.present(failAlert, animated: true, completion: nil)
+                                            }
                                         }
                                     }
                                     else {
@@ -144,7 +163,7 @@ struct WebViewModel {
                                         view?.present(verificationFailalert, animated: true, completion: nil)
                                     }
                                 case false:
-                                    let reloadFailAlert = UIAlertController(title: "유저 정보 갱신에 실패했습니다.", message: "이런현상이 계속 발생하는 경우 문의해주세요.", preferredStyle: .alert)
+                                    let reloadFailAlert = UIAlertController(title: "유저 정보 갱신에 실패했습니다.", message: "계속 이런 현상이 나타나면 문의해주세요.", preferredStyle: .alert)
                                     reloadFailAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
                                     view?.present(reloadFailAlert, animated: true, completion: nil)
                                 }
@@ -152,7 +171,7 @@ struct WebViewModel {
                         }))
                         view.present(sendEmailAlert, animated: true, completion: nil)
                     case false:
-                        let sendEmailFailalert = UIAlertController(title: "이메일 전송이 실패했습니다.", message: "이런현상이 계속 발생하는 경우 문의해주세요.", preferredStyle: .alert)
+                        let sendEmailFailalert = UIAlertController(title: "이메일 전송이 실패했습니다.", message: "계속 이런 현상이 나타나면 문의해주세요.", preferredStyle: .alert)
                         sendEmailFailalert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
                         view.present(sendEmailFailalert, animated: true, completion: nil)
                     }
@@ -224,7 +243,6 @@ struct WebViewModel {
                 }
             }
         }
-        
         animator.startAnimation()
     }
     
@@ -243,7 +261,7 @@ struct WebViewModel {
             }
             view.handleView.frame = CGRect(x: 0, y: y, width: view.handleView.frame.width, height: view.handleView.frame.height)
         case .ended:
-            if recognizer.velocity(in: view.handleView).y >= 1800 {
+            if recognizer.velocity(in: view.handleView).y >= 1550 {
                 handleAnimation(height: view.handleView.frame.height, view: view)
             }
         default:
@@ -251,11 +269,64 @@ struct WebViewModel {
         }
     }
     
-    public func uploadVocas(fileIndex: Int) {
+    public func uploadVocas(fileIndex: Int, view: UploadModalViewController) {
         let fileName = VocaManager.shared.fileNames[fileIndex]
         VocaManager.shared.loadVocasLocal(fileName: fileName)
         
         // alert띄우고 타이틀, 간단설명 적게 한 후에 OK하면 올리기
-        FirestoreManager.shared.putVocaDocuments(fileName: fileName, title: "UploadTitle", description: "Description", vocas: VocaManager.shared.vocas)
+        let alert = UIAlertController(title: "제목과 간단한 설명을 입력해주세요.", message: nil, preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "제목..."
+            textField.autocorrectionType = .no
+            textField.autocapitalizationType = .none
+        }
+        alert.addTextField { textField in
+            textField.placeholder = "간단한 설명..."
+            textField.autocorrectionType = .no
+            textField.autocapitalizationType = .none
+        }
+        alert.addAction(UIAlertAction(title: "업로드", style: .default, handler: { [weak view] _ in
+            guard let alertTextFields = alert.textFields,
+                  let title = alertTextFields[0].text,
+                  let description = alertTextFields[1].text else {
+                return
+            }
+            if title == "" {
+                let titleFailAlert = UIAlertController(title: "제목을 입력해주세요.", message: nil, preferredStyle: .alert)
+                titleFailAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { _ in
+                    uploadVocas(fileIndex: fileIndex, view: view!)
+                }))
+                view?.present(titleFailAlert, animated: true, completion: nil)
+            }
+            else if description == "" {
+                let descriptionFailAlert = UIAlertController(title: "간단한 설명을 입력해주세요.", message: nil, preferredStyle: .alert)
+                descriptionFailAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: {  _ in
+                    uploadVocas(fileIndex: fileIndex, view: view!)
+                }))
+                view?.present(descriptionFailAlert, animated: true, completion: nil)
+            }
+            else {
+                FirestoreManager.shared.putVocaDocuments(
+                    fileName: fileName,
+                    title: title,
+                    description: description,
+                    vocas: VocaManager.shared.vocas) { isUploaded in
+                    switch isUploaded {
+                    case true:
+                        let alert = UIAlertController(title: "업로드가 완료됐습니다.", message: "", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
+                            handleAnimation(height: view?.handleView.frame.height ?? 0, view: view!)
+                        }))
+                        view?.present(alert, animated: true, completion: nil)
+                    case false:
+                        let alert = UIAlertController(title: "업로드에 실패했습니다.", message: "계속 이런 현상이 나타나면 문의해주세요.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                        view?.present(alert, animated: true, completion: nil)
+                    }
+                }
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "취소", style: .destructive, handler: nil))
+        view.present(alert, animated: true, completion: nil)
     }
 }

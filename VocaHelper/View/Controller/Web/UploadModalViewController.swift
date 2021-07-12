@@ -114,7 +114,7 @@ class UploadModalViewController: UIViewController {
             }.disposed(by: disposeBag)
         
         
-        let dataSource = RxCollectionViewSectionedAnimatedDataSource<SectionOfWordsCell>  { [weak self] dataSource, cv, indexPath, item in
+        let dataSource = RxCollectionViewSectionedAnimatedDataSource<SectionOfWordsCell>  { dataSource, cv, indexPath, item in
             guard let  cell = cv.dequeueReusableCell(withReuseIdentifier: WordsCollectionViewCell.identifier,
                                                      for: indexPath) as? WordsCollectionViewCell else {
                 return UICollectionViewCell()
@@ -130,7 +130,7 @@ class UploadModalViewController: UIViewController {
         
         collectionView!.rx.itemSelected
             .bind { [weak self] indexPath in
-                self?.viewModel?.uploadVocas(fileIndex: indexPath.row)
+                self?.viewModel?.uploadVocas(fileIndex: indexPath.row, view: self!)
             }.disposed(by: disposeBag)
     }
 }
