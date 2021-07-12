@@ -23,6 +23,7 @@
 		895AAB4F2633FA0F00532021 /* EditTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */; };
 		895AAB572634165800532021 /* EditTableViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895AAB562634165800532021 /* EditTableViewFooter.swift */; };
 		895F2B352679B07C0067F618 /* SearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895F2B342679B07C0067F618 /* SearchResultTableViewCell.swift */; };
+		896402F9269C8E29003989C6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 896402F8269C8E29003989C6 /* GoogleService-Info.plist */; };
 		89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651F9C2632BE4900949DEB /* AppDelegate.swift */; };
 		89651F9F2632BE4900949DEB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651F9E2632BE4900949DEB /* SceneDelegate.swift */; };
 		89651FA62632BE4A00949DEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89651FA52632BE4A00949DEB /* Assets.xcassets */; };
@@ -43,7 +44,6 @@
 		89C812DC269961CF000CA8F9 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C812DB269961CF000CA8F9 /* CreateUserViewController.swift */; };
 		89C812DE26998F9E000CA8F9 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C812DD26998F9E000CA8F9 /* UserData.swift */; };
 		89C812E0269991F7000CA8F9 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C812DF269991F7000CA8F9 /* AuthManager.swift */; };
-		89CC7BE42691E462009D008D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89CC7BE32691E462009D008D /* GoogleService-Info.plist */; };
 		89CC7BE72691EF46009D008D /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CC7BE62691EF46009D008D /* WebViewController.swift */; };
 		89CC7BE92691F458009D008D /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CC7BE82691F458009D008D /* FirestoreManager.swift */; };
 		89ED977D2693624500374FC8 /* WebTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ED977C2693624500374FC8 /* WebTableViewCell.swift */; };
@@ -68,6 +68,7 @@
 		895AAB4E2633FA0F00532021 /* EditTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewCell.swift; sourceTree = "<group>"; };
 		895AAB562634165800532021 /* EditTableViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewFooter.swift; sourceTree = "<group>"; };
 		895F2B342679B07C0067F618 /* SearchResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableViewCell.swift; sourceTree = "<group>"; };
+		896402F8269C8E29003989C6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		89651F992632BE4900949DEB /* VocaHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocaHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89651F9C2632BE4900949DEB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		89651F9E2632BE4900949DEB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -90,7 +91,6 @@
 		89C812DB269961CF000CA8F9 /* CreateUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUserViewController.swift; sourceTree = "<group>"; };
 		89C812DD26998F9E000CA8F9 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		89C812DF269991F7000CA8F9 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
-		89CC7BE32691E462009D008D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		89CC7BE62691EF46009D008D /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		89CC7BE82691F458009D008D /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		89ED977C2693624500374FC8 /* WebTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTableViewCell.swift; sourceTree = "<group>"; };
@@ -231,7 +231,7 @@
 				89651FA52632BE4A00949DEB /* Assets.xcassets */,
 				89651FA72632BE4A00949DEB /* LaunchScreen.storyboard */,
 				89651FAA2632BE4A00949DEB /* Info.plist */,
-				89CC7BE32691E462009D008D /* GoogleService-Info.plist */,
+				896402F8269C8E29003989C6 /* GoogleService-Info.plist */,
 			);
 			path = VocaHelper;
 			sourceTree = "<group>";
@@ -376,6 +376,7 @@
 				89651F962632BE4900949DEB /* Frameworks */,
 				89651F972632BE4900949DEB /* Resources */,
 				0EBE441E02B428DBCC573B77 /* [CP] Embed Pods Frameworks */,
+				896402FA269C8F74003989C6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -425,7 +426,7 @@
 			files = (
 				89651FA92632BE4A00949DEB /* LaunchScreen.storyboard in Resources */,
 				89651FA62632BE4A00949DEB /* Assets.xcassets in Resources */,
-				89CC7BE42691E462009D008D /* GoogleService-Info.plist in Resources */,
+				896402F9269C8E29003989C6 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,6 +471,23 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		896402FA269C8F74003989C6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -656,6 +674,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = VocaHelper/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (

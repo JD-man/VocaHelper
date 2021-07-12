@@ -18,7 +18,7 @@ class WordsViewController: UIViewController {
     public var disposeBag = DisposeBag()
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad()        
         viewConfigure()
         rxConfigure()
         //print(VocaManager.directoryURL?.absoluteString)

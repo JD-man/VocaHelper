@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+//import FirebaseAnalytics
 
 final class AuthManager {
     static let shared = AuthManager()
@@ -34,11 +35,8 @@ final class AuthManager {
     
     public func checkUserVeryfied() -> Bool {
         guard let currentUser = Auth.auth().currentUser else {
-            print("유저없음")
             return false
         }
-        print(currentUser.email)
-        print(currentUser.isEmailVerified)
         if currentUser.isEmailVerified {
             return true
         }
@@ -54,7 +52,7 @@ final class AuthManager {
                 completion(false)
             }
             else {
-                completion(true)
+                completion(true)                
             }
         }
     }

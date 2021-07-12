@@ -136,10 +136,10 @@ class WebViewController: UIViewController {
                 self?.viewModel.presentUploadModal(view: self!)
             }.disposed(by: disposeBag)
         
-        searchBar.rx.text
-            .bind {
-                print($0!)
-            }.disposed(by: disposeBag)
+//        searchBar.rx.text
+//            .bind {
+//                print($0!)
+//            }.disposed(by: disposeBag)
 
 
         viewModel.webDataSubject
