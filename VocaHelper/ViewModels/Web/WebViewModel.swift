@@ -9,9 +9,11 @@ import Foundation
 import RxSwift
 
 struct WebViewModel {
+    private let disposeBag = DisposeBag()
     
     public var webDataSubject = BehaviorSubject<[WebData]>(value: [])
-    private let disposeBag = DisposeBag()
+    public var webModalSubject = BehaviorSubject<[SectionOfWordsCell]>(value: [])
+    
     
     init() {
         makeWebDataSubject()
@@ -181,5 +183,20 @@ struct WebViewModel {
             }
         }
     }
-
+    
+    // MARK: - For UploadModalViewController
+    
+    func changeToRealName(fileName: String) -> String {
+        return String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
+    }
+    
+    public func makewebModalSubject() {
+        var temp = VocaManager.shared.fileNames
+        temp.removeLast()
+        
+        let cells = temp.map {
+            WordsCell(identity: $0, fileName: changeToRealName(fileName: $0))
+        }
+        webModalSubject.onNext([SectionOfWordsCell(idx: 0, items: cells)])
+    }
 }
