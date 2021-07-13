@@ -31,6 +31,13 @@ class UploadModalViewController: UIViewController {
         let view = UIView()
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 30
+        view.backgroundColor = .systemBackground
+        return view
+    }()
+    
+    public let handleArea: UIView = {
+        let view = UIView()
+        view.layer.masksToBounds = true
         view.backgroundColor = .darkGray
         return view
     }()
@@ -67,6 +74,7 @@ class UploadModalViewController: UIViewController {
         let bottomBlockHeight: CGFloat = view.safeAreaInsets.bottom
         blockView.frame = view.bounds
         handleView.frame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: view.bounds.height)
+        handleArea.frame = CGRect(x: 0, y: handleView.bounds.minY, width: handleView.frame.width, height: 25)
         handleImage.frame = CGRect(x: 0.5 * (handleView.bounds.width - 30), y: 10 , width: 30, height: 5)
         collectionView?.frame = CGRect(x: 0, y: handleImage.frame.maxY + 10, width: handleView.frame.width, height: handleView.frame.height - minHeight - 25 - bottomBlockHeight)
         bottomBlockView.frame = CGRect(x: 0, y: collectionView?.frame.maxY ?? 0 + bottomBlockHeight, width: handleView.frame.width, height: bottomBlockHeight)
@@ -88,14 +96,15 @@ class UploadModalViewController: UIViewController {
         
         // CollectionView Config
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)        
+        collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)
         collectionView?.backgroundColor = .systemBackground
         
         // Add Gestures
         blockView.addGestureRecognizer(tapGesture)
-        handleView.addGestureRecognizer(panGesture)
+        handleArea.addGestureRecognizer(panGesture)
         
         // Add Subviews
+        handleView.addSubview(handleArea)
         handleView.addSubview(handleImage)
         handleView.addSubview(collectionView!)
         handleView.addSubview(bottomBlockView)

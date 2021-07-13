@@ -56,6 +56,11 @@ final class VocaManager {
     func makeFile() {
         let newFileName = "\(Date())Name"
         
+        // 1초가 지나지 않은 경우 같은 이름이 생겨나 FatalError가 발생함
+        guard !fileNames.contains(newFileName) else {
+            return
+        }
+        
         let insertIdx = fileNames.count - 1
         fileNames.insert(newFileName, at: insertIdx)
         
