@@ -30,8 +30,8 @@ final class FirestoreManager {
                     var returnedData = WebData(date: "",
                                                title: "",
                                                description: "",
-                                               writer: "", like: "",
-                                               download: "",
+                                               writer: "", like: 0,
+                                               download: 0,
                                                vocas: [Voca(idx: 0, word: "", meaning: "")])
                     do {
                         if let data = try $0.data(as : WebData.self) { returnedData = data }
@@ -53,7 +53,7 @@ final class FirestoreManager {
         }
         
         var uploadName = writer + " - " + title
-        let testWebData = WebData(date: "\(Date())", title: title, description: description, writer: writer, like: "0", download: "0", vocas: vocas)
+        let webData = WebData(date: "\(Date())", title: title, description: description, writer: writer, like: 0, download: 0, vocas: vocas)
         getUserUpload(email: email) { [weak self] result in
             switch result {
             case .success(let uploads):
@@ -62,7 +62,7 @@ final class FirestoreManager {
                     uploadName += "(" + "\(existNum)" + ")"
                 }
                 do {
-                    try self?.db.collection("VocaCollection").document(uploadName).setData(from: testWebData, completion: { error in
+                    try self?.db.collection("VocaCollection").document(uploadName).setData(from: webData, completion: { error in
                         if let error = error {
                             print(error)
                             completion(false)
@@ -90,10 +90,34 @@ final class FirestoreManager {
         }
     }
     
+    public func thumbsUp(webVocaName: String) {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        db.collection("VocaCollection").document(webVocaName).updateData([
+            "like" : FieldValue.increment(Int64(1))
+        ])
+        db.collection("UserCollection").document(email).updateData([
+            "like" : FieldValue.arrayUnion([webVocaName])
+        ])
+    }
+    
+    public func deleteThumbsUp(webVocaName: String) {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        db.collection("VocaCollection").document(webVocaName).updateData([
+            "like" : FieldValue.increment(Int64(-1))
+        ])
+        db.collection("UserCollection").document(email).updateData([
+            "like" : FieldValue.arrayRemove([webVocaName])
+        ])
+    }
+    
     // MARK: - UserCollection functions
     
     public func putUserDocuments(nickName: String, email: String, completion: ((Bool) -> Void)) {
-        let newUser = UserData(nickname: nickName, upload: [])
+        let newUser = UserData(nickname: nickName, upload: [], like: [])
         do {
             try db.collection("UserCollection").document(email).setData(from: newUser)
             completion(true)
@@ -133,6 +157,23 @@ final class FirestoreManager {
                     return
                 }
                 completion(.success(uploads))
+            }
+        }
+    }
+    
+    public func getUserLike(email: String, completion: @escaping ((Result<[String], Error>) -> Void)) {
+        db.collection("UserCollection").document(email).getDocument { snapshot, error in
+            if let error = error {
+                print(error)
+                completion(.failure(error))
+            }
+            else{
+                guard let snapshot = snapshot,
+                      let dictionary = snapshot.data(),
+                      let likes = dictionary["like"] as? [String] else {
+                    return
+                }
+                completion(.success(likes))
             }
         }
     }

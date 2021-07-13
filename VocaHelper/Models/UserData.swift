@@ -9,5 +9,6 @@ import Foundation
 
 struct UserData: Codable {
     var nickname: String
-    var upload: [String]    
+    var upload: [String]
+    var like: [String]
 }

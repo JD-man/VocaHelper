@@ -13,6 +13,7 @@ class WebViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     let sortTitle = ["다운순", "좋아요순"]
+    var userLikeList: [String] = []
     let viewModel = WebViewModel()
     
     
@@ -111,6 +112,7 @@ class WebViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(addStateObserver), name: NSNotification.Name("StateObserver"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
+        viewModel.makeWebDataSubject()
     }
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -126,6 +128,7 @@ class WebViewController: UIViewController {
     }
     
     private func rxConfigure() {
+        
         loginButton.rx.tap
             .bind { [weak self] in
                 self?.viewModel.didTapLoginButtonInWebViewController(button: self?.loginButton ?? UIButton(), view: self!)
@@ -147,10 +150,19 @@ class WebViewController: UIViewController {
                 cell.titleLabel.text = item.title
                 cell.descriptionLabel.text = item.description
                 cell.writerLabel.text = item.writer
-                cell.downloadLabel.text = item.download
-                cell.likeLabel.text = item.like
+                cell.downloadLabel.text = String(item.download)
+                cell.likeLabel.text = String(item.like)
+                
+                let likeImage = item.liked ? "hand.thumbsup.fill" : "hand.thumbsup"
+                
+                cell.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
 
-                cell.tapFunction = { self?.viewModel.getWebVocas(vocas: item.vocas, view: self!) }
+                cell.tapFunction = { self?.viewModel.getWebVocas(
+                    writer: item.writer,
+                    title: item.title,
+                    isLiked: item.liked,
+                    vocas: item.vocas,
+                    view: self!) }
             }.disposed(by: disposeBag)
 
         Observable.of(sortTitle)

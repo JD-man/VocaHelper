@@ -31,7 +31,7 @@ class WordsViewModel {
     // 추가버튼 터치시 동작
     public func makeNewViewModels(isAddButton: Bool) {
         if isAddButton {
-            VocaManager.shared.makeFile()
+            VocaManager.shared.makeFile(fileName: "\(Date())Name")
         }
         let newWordCell = VocaManager.shared.fileNames
             .map {

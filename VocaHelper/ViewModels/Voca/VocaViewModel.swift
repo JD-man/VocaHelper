@@ -150,7 +150,69 @@ class VocaViewModel {
     }
     
     
-    // MARK - For WebVocaViewController
+    // MARK: - For WebVocaViewController
+    public func didTapWebVocaRightButton(webVocaName: String, isLiked: Bool, view: WebVocaViewController) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "저장하기", style: .default, handler: { [weak view] _ in
+            view?.viewModel.saveWebVocaToLocal(isLiked: isLiked, view: view!)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "시험보기", style: .default, handler: { [weak view] _ in
+            view?.viewModel.pushWebVocaExamViewController(view: view!)
+        }))
+        switch isLiked {
+        case true:
+            actionSheet.addAction(UIAlertAction(title: "좋아요 취소", style: .default, handler: { _ in
+                FirestoreManager.shared.deleteThumbsUp(webVocaName: webVocaName)
+                view.isLiked = false
+            }))
+        case false:
+            actionSheet.addAction(UIAlertAction(title: "좋아요", style: .default, handler: { _ in
+                FirestoreManager.shared.thumbsUp(webVocaName: webVocaName)
+                view.isLiked = true
+            }))
+        }
+        actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        view.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    
+    public func saveWebVocaToLocal(isLiked: Bool, view: WebVocaViewController) {
+        let alert = UIAlertController(title: "저장할 파일의 이름을 적어주세요.", message: nil, preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.autocorrectionType = .no
+            textField.autocapitalizationType = .none
+            textField.placeholder = "저장할 파일의 이름..."
+        }
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { [weak view] _ in
+            guard let textFields = alert.textFields else {
+                return
+            }
+            let fileName = "\(Date())" + (textFields[0].text ?? "다운로드파일")
+            DispatchQueue.global().sync {
+                VocaManager.shared.makeFile(fileName: fileName)
+            }
+            DispatchQueue.global().sync {
+                VocaManager.shared.saveVocas(fileName: fileName)
+            }
+            DispatchQueue.global().sync {
+                print(isLiked)
+                let alert = UIAlertController(title: "단어장이 저장됐습니다.", message: isLiked ? nil : "단어장 작성자에게 좋아요를 눌러주세요!", preferredStyle: .alert)
+                if !isLiked {
+                    alert.addAction(UIAlertAction(title: "좋아요", style: .default, handler: { _ in
+                        FirestoreManager.shared.thumbsUp(webVocaName: view!.webVocaName)
+                    }))
+                }
+                alert.addAction(UIAlertAction(title: isLiked ? "확인" : "나중에", style: .cancel, handler: { _ in
+                    view?.tabBarController?.tabBar.isHidden.toggle()
+                    view?.navigationController?.popViewController(animated: true)
+                }))
+                view?.present(alert, animated: true, completion: nil)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+        view.present(alert, animated: true, completion: nil)
+    }
+    
     public func pushWebVocaExamViewController(view: WebVocaViewController) {
         guard VocaManager.shared.vocas.count >= 5 else {
             let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
@@ -158,8 +220,12 @@ class VocaViewModel {
             view.present(alert, animated: true, completion: nil)
             return
         }
-        view.navigationController?.popViewController(animated: true)
+        guard let navi = view.navigationController else {
+            return
+        }
+        //view.tabBarController?.tabBar.isHidden.toggle()
+        navi.popViewController(animated: true)
         let examVC = ExamViewController()
-        view.navigationController?.pushViewController(examVC, animated: true)
+        navi.pushViewController(examVC, animated: true)
     }
 }

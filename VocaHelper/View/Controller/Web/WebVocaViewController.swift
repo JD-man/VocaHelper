@@ -17,6 +17,8 @@ class WebVocaViewController: UIViewController {
     }
     
     public var fileName: String = ""
+    public var webVocaName: String = ""
+    public var isLiked: Bool = false
     
     lazy var viewModel = VocaViewModel(fileName: fileName)
     let disposeBag = DisposeBag()
@@ -40,6 +42,11 @@ class WebVocaViewController: UIViewController {
     }
     
     private func viewConfigure() {
+        
+        navigationItem.hidesBackButton = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem()
+        navigationItem.leftBarButtonItem?.image =  UIImage(systemName: "arrowshape.turn.up.backward")
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem()
         navigationItem.rightBarButtonItem?.image =  UIImage(systemName: "list.dash")
         
@@ -64,7 +71,13 @@ class WebVocaViewController: UIViewController {
         
         navigationItem.rightBarButtonItem?.rx.tap
             .bind { [weak self] in                
-                self?.viewModel.pushWebVocaExamViewController(view: self!)
+                self?.viewModel.didTapWebVocaRightButton(webVocaName: self!.webVocaName, isLiked: self!.isLiked, view: self!)
+            }.disposed(by: disposeBag)
+        
+        navigationItem.leftBarButtonItem?.rx.tap
+            .bind { [weak self] in
+                self?.tabBarController?.tabBar.isHidden.toggle()
+                self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
     }
 }

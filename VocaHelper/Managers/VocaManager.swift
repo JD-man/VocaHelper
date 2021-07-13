@@ -53,8 +53,8 @@ final class VocaManager {
     }
     
     /// Make file which is saved in phone storage
-    func makeFile() {
-        let newFileName = "\(Date())Name"
+    func makeFile(fileName: String) {
+        let newFileName = fileName
         
         // 1초가 지나지 않은 경우 같은 이름이 생겨나 FatalError가 발생함
         guard !fileNames.contains(newFileName) else {

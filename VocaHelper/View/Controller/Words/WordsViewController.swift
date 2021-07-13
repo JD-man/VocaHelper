@@ -21,12 +21,16 @@ class WordsViewController: UIViewController {
         super.viewDidLoad()        
         viewConfigure()
         rxConfigure()
-        //print(VocaManager.directoryURL?.absoluteString)
+        print(VocaManager.directoryURL?.absoluteString)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView?.frame = view.bounds
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        viewModels.makeNewViewModels(isAddButton: false)
     }
     
     private func viewConfigure() {

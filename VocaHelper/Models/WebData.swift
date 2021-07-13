@@ -12,8 +12,8 @@ struct WebData: Codable {
     let title: String
     let description: String
     let writer: String
-    let like: String
-    let download: String
+    let like: Int
+    let download: Int
     let vocas: [Voca]
     
     enum CodingKeys: String, CodingKey {

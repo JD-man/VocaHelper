@@ -11,7 +11,7 @@ import RxSwift
 struct WebViewModel {
     private let disposeBag = DisposeBag()
     
-    public var webDataSubject = BehaviorSubject<[WebData]>(value: [])
+    public var webDataSubject = BehaviorSubject<[WebCell]>(value: [])
     public var webModalSubject = BehaviorSubject<[SectionOfWordsCell]>(value: [])
     
     
@@ -21,15 +21,42 @@ struct WebViewModel {
     
     // MARK: - For WebViewController
     
-    private func makeWebDataSubject() {
-        FirestoreManager.shared.getVocaDocuments {
-            webDataSubject.onNext($0)
+    public func makeWebDataSubject() {
+        getUserLikes { result in
+            switch result {
+            case .success(let likes):
+                FirestoreManager.shared.getVocaDocuments {
+                    let cells = $0.map {
+                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
+                    }
+                    webDataSubject.onNext(cells)
+                }
+            case .failure(let error):
+                print(error)
+            }
         }
     }
     
-    public func getWebVocas(vocas: [Voca], view: WebViewController) {
+    public func getUserLikes(completion: @escaping ( (Result<[String],Error>)  -> Void)) {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        FirestoreManager.shared.getUserLike(email: email) { result in
+            switch result {
+            case .success(let likes):
+                completion(.success(likes))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    public func getWebVocas(writer: String, title: String, isLiked: Bool, vocas: [Voca], view: WebViewController) {
         VocaManager.shared.vocas = vocas
         let vc = WebVocaViewController()
+        vc.webVocaName = writer + " - " + title
+        vc.isLiked = isLiked
+        view.tabBarController?.tabBar.isHidden.toggle()
         view.navigationController?.pushViewController(vc, animated: true)
     }
     
