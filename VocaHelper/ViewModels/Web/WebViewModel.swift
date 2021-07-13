@@ -247,19 +247,27 @@ struct WebViewModel {
     }
     
     var startY: CGFloat = 0
+    var startHeight: CGFloat = 0
     public mutating func grabHandle(recognizer: UIPanGestureRecognizer, view: UploadModalViewController) {
         switch recognizer.state {
         case .began:
-            self.startY = view.handleView.frame.minY
+            startY = view.handleView.frame.minY
+            startHeight = view.collectionView?.frame.height ?? 0
         case .changed:
             var y = startY + recognizer.translation(in: view.handleView).y
+            var collectionViewHeight = startHeight - recognizer.translation(in: view.handleView).y
             if y <= view.maxHeight {
                 y = view.maxHeight
+                collectionViewHeight = view.handleView.frame.height - view.maxHeight - view.bottomBlockView.frame.height - 25
             }
             else if y >= view.minHeight {
                 y = view.minHeight
+                collectionViewHeight = view.handleView.frame.height - view.minHeight - view.bottomBlockView.frame.height - 25
             }
             view.handleView.frame = CGRect(x: 0, y: y, width: view.handleView.frame.width, height: view.handleView.frame.height)
+            view.collectionView?.frame = CGRect(x: 0, y: view.collectionView?.frame.origin.y ?? 0, width: view.collectionView?.frame.width ?? 0, height: collectionViewHeight)
+            view.bottomBlockView.frame = CGRect(x: 0, y: view.collectionView?.frame.maxY ?? 0 + view.bottomBlockView.frame.height, width: view.bottomBlockView.frame.width, height: view.bottomBlockView.frame.height)
+        
         case .ended:
             if recognizer.velocity(in: view.handleView).y >= 1550 {
                 handleAnimation(height: view.handleView.frame.height, view: view)

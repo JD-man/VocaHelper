@@ -19,7 +19,7 @@ class UploadModalViewController: UIViewController {
     public var disposeBag = DisposeBag()
     public var presenting: WebViewController?
     
-    private var collectionView: UICollectionView?
+    public var collectionView: UICollectionView?
     
     private let blockView: UIView = {
         let view = UIView()
@@ -32,7 +32,6 @@ class UploadModalViewController: UIViewController {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 30
         view.backgroundColor = .darkGray
-        
         return view
     }()
     
@@ -41,6 +40,13 @@ class UploadModalViewController: UIViewController {
         view.backgroundColor = .lightGray
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 3
+        return view
+    }()
+    
+    public let bottomBlockView: UIView = {
+        let view = UIView()
+        view.isUserInteractionEnabled = false
+        view.backgroundColor = .systemBackground
         return view
     }()
     
@@ -58,10 +64,12 @@ class UploadModalViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        let bottomBlockHeight: CGFloat = view.safeAreaInsets.bottom
         blockView.frame = view.bounds
         handleView.frame = CGRect(x: 0, y: view.bounds.height, width: view.bounds.width, height: view.bounds.height)
         handleImage.frame = CGRect(x: 0.5 * (handleView.bounds.width - 30), y: 10 , width: 30, height: 5)
-        collectionView?.frame = CGRect(x: 0, y: handleImage.frame.maxY + 10, width: handleView.frame.width, height: handleView.frame.height)
+        collectionView?.frame = CGRect(x: 0, y: handleImage.frame.maxY + 10, width: handleView.frame.width, height: handleView.frame.height - minHeight - 25 - bottomBlockHeight)
+        bottomBlockView.frame = CGRect(x: 0, y: collectionView?.frame.maxY ?? 0 + bottomBlockHeight, width: handleView.frame.width, height: bottomBlockHeight)
         
         //Animate View when viewDidLoad
         minHeight = view.bounds.height * 0.7
@@ -80,8 +88,7 @@ class UploadModalViewController: UIViewController {
         
         // CollectionView Config
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)
-        collectionView?.register(AddCollectionViewCell.self, forCellWithReuseIdentifier: AddCollectionViewCell.identifier)
+        collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)        
         collectionView?.backgroundColor = .systemBackground
         
         // Add Gestures
@@ -91,8 +98,10 @@ class UploadModalViewController: UIViewController {
         // Add Subviews
         handleView.addSubview(handleImage)
         handleView.addSubview(collectionView!)
+        handleView.addSubview(bottomBlockView)
         view.addSubview(blockView)
         view.addSubview(handleView)
+        
     }
     
     private func rxConfigure() {
