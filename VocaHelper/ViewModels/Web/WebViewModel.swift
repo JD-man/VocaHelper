@@ -21,11 +21,11 @@ struct WebViewModel {
     
     // MARK: - For WebViewController
     
-    public func makeWebDataSubject() {
+    public func makeWebDataSubject(orderBy: String = "date") {
         getUserLikes { result in
             switch result {
             case .success(let likes):
-                FirestoreManager.shared.getVocaDocuments {
+                FirestoreManager.shared.getVocaDocuments(orderBy: orderBy) {
                     let cells = $0.map {
                         WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
                     }
@@ -120,6 +120,28 @@ struct WebViewModel {
             alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
             view.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    public func presentSortPickerView(view: WebViewController) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let contentView = UIViewController()
+        contentView.preferredContentSize = CGSize(width: view.view.bounds.size.width / 1.5, height: 150)
+        contentView.view = view.sortPickerView
+
+        // UIAlertController의 key, value값을 이용함. 다른 클래스들의 key,value값은 뭐가있는지 찾아볼것.
+        
+        let orderBys: [String] = ["date", "like", "download"]
+        actionSheet.setValue(contentView, forKey: "contentViewController")
+        actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { [weak view] _ in
+            guard let itemIdx: Int = view?.sortPickerView.selectedRow(inComponent: 0) else {
+                return
+            }
+            let buttonTitle = view?.sortTitle[itemIdx]
+            view?.sortButton.setTitle(buttonTitle, for: .normal)
+            view?.viewModel.makeWebDataSubject(orderBy: orderBys[itemIdx])
+            view?.orderBy = orderBys[itemIdx]
+        }))
+        view.present(actionSheet, animated: true, completion: nil)
     }
     
     // MARK: - For LoginViewConroller

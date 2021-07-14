@@ -17,8 +17,8 @@ final class FirestoreManager {
     
     // MARK: - VocaCollection functions
     
-    public func getVocaDocuments(completion: @escaping ([WebData]) -> Void ) {
-        db.collection("VocaCollection").order(by: "date", descending: true).getDocuments { querySnapShot, error in
+    public func getVocaDocuments(orderBy: String , completion: @escaping ([WebData]) -> Void ) {
+        db.collection("VocaCollection").order(by:orderBy, descending: true).getDocuments { querySnapShot, error in
             if let error = error {
                 print(error)
             }
@@ -111,6 +111,12 @@ final class FirestoreManager {
         ])
         db.collection("UserCollection").document(email).updateData([
             "like" : FieldValue.arrayRemove([webVocaName])
+        ])
+    }
+    
+    public func downloadNumberUp(webVocaName: String) {
+        db.collection("VocaCollection").document(webVocaName).updateData([
+            "download" : FieldValue.increment(Int64(1))
         ])
     }
     

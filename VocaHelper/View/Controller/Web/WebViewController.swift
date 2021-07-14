@@ -12,9 +12,10 @@ import RxCocoa
 class WebViewController: UIViewController {
     
     let disposeBag = DisposeBag()
-    let sortTitle = ["다운순", "좋아요순"]
-    var userLikeList: [String] = []
-    let viewModel = WebViewModel()
+    public let sortTitle = ["최신순","추천순", "다운순"]
+    public var orderBy: String = "date"
+    public var userLikeList: [String] = []
+    public let viewModel = WebViewModel()
     
     
     let searchBar: UISearchBar = {
@@ -26,7 +27,7 @@ class WebViewController: UIViewController {
     
     let sortButton: UIButton = {
         let button = UIButton()
-        button.setTitle("다운순", for: .normal)
+        button.setTitle("최신순", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         button.layer.masksToBounds = true
@@ -163,37 +164,20 @@ class WebViewController: UIViewController {
                     vocas: item.vocas,
                     view: self!) }
             }.disposed(by: disposeBag)
-
+        
         Observable.of(sortTitle)
             .bind(to: sortPickerView.rx.itemTitles) {
                 return $1
             }.disposed(by: disposeBag)
-
-        sortPickerView.rx.itemSelected
-            .bind() { [weak self] in
-                self?.sortButton.setTitle(self?.sortTitle[$0.row], for: .normal)
-                // 정렬하기
-            }.disposed(by: disposeBag)
-
+        
         sortButton.rx.tap
             .bind { [weak self] in
-                guard let strongSelf = self else {
-                    return
-                }
-                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                let contentView = UIViewController()
-                contentView.preferredContentSize = CGSize(width: strongSelf.view.bounds.size.width / 1.5, height: 150)
-                contentView.view = strongSelf.sortPickerView
-
-                // UIAlertController의 key, value값을 이용함. 다른 클래스들의 key,value값은 뭐가있는지 찾아볼것.
-                actionSheet.setValue(contentView, forKey: "contentViewController")
-                actionSheet.addAction(UIAlertAction(title: "확인", style: .cancel, handler:  nil ))
-                strongSelf.present(actionSheet, animated: true, completion: nil)
+                self?.viewModel.presentSortPickerView(view: self!)
             }.disposed(by: disposeBag)
     }
     
     @objc private func addStateObserver() {
         viewModel.setLoginButton(textField: loginStatusTextField, button: loginButton)
-        viewModel.makeWebDataSubject()
+        viewModel.makeWebDataSubject(orderBy: orderBy)
     }
 }

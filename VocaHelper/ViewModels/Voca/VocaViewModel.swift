@@ -193,6 +193,7 @@ class VocaViewModel {
             }
             DispatchQueue.global().sync {
                 VocaManager.shared.saveVocas(fileName: fileName)
+                FirestoreManager.shared.downloadNumberUp(webVocaName: view!.webVocaName)
             }
             DispatchQueue.global().sync {                
                 let alert = UIAlertController(title: "단어장이 저장됐습니다.", message: isLiked ? nil : "이 단어장을 추천해주세요!", preferredStyle: .alert)
