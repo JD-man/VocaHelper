@@ -126,7 +126,7 @@ class WebTableViewCell: UITableViewCell {
     
     private func gradientConfigure() {
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.tertiarySystemBackground.cgColor, UIColor.init(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: CGFloat.random(in: 0.0...1.0)).cgColor]
+        gradient.colors = [UIColor.init(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: CGFloat.random(in: 0.0...1.0)).cgColor, UIColor.tertiarySystemBackground.cgColor]
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)

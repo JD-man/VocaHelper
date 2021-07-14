@@ -15,9 +15,9 @@ struct WebViewModel {
     public var webModalSubject = BehaviorSubject<[SectionOfWordsCell]>(value: [])
     
     
-    init() {
-        makeWebDataSubject()
-    }
+//    init() {
+//        makeWebDataSubject()
+//    }
     
     // MARK: - For WebViewController
     
@@ -88,7 +88,7 @@ struct WebViewModel {
                 FirestoreManager.shared.getUserNickName(email: email) { result in
                     switch result {
                     case .success(let nickName):
-                        textField.text = nickName
+                        textField.text = "안녕하세요, \(nickName)님!"
                         UserDefaults.standard.set(nickName, forKey: "nickname")
                     case .failure(_):
                         textField.text = "유저 정보를 가져오는데 실패했습니다."
@@ -96,7 +96,7 @@ struct WebViewModel {
                 }
                 return
             }
-            textField.text = nickName
+            textField.text = "안녕하세요, \(nickName)님!"
         }
         else {
             button.setTitle("로그인", for: .normal)
@@ -266,6 +266,7 @@ struct WebViewModel {
         if height ==  view.handleView.frame.height {
             animator.addCompletion { [weak view] _ in
                 view?.dismiss(animated: false) {
+                    NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
                     view?.presenting?.tabBarController?.tabBar.isHidden.toggle()
                 }
             }

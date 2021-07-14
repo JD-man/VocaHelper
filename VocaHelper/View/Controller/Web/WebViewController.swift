@@ -112,7 +112,6 @@ class WebViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(addStateObserver), name: NSNotification.Name("StateObserver"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
-        viewModel.makeWebDataSubject()
     }
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -195,5 +194,6 @@ class WebViewController: UIViewController {
     
     @objc private func addStateObserver() {
         viewModel.setLoginButton(textField: loginStatusTextField, button: loginButton)
+        viewModel.makeWebDataSubject()
     }
 }

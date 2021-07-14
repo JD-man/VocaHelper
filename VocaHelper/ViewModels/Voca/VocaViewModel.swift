@@ -161,12 +161,12 @@ class VocaViewModel {
         }))
         switch isLiked {
         case true:
-            actionSheet.addAction(UIAlertAction(title: "좋아요 취소", style: .default, handler: { _ in
+            actionSheet.addAction(UIAlertAction(title: "추천 취소", style: .default, handler: { _ in
                 FirestoreManager.shared.deleteThumbsUp(webVocaName: webVocaName)
                 view.isLiked = false
             }))
         case false:
-            actionSheet.addAction(UIAlertAction(title: "좋아요", style: .default, handler: { _ in
+            actionSheet.addAction(UIAlertAction(title: "추천", style: .default, handler: { _ in
                 FirestoreManager.shared.thumbsUp(webVocaName: webVocaName)
                 view.isLiked = true
             }))
@@ -194,12 +194,13 @@ class VocaViewModel {
             DispatchQueue.global().sync {
                 VocaManager.shared.saveVocas(fileName: fileName)
             }
-            DispatchQueue.global().sync {
-                print(isLiked)
-                let alert = UIAlertController(title: "단어장이 저장됐습니다.", message: isLiked ? nil : "단어장 작성자에게 좋아요를 눌러주세요!", preferredStyle: .alert)
+            DispatchQueue.global().sync {                
+                let alert = UIAlertController(title: "단어장이 저장됐습니다.", message: isLiked ? nil : "이 단어장을 추천해주세요!", preferredStyle: .alert)
                 if !isLiked {
-                    alert.addAction(UIAlertAction(title: "좋아요", style: .default, handler: { _ in
+                    alert.addAction(UIAlertAction(title: "추천", style: .default, handler: { _ in
                         FirestoreManager.shared.thumbsUp(webVocaName: view!.webVocaName)
+                        view?.tabBarController?.tabBar.isHidden.toggle()
+                        view?.navigationController?.popViewController(animated: true)
                     }))
                 }
                 alert.addAction(UIAlertAction(title: isLiked ? "확인" : "나중에", style: .cancel, handler: { _ in
