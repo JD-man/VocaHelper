@@ -23,18 +23,18 @@ class EditViewController: UIViewController {
     
     private var prevTitle: String = ""
     private var selectedSection: Int?
-    private var prevSelectedSection: Int = 0
     private var selectedCell: EditTableViewCell?
     
     private var touchXPos : CGFloat = 0
-    private var touchYPos : CGFloat = 0
     
-    private var prevViewY: CGFloat = 0
+    
+    private var tableViewConstraints: [NSLayoutConstraint] = []
     
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
         tableView.rowHeight = 100
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
@@ -49,15 +49,24 @@ class EditViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        tableViewConstraints = [
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
+        ]
+        NSLayoutConstraint.activate(tableViewConstraints)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func viewConfigure() {
-        view.backgroundColor = .systemIndigo
+        view.backgroundColor = .systemBackground
         
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem()
@@ -70,11 +79,13 @@ class EditViewController: UIViewController {
         gesture = UITapGestureRecognizer()
         gesture.cancelsTouchesInView = false        
         tableView.addGestureRecognizer(gesture)
+        
         view.addSubview(tableView)
     }
     
     private func registerKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(willShowKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(willHideKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     @objc private func willShowKeyboard(_ notification: Notification) {
@@ -82,11 +93,14 @@ class EditViewController: UIViewController {
               let rect = info["UIKeyboardFrameEndUserInfoKey"] as? CGRect else {
             return
         }
-        if prevSelectedSection != selectedSection && touchYPos > (rect.minY - 30 - view.frame.origin.y) {            
-            prevViewY = tableView.frame.origin.y
-            tableView.frame.origin.y -= rect.height
-            title = ""
-        }
+        NSLayoutConstraint.deactivate(tableViewConstraints)
+        tableViewConstraints.removeLast()
+        tableViewConstraints.append(
+            tableView.heightAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.heightAnchor,
+                constant: -rect.height + view.safeAreaInsets.bottom)
+        )
+        NSLayoutConstraint.activate(tableViewConstraints)
         
         navigationItem.leftBarButtonItem?.isEnabled = false
         guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
@@ -94,7 +108,25 @@ class EditViewController: UIViewController {
         }
         footer.isUserInteractionEnabled = false
         footer.addButton.tintColor = .systemGray
-        prevSelectedSection = selectedSection ?? 0
+    }
+    
+    @objc private func willHideKeyboard(_ notification: Notification) {
+        NSLayoutConstraint.deactivate(tableViewConstraints)
+        tableViewConstraints.removeLast()
+        tableViewConstraints.append(
+            tableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
+        )
+        NSLayoutConstraint.activate(tableViewConstraints)
+        
+        navigationItem.leftBarButtonItem?.isEnabled = true
+        guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
+            return
+        }
+        footer.isUserInteractionEnabled = true
+        footer.addButton.tintColor = .systemGreen
+        
+        tableView.deselectRow(at: IndexPath(row: 0, section: selectedSection ?? 0), animated: false)
+        cellDeselected()
     }
     
     private func rxConfigure() {
@@ -141,7 +173,6 @@ class EditViewController: UIViewController {
         gesture.rx.event
             .bind { [weak self] in
                 self?.touchXPos = $0.location(in: self?.tableView).x
-                self?.touchYPos = $0.location(in: self?.view).y
             }.disposed(by: disposeBag)
         
         tableView.rx.itemSelected
@@ -184,22 +215,7 @@ extension EditViewController: UITableViewDelegate
 
 extension EditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        UIView.animate(withDuration: 0.15) { [weak self] in
-            self?.tableView.frame.origin.y = self?.prevViewY ?? 0
-        }
-        prevViewY = tableView.frame.origin.y
-        navigationItem.leftBarButtonItem?.isEnabled = true
-        prevSelectedSection = 0
-        title = String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
         textField.resignFirstResponder()
-        tableView.deselectRow(at: IndexPath(row: 0, section: selectedSection ?? 0), animated: false)
-        guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
-            return false
-        }
-        footer.isUserInteractionEnabled = true
-        footer.addButton.tintColor = .systemGreen
-        //print(selectedRow)
-        cellDeselected()
         return true
     }
 }

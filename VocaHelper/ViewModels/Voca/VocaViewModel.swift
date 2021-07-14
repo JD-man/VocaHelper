@@ -119,12 +119,12 @@ class VocaViewModel {
     }
     
     public func cellDeselected(section: Int?, cell: EditTableViewCell?) {
-        guard let row = section,
+        guard let section = section,
               let cell = cell else {
             return
         }
-        VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
-        VocaManager.shared.vocas[row].meaning = cell.meaningTextField.text ?? ""        
+        VocaManager.shared.vocas[section].word = cell.wordTextField.text ?? ""
+        VocaManager.shared.vocas[section].meaning = cell.meaningTextField.text ?? ""        
         makeViewModelsFromVocas()
     }
     

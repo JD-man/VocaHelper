@@ -21,12 +21,12 @@ class WordsViewController: UIViewController {
         super.viewDidLoad()        
         viewConfigure()
         rxConfigure()
-        print(VocaManager.directoryURL?.absoluteString)
+        //print(VocaManager.directoryURL?.absoluteString)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectionView?.frame = view.bounds
+        collectionView?.frame = CGRect(x: 0, y: view.bounds.minY, width: view.bounds.width, height: view.bounds.height - view.safeAreaInsets.bottom)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -48,6 +48,7 @@ class WordsViewController: UIViewController {
         collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)
         collectionView?.register(AddCollectionViewCell.self, forCellWithReuseIdentifier: AddCollectionViewCell.identifier)
         collectionView?.backgroundColor = .systemBackground
+        view.backgroundColor = .systemBackground
         
         
         view.addSubview(collectionView!)
