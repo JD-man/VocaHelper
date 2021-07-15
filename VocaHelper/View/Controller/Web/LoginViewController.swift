@@ -117,6 +117,11 @@ class LoginViewController: UIViewController {
     }
     
     private func viewConfigure() {
+        if UIDevice.current.orientation != .portrait {
+            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+        }
+        UINavigationController.attemptRotationToDeviceOrientation()
+        
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 40
         view.addSubview(handleView)

@@ -14,7 +14,9 @@ class WebTableViewCell: UITableViewCell {
     
     let backgroundButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .link
+        button.backgroundColor = .systemBackground
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 25
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -23,6 +25,8 @@ class WebTableViewCell: UITableViewCell {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 0.3)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 25
         return view
     }()
     
@@ -32,7 +36,7 @@ class WebTableViewCell: UITableViewCell {
         label.font = .systemFont(ofSize: 30, weight: .semibold)
         label.textColor = .label
         label.adjustsFontSizeToFitWidth = true
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -43,7 +47,7 @@ class WebTableViewCell: UITableViewCell {
         label.font = .systemFont(ofSize: 12, weight: .bold)
         label.textColor = .label
         label.adjustsFontSizeToFitWidth = true
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -54,7 +58,7 @@ class WebTableViewCell: UITableViewCell {
         label.text = "간단설명한 단어장 설명부분 간단설명한 단어장 설명부분 간단설명한 단어장 설명부분 "
         label.font = .systemFont(ofSize: 18, weight: .medium)
         label.textColor = .label
-        label.numberOfLines = 0
+        label.numberOfLines = 0        
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -95,12 +99,19 @@ class WebTableViewCell: UITableViewCell {
         return label
     }()
     
+    let gradient: CAGradientLayer = {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.init(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: CGFloat.random(in: 0.0...1.0)).cgColor, UIColor.tertiarySystemBackground.cgColor]
+        gradient.locations = [0.0, 1.0]
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
+        return gradient
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundButton.layer.masksToBounds = true
-        backgroundButton.layer.cornerRadius = 25
-        shadowView.layer.masksToBounds = true
-        shadowView.layer.cornerRadius = 25
+        cellConfigure()
+        constraintsConfigure()
     }
     
     required init?(coder: NSCoder) {
@@ -109,20 +120,17 @@ class WebTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        gradientConfigure()
-        cellConfigure()
-        constraintsConfigure()
+        gradient.frame = backgroundButton.layer.bounds
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        backgroundButton.layer.sublayers = nil
         titleLabel.text = "초기화"
         likeLabel.text = "초기화"
         writerLabel.text = "초기화"
         downloadLabel.text = "초기화"
         descriptionLabel.text = "초기화"
-        likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
+        likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)        
     }
     
     @objc private func didTapButton() {
@@ -132,17 +140,8 @@ class WebTableViewCell: UITableViewCell {
         tapFunc()
     }
     
-    private func gradientConfigure() {
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.init(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: CGFloat.random(in: 0.0...1.0)).cgColor, UIColor.tertiarySystemBackground.cgColor]
-        gradient.locations = [0.0, 1.0]
-        gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
-        gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
-        backgroundButton.layer.addSublayer(gradient)
-        gradient.frame = backgroundButton.layer.bounds
-    }
-    
     private func cellConfigure() {
+        backgroundButton.layer.addSublayer(gradient)
         contentView.addSubview(shadowView)
         contentView.addSubview(backgroundButton)
         contentView.addSubview(titleLabel)
@@ -158,28 +157,28 @@ class WebTableViewCell: UITableViewCell {
     
     private func constraintsConfigure() {
         
-        backgroundButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        backgroundButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true        
-        backgroundButton.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.85).isActive = true
-        backgroundButton.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.75).isActive = true
+        backgroundButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
+        backgroundButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
+        backgroundButton.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.85).isActive = true
+        backgroundButton.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.75).isActive = true
         
-        shadowView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 5).isActive = true
-        shadowView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 5).isActive = true
-        shadowView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.85).isActive = true
-        shadowView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.75).isActive = true
+        shadowView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor, constant: 5).isActive = true
+        shadowView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor, constant: 5).isActive = true
+        shadowView.widthAnchor.constraint(equalTo: backgroundButton.widthAnchor).isActive = true
+        shadowView.heightAnchor.constraint(equalTo: backgroundButton.heightAnchor).isActive = true
         
-        titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        titleLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: backgroundButton.topAnchor, constant: 20).isActive = true
-        titleLabel.widthAnchor.constraint(equalTo: backgroundButton.widthAnchor, multiplier: 0.9).isActive = true
+        titleLabel.widthAnchor.constraint(equalTo: backgroundButton.widthAnchor, multiplier: 0.85).isActive = true
         titleLabel.heightAnchor.constraint(equalTo: backgroundButton.heightAnchor, multiplier: 0.15).isActive = true
         
-        descriptionLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        descriptionLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
         descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
-        descriptionLabel.widthAnchor.constraint(equalTo: backgroundButton.widthAnchor, multiplier: 0.9).isActive = true
+        descriptionLabel.widthAnchor.constraint(equalTo: titleLabel.widthAnchor).isActive = true
         descriptionLabel.heightAnchor.constraint(lessThanOrEqualTo: backgroundButton.heightAnchor, multiplier: 0.4).isActive = true
         
         downloadLabel.rightAnchor.constraint(equalTo: descriptionLabel.rightAnchor).isActive = true
-        downloadLabel.bottomAnchor.constraint(equalTo: backgroundButton.bottomAnchor, constant: -10).isActive = true
+        downloadLabel.bottomAnchor.constraint(equalTo: backgroundButton.bottomAnchor, constant: -12).isActive = true
         downloadLabel.widthAnchor.constraint(lessThanOrEqualTo: writerLabel.widthAnchor, multiplier: 0.4).isActive = true
         downloadLabel.heightAnchor.constraint(equalTo: writerLabel.widthAnchor, multiplier: 0.1).isActive = true
         
@@ -200,7 +199,7 @@ class WebTableViewCell: UITableViewCell {
         
         writerLabel.bottomAnchor.constraint(equalTo: downloadLabel.topAnchor, constant: -5).isActive = true
         writerLabel.rightAnchor.constraint(equalTo: descriptionLabel.rightAnchor).isActive = true
-        writerLabel.leftAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        writerLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
         writerLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor, multiplier: 0.5).isActive = true
     }
 }

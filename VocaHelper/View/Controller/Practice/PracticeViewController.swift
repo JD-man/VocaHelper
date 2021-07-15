@@ -93,34 +93,31 @@ class PracticeViewController: UIViewController {
     }
     
     private func constraintsConfigure() {
-        let labelWidth = view.bounds.width / 2 - 15
-        let labelHeight = labelWidth / 3
         
-        
-        wordLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -0.25 * view.bounds.width).isActive = true
+        wordLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
+        wordLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: -10).isActive = true
         wordLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        wordLabel.widthAnchor.constraint(equalToConstant: labelWidth).isActive = true
-        wordLabel.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
+        wordLabel.heightAnchor.constraint(equalTo: wordLabel.widthAnchor, multiplier: 0.3).isActive = true
         
-        meaningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0.25 * view.bounds.width).isActive = true
+        meaningLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 10).isActive = true
+        meaningLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
         meaningLabel.centerYAnchor.constraint(equalTo: wordLabel.centerYAnchor).isActive = true
-        meaningLabel.widthAnchor.constraint(equalToConstant: labelWidth).isActive = true
-        meaningLabel.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
-        
+        meaningLabel.heightAnchor.constraint(equalTo: wordLabel.heightAnchor).isActive = true
+
         prevButton.centerXAnchor.constraint(equalTo: wordLabel.centerXAnchor).isActive = true
         prevButton.topAnchor.constraint(equalTo: wordLabel.bottomAnchor, constant: 15).isActive = true
-        prevButton.widthAnchor.constraint(equalToConstant: labelHeight / 2).isActive = true
-        prevButton.heightAnchor.constraint(equalToConstant: labelHeight / 2).isActive = true
-        
+        prevButton.widthAnchor.constraint(equalTo: wordLabel.widthAnchor, multiplier: 0.15).isActive = true
+        prevButton.heightAnchor.constraint(equalTo: wordLabel.widthAnchor, multiplier: 0.15).isActive = true
+
         nextButton.centerXAnchor.constraint(equalTo: meaningLabel.centerXAnchor).isActive = true
         nextButton.topAnchor.constraint(equalTo: meaningLabel.bottomAnchor, constant: 15).isActive = true
-        nextButton.widthAnchor.constraint(equalToConstant: labelHeight / 2).isActive = true
-        nextButton.heightAnchor.constraint(equalToConstant: labelHeight / 2).isActive = true
-        
+        nextButton.widthAnchor.constraint(equalTo: prevButton.widthAnchor).isActive = true
+        nextButton.heightAnchor.constraint(equalTo: prevButton.heightAnchor).isActive = true
+
         blind.centerXAnchor.constraint(equalTo: meaningLabel.centerXAnchor).isActive = true
         blind.centerYAnchor.constraint(equalTo: meaningLabel.centerYAnchor).isActive = true
-        blind.widthAnchor.constraint(equalToConstant: labelWidth + 10).isActive = true
-        blind.heightAnchor.constraint(equalToConstant: labelHeight + 10).isActive = true
+        blind.widthAnchor.constraint(equalTo: meaningLabel.widthAnchor, constant: 10).isActive = true
+        blind.heightAnchor.constraint(equalTo: meaningLabel.heightAnchor, constant: 10).isActive = true
     }
     
     private func rxConfigure() {

@@ -104,7 +104,6 @@ class PopupViewController: UIViewController {
         stackView.addArrangedSubview(examButton)
         stackView.addArrangedSubview(deleteButton)
         stackView.addArrangedSubview(exitButton)
-        
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
     }
@@ -112,15 +111,15 @@ class PopupViewController: UIViewController {
     private func configure() {
         view.backgroundColor = UIColor(white: 0.6, alpha: 0.7)
         
-        textField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        textField.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -0.5 * (view.bounds.height * 6/15 + 10)).isActive = true
-        textField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
-        textField.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/15).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 10).isActive = true
+        stackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        stackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3).isActive = true
         
-        stackView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 10).isActive = true
-        stackView.centerXAnchor.constraint(equalTo: textField.centerXAnchor).isActive = true
-        stackView.widthAnchor.constraint(equalTo: textField.widthAnchor).isActive = true
-        stackView.heightAnchor.constraint(equalTo: textField.heightAnchor, multiplier: 5).isActive = true
+        textField.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -10).isActive = true
+        textField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        textField.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
+        textField.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/15).isActive = true
     }
     
     private func addSubViews() {

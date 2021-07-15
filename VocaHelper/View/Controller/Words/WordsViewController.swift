@@ -25,8 +25,7 @@ class WordsViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        //collectionView?.frame = CGRect(x: 0, y: view.bounds.minY, width: view.bounds.width, height: view.bounds.height - view.safeAreaInsets.bottom)
+        super.viewDidLayoutSubviews()        
     }
     
     override func viewWillAppear (_ animated: Bool) {
@@ -38,7 +37,9 @@ class WordsViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        layout.itemSize = CGSize(width: view.bounds.width/3-15, height: view.bounds.width/3-20)
+        layout.itemSize = view.bounds.width < view.bounds.height ?
+            CGSize(width: view.bounds.width/3-15, height: view.bounds.width/3-20) :
+            CGSize(width: view.bounds.height/3-15, height: view.bounds.height/3-20)
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 10
         layout.minimumInteritemSpacing = 10

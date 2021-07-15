@@ -22,6 +22,7 @@ class WebViewController: UIViewController {
         let bar = UISearchBar()
         bar.autocorrectionType = .no
         bar.autocapitalizationType = .none
+        bar.translatesAutoresizingMaskIntoConstraints = false
         return bar
     }()
     
@@ -34,6 +35,7 @@ class WebViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -51,6 +53,7 @@ class WebViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -64,6 +67,7 @@ class WebViewController: UIViewController {
         button.isEnabled = true
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -75,8 +79,11 @@ class WebViewController: UIViewController {
         textField.text = "로그아웃 상태입니다."
         textField.leftViewMode = .always
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        textField.rightViewMode = .always
+        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         textField.isEnabled = false
         textField.isUserInteractionEnabled = false
+        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
@@ -86,6 +93,7 @@ class WebViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.rowHeight = 250
         tableView.allowsSelection = false
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
 
@@ -95,19 +103,12 @@ class WebViewController: UIViewController {
         navigationItem.title = "찾아보기"
         navigationController?.navigationBar.prefersLargeTitles = true
         configure()
+        constraintsConfigure()
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let heightOffset: CGFloat = 15
-        searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.maxY, width: view.bounds.size.width, height: 50)
-        
-        loginStatusTextField.frame = CGRect(x: 10, y: searchBar.frame.maxY + heightOffset, width: view.bounds.size.width / 2, height: 30)
-        loginButton.frame = CGRect(x: loginStatusTextField.frame.maxX  + 10, y: loginStatusTextField.frame.minY, width: loginStatusTextField.frame.width/4, height: 30)
-        uploadButton.frame = CGRect(x: loginButton.frame.maxX + 10, y: loginStatusTextField.frame.minY, width: loginButton.frame.width, height: loginButton.frame.height)
-        sortButton.frame = CGRect(x: uploadButton.frame.maxX + 10, y: loginStatusTextField.frame.minY, width: loginButton.frame.width, height: loginButton.frame.height)
-        wordsTableView.frame = CGRect(x: 0, y: loginStatusTextField.frame.maxY + heightOffset, width: view.bounds.size.width, height: view.bounds.size.height - (loginStatusTextField.frame.maxY + heightOffset))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -125,6 +126,39 @@ class WebViewController: UIViewController {
         view.addSubview(sortButton)
         view.addSubview(uploadButton)
         view.addSubview(wordsTableView)
+    }
+    
+    private func constraintsConfigure() {
+        let heightOffset: CGFloat = 15
+        searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        searchBar.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        searchBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        sortButton.topAnchor.constraint(equalTo: loginStatusTextField.topAnchor).isActive = true
+        sortButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
+        sortButton.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.12).isActive = true
+        sortButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        uploadButton.topAnchor.constraint(equalTo: loginStatusTextField.topAnchor).isActive = true
+        uploadButton.rightAnchor.constraint(equalTo: sortButton.leftAnchor, constant: -10).isActive = true
+        uploadButton.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.12).isActive = true
+        uploadButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        loginButton.topAnchor.constraint(equalTo: loginStatusTextField.topAnchor).isActive = true
+        loginButton.rightAnchor.constraint(equalTo: uploadButton.leftAnchor, constant: -10).isActive = true
+        loginButton.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.12).isActive = true
+        loginButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        loginStatusTextField.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: heightOffset).isActive = true
+        loginStatusTextField.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
+        loginStatusTextField.rightAnchor.constraint(lessThanOrEqualTo: loginButton.leftAnchor, constant: -10).isActive = true
+        loginStatusTextField.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        wordsTableView.topAnchor.constraint(equalTo: loginStatusTextField.bottomAnchor, constant: heightOffset).isActive = true
+        wordsTableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        wordsTableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        wordsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true       
     }
     
     private func rxConfigure() {

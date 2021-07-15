@@ -40,7 +40,12 @@ struct WebViewModel {
         
         webDataSubject.onNext(
             [WebCell(date: "3", title: "title", description: "description", writer: "writer", like: 888, download: 888, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
-            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescription", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true)
+            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
+            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
+            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
+            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
+            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
+            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true)
             ])
     }
     
