@@ -31,6 +31,7 @@ class PracticeViewController: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.clipsToBounds = true
         label.layer.cornerRadius = 10
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -44,6 +45,7 @@ class PracticeViewController: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.clipsToBounds = true
         label.layer.cornerRadius = 10
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -51,6 +53,7 @@ class PracticeViewController: UIViewController {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "backward"), for: .normal)
         button.tintColor = .label
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -58,12 +61,12 @@ class PracticeViewController: UIViewController {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "forward"), for: .normal)
         button.tintColor = .label
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private let blind: BlindUIView = {
         let view = BlindUIView()
-        view.clipsToBounds = true
         return view
     }()
     
@@ -71,47 +74,12 @@ class PracticeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubviews()
+        constraintsConfigure()
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let labelWidth = view.bounds.width / 2 - 15
-        let labelHeight = labelWidth / 3
-        
-        let buttonSize: CGFloat = 25
-        let blindPadding: CGFloat = 10
-        
-        wordLabel.frame = CGRect(
-            x: view.bounds.origin.x + 10,
-            y: view.bounds.height/2 - labelHeight/2,
-            width: labelWidth,
-            height: labelHeight
-        )
-        meaningLabel.frame = CGRect(
-            x: view.bounds.width / 2 + 5,
-            y: view.bounds.height/2 - labelHeight/2,
-            width: labelWidth,
-            height: labelHeight
-        )
-        prevButton.frame = CGRect(
-            x: labelWidth / 2 + 10 - buttonSize/2,
-            y: wordLabel.frame.origin.y + labelHeight + buttonSize * 1.5,
-            width: buttonSize,
-            height: buttonSize
-        )
-        nextButton.frame = CGRect(
-            x: view.bounds.width - (labelWidth / 2 + 10) - buttonSize/2,
-            y: wordLabel.frame.origin.y + labelHeight + buttonSize * 1.5,
-            width: buttonSize,
-            height: buttonSize
-        )
-        blind.frame = CGRect(
-            x: view.bounds.width/2,
-            y: meaningLabel.frame.origin.y - blindPadding/2,
-            width: labelWidth + blindPadding,
-            height: labelHeight + blindPadding
-        )
     }
     
     private func addSubviews() {
@@ -122,6 +90,37 @@ class PracticeViewController: UIViewController {
         view.addSubview(nextButton)
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.backward"))
+    }
+    
+    private func constraintsConfigure() {
+        let labelWidth = view.bounds.width / 2 - 15
+        let labelHeight = labelWidth / 3
+        
+        
+        wordLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -0.25 * view.bounds.width).isActive = true
+        wordLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        wordLabel.widthAnchor.constraint(equalToConstant: labelWidth).isActive = true
+        wordLabel.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
+        
+        meaningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0.25 * view.bounds.width).isActive = true
+        meaningLabel.centerYAnchor.constraint(equalTo: wordLabel.centerYAnchor).isActive = true
+        meaningLabel.widthAnchor.constraint(equalToConstant: labelWidth).isActive = true
+        meaningLabel.heightAnchor.constraint(equalToConstant: labelHeight).isActive = true
+        
+        prevButton.centerXAnchor.constraint(equalTo: wordLabel.centerXAnchor).isActive = true
+        prevButton.topAnchor.constraint(equalTo: wordLabel.bottomAnchor, constant: 15).isActive = true
+        prevButton.widthAnchor.constraint(equalToConstant: labelHeight / 2).isActive = true
+        prevButton.heightAnchor.constraint(equalToConstant: labelHeight / 2).isActive = true
+        
+        nextButton.centerXAnchor.constraint(equalTo: meaningLabel.centerXAnchor).isActive = true
+        nextButton.topAnchor.constraint(equalTo: meaningLabel.bottomAnchor, constant: 15).isActive = true
+        nextButton.widthAnchor.constraint(equalToConstant: labelHeight / 2).isActive = true
+        nextButton.heightAnchor.constraint(equalToConstant: labelHeight / 2).isActive = true
+        
+        blind.centerXAnchor.constraint(equalTo: meaningLabel.centerXAnchor).isActive = true
+        blind.centerYAnchor.constraint(equalTo: meaningLabel.centerYAnchor).isActive = true
+        blind.widthAnchor.constraint(equalToConstant: labelWidth + 10).isActive = true
+        blind.heightAnchor.constraint(equalToConstant: labelHeight + 10).isActive = true
     }
     
     private func rxConfigure() {

@@ -18,13 +18,15 @@ class SearchViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(SearchResultTableViewCell.self, forCellReuseIdentifier: SearchResultTableViewCell.identifier)
         tableView.isHidden = true
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
     private let searchBar: UISearchBar = {
         let bar = UISearchBar()
         bar.searchTextField.autocapitalizationType = .none
-        bar.searchTextField.autocorrectionType = .no        
+        bar.searchTextField.autocorrectionType = .no
+        bar.translatesAutoresizingMaskIntoConstraints = false
         return bar
     }()
     
@@ -36,6 +38,7 @@ class SearchViewController: UIViewController {
         label.textAlignment = .center
         label.textColor = .systemGray4
         label.isHidden = false
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
@@ -45,14 +48,12 @@ class SearchViewController: UIViewController {
         navigationItem.title = "단어찾기"
         navigationController?.navigationBar.prefersLargeTitles = true
         searchBarConfigure()
+        constraintsConfigure()
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.maxY, width: view.bounds.size.width, height: 50)
-        tableView.frame = CGRect(x: 0, y: searchBar.frame.origin.y + searchBar.frame.size.height, width: view.bounds.size.width, height: view.bounds.size.height - searchBar.frame.size.height)
-        noResultView.frame = view.bounds
     }
     
     private func searchBarConfigure() {
@@ -67,6 +68,27 @@ class SearchViewController: UIViewController {
         ]
         toolBar.sizeToFit()
         searchBar.searchTextField.inputAccessoryView = toolBar
+    }
+    
+    private func constraintsConfigure() {
+        //searchBar.frame = CGRect(x: 0, y: navigationController!.navigationBar.frame.maxY, width: view.bounds.size.width, height: 50)
+//        tableView.frame = CGRect(x: 0, y: searchBar.frame.origin.y + searchBar.frame.size.height, width: view.bounds.size.width, height: view.bounds.size.height - searchBar.frame.size.height)
+//        noResultView.frame = view.bounds
+        
+        searchBar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        searchBar.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
+        tableView.widthAnchor.constraint(equalTo: searchBar.widthAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        noResultView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        noResultView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
+        noResultView.widthAnchor.constraint(equalTo: searchBar.widthAnchor).isActive = true
+        noResultView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
     
     @objc private func didTapBarbutton() {

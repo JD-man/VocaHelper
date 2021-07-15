@@ -18,8 +18,9 @@ class ResultTableViewCell: UITableViewCell {
         label.textAlignment = .center
         label.backgroundColor = .systemIndigo
         label.clipsToBounds = true
-        label.layer.cornerRadius = 20
+        label.layer.cornerRadius = 15
         label.textColor = .systemBackground
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -28,12 +29,14 @@ class ResultTableViewCell: UITableViewCell {
         label.adjustsFontSizeToFitWidth = true
         label.font = UIFont.systemFont(ofSize: 25, weight: .regular)
         label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubviews()
+        constraintsConfigure()
         self.isUserInteractionEnabled = false
     }
     
@@ -43,14 +46,6 @@ class ResultTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let answerLabelsHeight = self.bounds.height
-        let wordLabelPadding: CGFloat = 10
-        wordLabel.frame = CGRect(x: wordLabelPadding / 2,
-                                                    y: wordLabelPadding / 2,
-                                                    width: self.bounds.width/2 - wordLabelPadding,
-                                                    height: self.bounds.height - wordLabelPadding
-        )
-        userAnswerLabel.frame = CGRect(x: self.bounds.width/2, y: 0, width: self.bounds.width/2, height: answerLabelsHeight)
     }
     
     override func prepareForReuse() {
@@ -62,5 +57,20 @@ class ResultTableViewCell: UITableViewCell {
     private func addSubviews() {
         self.addSubview(wordLabel)
         self.addSubview(userAnswerLabel)
+    }
+    
+    private func constraintsConfigure() {
+        let padding: CGFloat = 10
+        
+        wordLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: padding).isActive = true
+        wordLabel.rightAnchor.constraint(equalTo: centerXAnchor, constant: -padding).isActive = true
+        wordLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding).isActive = true
+        wordLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding).isActive = true
+        
+        
+        userAnswerLabel.leftAnchor.constraint(equalTo: centerXAnchor, constant: padding).isActive = true
+        userAnswerLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -padding).isActive = true
+        userAnswerLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding).isActive = true
+        userAnswerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding).isActive = true
     }
 }

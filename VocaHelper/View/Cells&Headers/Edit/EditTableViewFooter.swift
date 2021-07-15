@@ -13,20 +13,19 @@ class EditTableViewFooter: UIView {
         let button = UIButton()
         button.tintColor = .systemGreen
         button.backgroundColor = .systemBackground
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        addSubViews()
         configure()
-        addSubViews()        
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let buttonSize = frame.height / 1.5
-        addButton.frame = CGRect(x: self.bounds.width / 2 - buttonSize / 2, y: 0, width: buttonSize, height: buttonSize)
-        addButton.setBackgroundImage(UIImage(systemName: "plus.circle"), for: .normal)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -35,6 +34,12 @@ class EditTableViewFooter: UIView {
     
     private func configure() {
         backgroundColor = .systemBackground
+        addButton.setBackgroundImage(UIImage(systemName: "plus.circle"), for: .normal)
+        
+        addButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        addButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        addButton.widthAnchor.constraint(equalTo: heightAnchor, multiplier: 1 / 1.5).isActive = true
+        addButton.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1 / 1.5).isActive = true
     }
     
     private func addSubViews() {

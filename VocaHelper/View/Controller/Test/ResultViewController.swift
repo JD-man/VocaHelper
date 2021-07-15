@@ -23,20 +23,28 @@ class ResultViewController: UIViewController {
         let tableView = UITableView()
         tableView.rowHeight = 70
         tableView.register(ResultTableViewCell.self, forCellReuseIdentifier: ResultTableViewCell.identifier)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemTeal        
-        view.addSubview(resultTableView)        
+        view.backgroundColor = .systemBackground
+        view.addSubview(resultTableView)
+        constraintsConfigure()
         addFooter()
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        resultTableView.frame = view.bounds
+    }
+    
+    private func constraintsConfigure() {
+        resultTableView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        resultTableView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+        resultTableView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        resultTableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor).isActive = true
     }
     
     private func addFooter() {

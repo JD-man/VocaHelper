@@ -30,6 +30,7 @@ class EditTableViewCell: UITableViewCell {
         textfield.layer.borderWidth = 1.5
         textfield.backgroundColor = UIColor(red: 93/255, green: 163/255, blue: 178/255, alpha: 1.0)
         textfield.textColor = .systemBackground
+        textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
     
@@ -43,7 +44,8 @@ class EditTableViewCell: UITableViewCell {
         textfield.returnKeyType = .done
         textfield.clipsToBounds = true
         textfield.layer.cornerRadius = 10
-        textfield.layer.borderWidth = 1.5        
+        textfield.layer.borderWidth = 1.5
+        textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
     
@@ -54,21 +56,11 @@ class EditTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubViews()
+        constraintConfigure()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let width = self.bounds.width / 2 - 10
-        let height = self.bounds.height / 1.5
-        
-        wordTextField.frame = CGRect(x: 5,
-                                                          y: self.bounds.height/2 - height/2,
-                                                          width: width,
-                                                          height: height)
-        meaningTextField.frame = CGRect(x: self.bounds.width / 2 + 5,
-                                                               y: self.bounds.height/2 - height/2,
-                                                               width: width,
-                                                               height: height)
     }
     
     override func prepareForReuse() {
@@ -80,5 +72,21 @@ class EditTableViewCell: UITableViewCell {
     private func addSubViews() {
         self.addSubview(wordTextField)
         self.addSubview(meaningTextField)
+    }
+    
+    private func constraintConfigure() {
+//        let width = self.bounds.width / 2 - 10
+//        let height = self.bounds.height / 1.5
+        
+        let gap: CGFloat = 10
+        wordTextField.leftAnchor.constraint(equalTo: leftAnchor, constant: gap).isActive = true
+        wordTextField.rightAnchor.constraint(equalTo: centerXAnchor, constant: -gap).isActive = true
+        wordTextField.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        wordTextField.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/1.5).isActive = true
+        
+        meaningTextField.leftAnchor.constraint(equalTo: centerXAnchor, constant: gap).isActive = true
+        meaningTextField.rightAnchor.constraint(equalTo: rightAnchor, constant: -gap).isActive = true
+        meaningTextField.centerYAnchor.constraint(equalTo: wordTextField.centerYAnchor).isActive = true
+        meaningTextField.heightAnchor.constraint(equalTo: wordTextField.heightAnchor).isActive = true
     }
 }

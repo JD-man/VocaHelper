@@ -29,6 +29,7 @@ class ExamViewController: UIViewController {
 
     private let stackView: UIStackView = {
         let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
 
@@ -66,9 +67,6 @@ class ExamViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let stackViewWidth: CGFloat = 300
-        let stackViewHeight: CGFloat = 500
-        stackView.frame = CGRect(x: view.bounds.width/2 - stackViewWidth/2, y: view.bounds.height/2 - stackViewHeight/2, width: stackViewWidth, height: stackViewHeight)
     }
 
     private func configView() {
@@ -102,6 +100,11 @@ class ExamViewController: UIViewController {
         stackView.distribution = .fillEqually
         stackView.layer.cornerRadius = 30
         view.addSubview(stackView)
+        
+        stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        stackView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.75).isActive = true
+        stackView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.75).isActive = true
     }
     
     private func rxConfigure() {

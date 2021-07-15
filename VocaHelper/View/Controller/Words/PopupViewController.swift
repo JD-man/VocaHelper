@@ -19,17 +19,27 @@ class PopupViewController: UIViewController {
     public var deleteClosure: (() -> Void)?
     public var exitClosure: (() -> Void)?
     
+    let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.layer.masksToBounds = true
+        stackView.layer.cornerRadius = 15
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     let textField: UITextField = {
         let textField = UITextField()
         textField.textAlignment = .center
         textField.backgroundColor = .label
         textField.textColor = .systemBackground
-        textField.layer.cornerRadius = 20
+        textField.layer.masksToBounds = true
+        textField.layer.cornerRadius = 15
         textField.font = UIFont.systemFont(ofSize: 25)
         textField.adjustsFontSizeToFitWidth = true
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
         textField.keyboardType = .default
+        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
@@ -38,6 +48,7 @@ class PopupViewController: UIViewController {
         button.setTitle("Edit", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
+        button.layer.masksToBounds = true
         return button
     }()
     
@@ -70,47 +81,51 @@ class PopupViewController: UIViewController {
         button.setTitle("Exit", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
+        button.layer.masksToBounds = true
         return button
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configure()
+        stackViewConfigure()
         addSubViews()
-        // Do any additional setup after loading the view.
+        configure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let popupWidth = view.bounds.width / 2
-        let popupHeight = view.bounds.height / 15
-        let popupX = view.bounds.width / 2 - popupWidth / 2
-        let popupY = view.bounds.height / 2 - (popupHeight / 2) * 6
-        
-        textField.frame = CGRect(x: popupX, y: popupY, width: popupWidth, height: popupHeight)
-        editButton.frame = CGRect(x: popupX, y: textField.frame.origin.y + +textField.bounds.height + 5, width: popupWidth, height: popupHeight)
-        practiceButton.frame = CGRect(x: popupX, y: editButton.frame.origin.y + +editButton.bounds.height, width: popupWidth, height: popupHeight)
-        examButton.frame = CGRect(x: popupX, y: practiceButton.frame.origin.y + +practiceButton.bounds.height, width: popupWidth, height: popupHeight)
-        deleteButton.frame = CGRect(x: popupX, y: examButton.frame.origin.y + +examButton.bounds.height, width: popupWidth, height: popupHeight)
-        exitButton.frame = CGRect(x: popupX, y: deleteButton.frame.origin.y + +deleteButton.bounds.height, width: popupWidth, height: popupHeight)
-        
         addTarget()
-        
         textField.delegate = self        
+    }
+    
+    private func stackViewConfigure() {
+        stackView.addArrangedSubview(editButton)
+        stackView.addArrangedSubview(practiceButton)
+        stackView.addArrangedSubview(examButton)
+        stackView.addArrangedSubview(deleteButton)
+        stackView.addArrangedSubview(exitButton)
+        
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
     }
     
     private func configure() {
         view.backgroundColor = UIColor(white: 0.6, alpha: 0.7)
+        
+        textField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        textField.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -0.5 * (view.bounds.height * 6/15 + 10)).isActive = true
+        textField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        textField.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/15).isActive = true
+        
+        stackView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 10).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: textField.centerXAnchor).isActive = true
+        stackView.widthAnchor.constraint(equalTo: textField.widthAnchor).isActive = true
+        stackView.heightAnchor.constraint(equalTo: textField.heightAnchor, multiplier: 5).isActive = true
     }
     
     private func addSubViews() {
         view.addSubview(textField)
-        view.addSubview(editButton)
-        view.addSubview(practiceButton)
-        view.addSubview(examButton)
-        view.addSubview(deleteButton)
-        view.addSubview(exitButton)
+        view.addSubview(stackView)
     }
     
     private func addTarget() {

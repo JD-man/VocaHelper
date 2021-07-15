@@ -20,12 +20,15 @@ class BlindUIView: UIView {
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
-        gradient.cornerRadius = 10
+        gradient.masksToBounds = true
         return gradient
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        layer.masksToBounds = true
+        layer.cornerRadius = 15
+        translatesAutoresizingMaskIntoConstraints = false
     }
     
     required init?(coder: NSCoder) {

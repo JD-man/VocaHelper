@@ -15,6 +15,7 @@ class ResultTableViewFooter: UIView {
         label.adjustsFontSizeToFitWidth = true
         label.font = UIFont.systemFont(ofSize: 25, weight: .regular)
         label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -25,7 +26,8 @@ class ResultTableViewFooter: UIView {
         button.backgroundColor = .label
         button.setTitleColor(.systemBackground, for: .normal)
         button.layer.masksToBounds = true
-        button.clipsToBounds = true
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -36,13 +38,15 @@ class ResultTableViewFooter: UIView {
         button.backgroundColor = .label
         button.setTitleColor(.systemBackground, for: .normal)
         button.layer.masksToBounds = true
-        button.clipsToBounds = true
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
+        constraintsConfigure()
     }
     
     required init?(coder: NSCoder) {
@@ -51,17 +55,30 @@ class ResultTableViewFooter: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let offset: CGFloat = 100
-        scoreLabel.frame = CGRect(x: 0, y: 10, width: self.bounds.width, height: self.bounds.height/4)
-        examButton.frame = CGRect(x: 0.5 * offset, y: self.bounds.height/2, width: self.bounds.width/2 - offset, height: self.bounds.height/4)
-        homeButton.frame = CGRect(x: self.bounds.width/2 + 0.5 * offset, y: self.bounds.height/2, width: self.bounds.width/2 - offset, height: self.bounds.height/4)
-        examButton.layer.cornerRadius = 10
-        homeButton.layer.cornerRadius = 10
     }
     
     private func addSubviews() {
         self.addSubview(scoreLabel)
         self.addSubview(examButton)
         self.addSubview(homeButton)
+    }
+    
+    private func constraintsConfigure() {
+        let offset: CGFloat = 100
+        
+        scoreLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        scoreLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        scoreLabel.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        scoreLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25).isActive = true
+        
+        examButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 0.5 * offset).isActive = true
+        examButton.rightAnchor.constraint(equalTo: centerXAnchor, constant: -0.5 * offset).isActive = true
+        examButton.topAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        examButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+        homeButton.leftAnchor.constraint(equalTo: centerXAnchor, constant: 0.5 * offset).isActive = true
+        homeButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -0.5 * offset).isActive = true
+        homeButton.topAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        homeButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 }

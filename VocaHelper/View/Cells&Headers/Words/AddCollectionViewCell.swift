@@ -16,13 +16,15 @@ class AddCollectionViewCell: UICollectionViewCell {
     public let button: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "folder.badge.plus"), for: .normal)
-        button.tintColor = .systemGreen        
+        button.tintColor = .systemGreen
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
+        constraintsConfigure()
     }
     
     required init?(coder: NSCoder) {
@@ -31,10 +33,6 @@ class AddCollectionViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let imageSizeWidth = self.bounds.width/2
-        let imageSizeheight = self.bounds.width/2.5
-        
-        button.frame = CGRect(x: self.bounds.width/2 - imageSizeWidth/2 , y: self.bounds.height/2 - imageSizeheight/2, width: imageSizeWidth, height: imageSizeheight)
     }
     
     override func prepareForReuse() {
@@ -45,6 +43,13 @@ class AddCollectionViewCell: UICollectionViewCell {
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
         addSubview(button)
         backgroundColor = .systemBackground
+    }
+    
+    private func constraintsConfigure() {
+        button.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        button.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        button.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5).isActive = true
+        button.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.45).isActive = true
     }
     
     @objc private func didTapButton() {

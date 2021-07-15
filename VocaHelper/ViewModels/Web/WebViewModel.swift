@@ -15,9 +15,9 @@ struct WebViewModel {
     public var webModalSubject = BehaviorSubject<[SectionOfWordsCell]>(value: [])
     
     
-//    init() {
-//        makeWebDataSubject()
-//    }
+    init() {
+        makeWebDataSubject()
+    }
     
     // MARK: - For WebViewController
     

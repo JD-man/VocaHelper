@@ -19,17 +19,17 @@ class WordsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()        
-        viewConfigure()
+        viewConfigure()        
         rxConfigure()
         //print(VocaManager.directoryURL?.absoluteString)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectionView?.frame = CGRect(x: 0, y: view.bounds.minY, width: view.bounds.width, height: view.bounds.height - view.safeAreaInsets.bottom)
+        //collectionView?.frame = CGRect(x: 0, y: view.bounds.minY, width: view.bounds.width, height: view.bounds.height - view.safeAreaInsets.bottom)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear (_ animated: Bool) {
         viewModels.makeNewViewModels(isAddButton: false)
     }
     
@@ -45,13 +45,18 @@ class WordsViewController: UIViewController {
         
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView?.translatesAutoresizingMaskIntoConstraints = false
         collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)
         collectionView?.register(AddCollectionViewCell.self, forCellWithReuseIdentifier: AddCollectionViewCell.identifier)
         collectionView?.backgroundColor = .systemBackground
+        
         view.backgroundColor = .systemBackground
-        
-        
         view.addSubview(collectionView!)
+        
+        collectionView?.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        collectionView?.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+        collectionView?.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        collectionView?.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor).isActive = true
     }
     
     private func rxConfigure() {
