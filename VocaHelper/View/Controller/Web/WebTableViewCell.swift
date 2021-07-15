@@ -15,12 +15,14 @@ class WebTableViewCell: UITableViewCell {
     let backgroundButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .link
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     let shadowView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 0.3)
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -30,7 +32,8 @@ class WebTableViewCell: UITableViewCell {
         label.font = .systemFont(ofSize: 30, weight: .semibold)
         label.textColor = .label
         label.adjustsFontSizeToFitWidth = true
-        label.numberOfLines = 1
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -40,8 +43,9 @@ class WebTableViewCell: UITableViewCell {
         label.font = .systemFont(ofSize: 12, weight: .bold)
         label.textColor = .label
         label.adjustsFontSizeToFitWidth = true
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -50,13 +54,16 @@ class WebTableViewCell: UITableViewCell {
         label.text = "간단설명한 단어장 설명부분 간단설명한 단어장 설명부분 간단설명한 단어장 설명부분 "
         label.font = .systemFont(ofSize: 18, weight: .medium)
         label.textColor = .label
-        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let likeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
+        button.contentMode = .scaleToFill
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -66,12 +73,15 @@ class WebTableViewCell: UITableViewCell {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let downloadButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "arrow.down.square"), for: .normal)
+        button.contentMode = .scaleAspectFill
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -81,6 +91,7 @@ class WebTableViewCell: UITableViewCell {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -98,12 +109,9 @@ class WebTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let backGroundOffsetX: CGFloat = 20
-        let backGroundOffsetY: CGFloat = 25
-        backgroundButton.frame = CGRect(x: backGroundOffsetX, y: backGroundOffsetY, width: frame.width - 2 * backGroundOffsetX, height: frame.height - 2 * backGroundOffsetY)
-        shadowView.frame = CGRect(x: backgroundButton.frame.minX + 5, y: backgroundButton.frame.minY + 5, width: backgroundButton.frame.width, height: backgroundButton.frame.height)
         gradientConfigure()
         cellConfigure()
+        constraintsConfigure()
     }
     
     override func prepareForReuse() {
@@ -145,20 +153,54 @@ class WebTableViewCell: UITableViewCell {
         contentView.addSubview(downloadButton)
         contentView.addSubview(downloadLabel)
         
-        
         backgroundButton.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
-        titleLabel.frame = CGRect(x: backgroundButton.frame.minX + 20, y: backgroundButton.frame.minY + 15, width: backgroundButton.frame.width / 2, height: 50)
-        descriptionLabel.frame = CGRect(x: titleLabel.frame.minX, y: titleLabel.frame.maxY + 10, width: bounds.width - (2 * titleLabel.frame.minX), height: 70)
+    }
+    
+    private func constraintsConfigure() {
         
-        writerLabel.frame = CGRect(x: descriptionLabel.frame.maxX - 120, y: backgroundButton.frame.maxY - 50, width: 120, height: 20)
+        backgroundButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        backgroundButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true        
+        backgroundButton.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.85).isActive = true
+        backgroundButton.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.75).isActive = true
         
-        likeButton.frame = CGRect(x: writerLabel.frame.minX, y: backgroundButton.frame.maxY - 35, width: 30, height: 30)
-        likeLabel.frame = CGRect(x: likeButton.frame.maxX, y: likeButton.frame.minY, width: 30, height: 30)
-        downloadButton.frame = CGRect(x: likeLabel.frame.maxX, y: likeButton.frame.minY, width: 30, height: 30)
-        downloadLabel.frame = CGRect(x: downloadButton.frame.maxX, y: likeButton.frame.minY, width: 30, height: 30)
+        shadowView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 5).isActive = true
+        shadowView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 5).isActive = true
+        shadowView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.85).isActive = true
+        shadowView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.75).isActive = true
         
-        // top align
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.sizeToFit()
+        titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: backgroundButton.topAnchor, constant: 20).isActive = true
+        titleLabel.widthAnchor.constraint(equalTo: backgroundButton.widthAnchor, multiplier: 0.9).isActive = true
+        titleLabel.heightAnchor.constraint(equalTo: backgroundButton.heightAnchor, multiplier: 0.15).isActive = true
+        
+        descriptionLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
+        descriptionLabel.widthAnchor.constraint(equalTo: backgroundButton.widthAnchor, multiplier: 0.9).isActive = true
+        descriptionLabel.heightAnchor.constraint(lessThanOrEqualTo: backgroundButton.heightAnchor, multiplier: 0.4).isActive = true
+        
+        downloadLabel.rightAnchor.constraint(equalTo: descriptionLabel.rightAnchor).isActive = true
+        downloadLabel.bottomAnchor.constraint(equalTo: backgroundButton.bottomAnchor, constant: -10).isActive = true
+        downloadLabel.widthAnchor.constraint(lessThanOrEqualTo: writerLabel.widthAnchor, multiplier: 0.4).isActive = true
+        downloadLabel.heightAnchor.constraint(equalTo: writerLabel.widthAnchor, multiplier: 0.1).isActive = true
+        
+        downloadButton.rightAnchor.constraint(equalTo: downloadLabel.leftAnchor, constant: -3).isActive = true
+        downloadButton.bottomAnchor.constraint(equalTo: downloadLabel.bottomAnchor).isActive = true
+        downloadButton.widthAnchor.constraint(equalTo: writerLabel.widthAnchor, multiplier: 0.1).isActive = true
+        downloadButton.heightAnchor.constraint(equalTo: downloadLabel.heightAnchor).isActive = true
+
+        likeLabel.rightAnchor.constraint(equalTo: downloadButton.leftAnchor, constant: -5).isActive = true
+        likeLabel.bottomAnchor.constraint(equalTo: downloadLabel.bottomAnchor).isActive = true
+        likeLabel.widthAnchor.constraint(lessThanOrEqualTo: writerLabel.widthAnchor, multiplier: 0.4).isActive = true
+        likeLabel.heightAnchor.constraint(equalTo: downloadLabel.heightAnchor).isActive = true
+
+        likeButton.rightAnchor.constraint(equalTo: likeLabel.leftAnchor, constant: -3).isActive = true
+        likeButton.bottomAnchor.constraint(equalTo: downloadLabel.bottomAnchor).isActive = true
+        likeButton.widthAnchor.constraint(equalTo: downloadLabel.heightAnchor).isActive = true
+        likeButton.heightAnchor.constraint(equalTo: downloadLabel.heightAnchor).isActive = true
+        
+        writerLabel.bottomAnchor.constraint(equalTo: downloadLabel.topAnchor, constant: -5).isActive = true
+        writerLabel.rightAnchor.constraint(equalTo: descriptionLabel.rightAnchor).isActive = true
+        writerLabel.leftAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        writerLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor, multiplier: 0.5).isActive = true
     }
 }

@@ -25,6 +25,7 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .gray
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 5
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -32,6 +33,7 @@ class LoginViewController: UIViewController {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "Logo")
         imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
@@ -48,6 +50,7 @@ class LoginViewController: UIViewController {
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
         textField.adjustsFontSizeToFitWidth = true
+        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
@@ -65,6 +68,7 @@ class LoginViewController: UIViewController {
         textField.autocapitalizationType = .none
         textField.isSecureTextEntry = true
         textField.adjustsFontSizeToFitWidth = true
+        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
@@ -75,6 +79,7 @@ class LoginViewController: UIViewController {
         button.backgroundColor = .link
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 5
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -85,6 +90,7 @@ class LoginViewController: UIViewController {
         button.backgroundColor = .link
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 5
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -93,6 +99,7 @@ class LoginViewController: UIViewController {
         button.backgroundColor = nil
         button.setTitle("비밀번호찾기", for: .normal)
         button.setTitleColor(.link, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -101,23 +108,12 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black
         viewConfigure()
+        constraintsConfigure()
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let gap: CGFloat = 10
-        let textFieldWidth: CGFloat = view.bounds.width / 1.3
-        let textFieldHeight: CGFloat = textFieldWidth / 9
-        let buttonOffset: CGFloat = 40
-        
-        handleView.frame = CGRect(x: (view.bounds.width - 50) * 0.5, y: view.safeAreaInsets.top + gap, width: 50, height: 5)
-        logoImageView.frame = CGRect(x: view.bounds.width/4, y: handleView.frame.maxY + 2 * gap, width: view.bounds.width/2, height: view.bounds.width/4)
-        emailTextField.frame = CGRect(x: 0.5 * (view.bounds.width - textFieldWidth), y: logoImageView.frame.maxY + 2*gap, width: textFieldWidth, height: textFieldHeight)
-        passwordTextField.frame = CGRect(x: 0.5 * (view.bounds.width - textFieldWidth), y: emailTextField.frame.maxY + 1.5 * gap, width: textFieldWidth, height: textFieldHeight)
-        loginButton.frame = CGRect(x: 0.5 * (view.bounds.width - (textFieldWidth - buttonOffset)), y: passwordTextField.frame.maxY + 1.5 * gap, width: textFieldWidth - buttonOffset, height: textFieldHeight)
-        signUpButton.frame = CGRect(x: 0.5 * (view.bounds.width - (textFieldWidth - buttonOffset)), y: loginButton.frame.maxY + 1.5 * gap, width: textFieldWidth - buttonOffset, height: textFieldHeight)
-        findPasswordButton.frame = CGRect(x: 0.5 * (view.bounds.width - (textFieldWidth - buttonOffset)), y: signUpButton.frame.maxY + 1.5 * gap, width: textFieldWidth - buttonOffset, height: textFieldHeight)
     }
     
     private func viewConfigure() {
@@ -133,6 +129,45 @@ class LoginViewController: UIViewController {
         
         emailTextField.attributedPlaceholder = NSAttributedString(string: "이메일을 입력하세요...", attributes: [.foregroundColor : UIColor.lightGray])
         passwordTextField.attributedPlaceholder = NSAttributedString(string: "비밀번호를 입력하세요...", attributes: [.foregroundColor : UIColor.lightGray])
+    }
+    
+    private func constraintsConfigure() {
+        let gap: CGFloat = 10
+        
+        handleView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: gap).isActive = true
+        handleView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        handleView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.1).isActive = true
+        handleView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.01).isActive = true
+        
+        logoImageView.topAnchor.constraint(equalTo: handleView.bottomAnchor, constant: 2 * gap).isActive = true
+        logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        logoImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/2).isActive = true
+        logoImageView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/4).isActive = true
+        
+        emailTextField.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 2 * gap).isActive = true
+        emailTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        emailTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/1.3).isActive = true
+        emailTextField.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/12).isActive = true
+        
+        passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 2 * gap).isActive = true
+        passwordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        passwordTextField.widthAnchor.constraint(equalTo: emailTextField.widthAnchor).isActive = true
+        passwordTextField.heightAnchor.constraint(equalTo: emailTextField.heightAnchor).isActive = true
+        
+        loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 1.5 * gap).isActive = true
+        loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.5).isActive = true
+        loginButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
+        
+        signUpButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 1.5 * gap).isActive = true
+        signUpButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        signUpButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.5).isActive = true
+        signUpButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
+        
+        findPasswordButton.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 1.5 * gap).isActive = true
+        findPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        findPasswordButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.6).isActive = true
+        findPasswordButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
     }
     
     private func rxConfigure() {

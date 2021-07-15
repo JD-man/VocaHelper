@@ -22,19 +22,26 @@ struct WebViewModel {
     // MARK: - For WebViewController
     
     public func makeWebDataSubject(orderBy: String = "date") {
-        getUserLikes { result in
-            switch result {
-            case .success(let likes):
-                FirestoreManager.shared.getVocaDocuments(orderBy: orderBy) {
-                    let cells = $0.map {
-                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
-                    }
-                    webDataSubject.onNext(cells)
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
+        // 로그인 상태면 WebCell로 map. 아니면 WebData 형식으로 받아야됨. 그래야 로그아웃 상태에서도 게시물을 확인할 수 있음.
+        // getUserLikes를 getVocaDouments 안으로 집어넣어야 한다.
+//        getUserLikes { result in
+//            switch result {
+//            case .success(let likes):
+//                FirestoreManager.shared.getVocaDocuments(orderBy: orderBy) {
+//                    let cells = $0.map {
+//                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
+//                    }
+//                    webDataSubject.onNext(cells)
+//                }
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+        
+        webDataSubject.onNext(
+            [WebCell(date: "3", title: "title", description: "description", writer: "writer", like: 888, download: 888, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
+            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescription", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true)
+            ])
     }
     
     public func getUserLikes(completion: @escaping ( (Result<[String],Error>)  -> Void)) {

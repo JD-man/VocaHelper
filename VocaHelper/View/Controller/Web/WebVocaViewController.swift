@@ -27,18 +27,19 @@ class WebVocaViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
         tableView.rowHeight = 100
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewConfigure()
+        constraintsConfigure()
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
     }
     
     private func viewConfigure() {
@@ -50,8 +51,15 @@ class WebVocaViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem()
         navigationItem.rightBarButtonItem?.image =  UIImage(systemName: "list.dash")
         
-        view.backgroundColor = .systemIndigo
+        view.backgroundColor = .systemBackground
         view.addSubview(tableView)
+    }
+    
+    private func constraintsConfigure() {
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor).isActive = true
     }
     
     private func rxConfigure() {
