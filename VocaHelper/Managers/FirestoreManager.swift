@@ -17,8 +17,11 @@ final class FirestoreManager {
     
     // MARK: - VocaCollection functions
     
-    public func getVocaDocuments(orderBy: String , completion: @escaping ([WebData]) -> Void ) {
-        db.collection("VocaCollection").order(by:orderBy, descending: true).getDocuments { querySnapShot, error in
+    public func getVocaDocuments(orderBy: String, loadLimit: Int, completion: @escaping ([WebData]) -> Void ) {
+        db.collection("VocaCollection")
+            .order(by:orderBy, descending: true)
+            .limit(to: loadLimit)
+            .getDocuments { querySnapShot, error in
             if let error = error {
                 print(error)
             }

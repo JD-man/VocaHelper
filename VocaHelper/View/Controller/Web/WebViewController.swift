@@ -15,7 +15,12 @@ class WebViewController: UIViewController {
     public let sortTitle = ["최신순","추천순", "다운순"]
     public var orderBy: String = "date"
     public var userLikeList: [String] = []
-    public let viewModel = WebViewModel()
+    public var viewModel = WebViewModel()
+    
+    public var loadLimit: Int = 5
+    
+    public var isSearching: Bool = false
+    public var searchText: String = ""
     
     
     let searchBar: UISearchBar = {
@@ -25,15 +30,6 @@ class WebViewController: UIViewController {
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.backgroundColor = nil
         return bar
-    }()
-    
-    let searchButton : UIButton = {
-        let button = UIButton()
-        button.setTitle("검색", for: .normal)
-        button.setTitleColor(.link, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.textAlignment = .center
-        return button
     }()
     
     let sortButton: UIButton = {
@@ -130,7 +126,6 @@ class WebViewController: UIViewController {
     }
     
     private func configure() {
-        searchBar.addSubview(searchButton)
         view.addSubview(searchBar)
         view.addSubview(loginStatusTextField)
         view.addSubview(loginButton)
@@ -143,13 +138,8 @@ class WebViewController: UIViewController {
         let heightOffset: CGFloat = 15
         searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         searchBar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
-        searchBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.8).isActive = true
+        searchBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
         searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        searchButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
-        searchButton.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor).isActive = true
-        searchButton.leftAnchor.constraint(equalTo: searchBar.rightAnchor).isActive = true
-        searchButton.heightAnchor.constraint(equalTo: searchBar.heightAnchor).isActive = true
         
         sortButton.topAnchor.constraint(equalTo: loginStatusTextField.topAnchor).isActive = true
         sortButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
@@ -178,6 +168,7 @@ class WebViewController: UIViewController {
     }
     
     private func rxConfigure() {
+        
         loginButton.rx.tap
             .bind { [weak self] in
                 self?.viewModel.didTapLoginButtonInWebViewController(button: self?.loginButton ?? UIButton(), view: self!)
@@ -188,9 +179,15 @@ class WebViewController: UIViewController {
                 self?.viewModel.presentUploadModal(view: self!)
             }.disposed(by: disposeBag)
         
-        searchBar.searchTextField.rx.controlEvent(.editingDidEnd)
-            .bind {
-                print("endedit")
+        searchBar.searchTextField.rx.controlEvent(.editingDidEndOnExit)
+            .bind { [weak self] in
+                self?.viewModel.searchWebVoca(
+                    searchText: self?.searchBar.text ?? "",
+                    orderBy: self?.orderBy ?? "date",
+                    loadLimit: self?.loadLimit ?? 0,
+                    view: self!)
+                self?.searchBar.text = ""
+                self?.searchBar.resignFirstResponder()
             }.disposed(by: disposeBag)
 
 
@@ -213,7 +210,8 @@ class WebViewController: UIViewController {
                     title: item.title,
                     isLiked: item.liked,
                     vocas: item.vocas,
-                    view: self!) }
+                    view: self!)
+                }
             }.disposed(by: disposeBag)
         
         Observable.of(sortTitle)
@@ -225,9 +223,24 @@ class WebViewController: UIViewController {
             .bind { [weak self] in
                 self?.viewModel.presentSortPickerView(view: self!)
             }.disposed(by: disposeBag)
+        
+        let refresher = UIRefreshControl()
+        wordsTableView.refreshControl = refresher
+        refresher.rx.controlEvent(.valueChanged)
+            .bind { [weak self] in
+                self?.searchText = ""
+                self?.isSearching = false
+                self?.isSearching = true
+                self?.loadLimit = 5
+                self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date")
+                refresher.endRefreshing()
+            }.disposed(by: disposeBag)
     }
     
     @objc private func addStateObserver() {
+        searchText = ""
+        isSearching = false
+        loadLimit = 5
         viewModel.setLoginButton(textField: loginStatusTextField, button: loginButton)
         viewModel.makeWebDataSubject(orderBy: orderBy)
     }

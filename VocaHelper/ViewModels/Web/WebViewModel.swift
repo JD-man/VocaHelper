@@ -11,22 +11,17 @@ import RxSwift
 struct WebViewModel {
     private let disposeBag = DisposeBag()
     
-    public var webDataSubject = BehaviorSubject<[WebCell]>(value: [])
+    public var webDataSubject = PublishSubject<[WebCell]>()
     public var webModalSubject = BehaviorSubject<[SectionOfWordsCell]>(value: [])
-    
-    
-    init() {
-        makeWebDataSubject()
-    }
     
     // MARK: - For WebViewController
     
-    public func makeWebDataSubject(orderBy: String = "date") {
+    public func makeWebDataSubject(orderBy: String = "date", loadLimit: Int = 5) {
         if AuthManager.shared.checkUserLoggedIn() {
             getUserLikes { result in
                 switch result {
                 case .success(let likes):
-                    FirestoreManager.shared.getVocaDocuments(orderBy: orderBy) {
+                    FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
                         let cells = $0.map {
                             WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
                         }
@@ -38,7 +33,7 @@ struct WebViewModel {
             }
         }
         else {
-            FirestoreManager.shared.getVocaDocuments(orderBy: orderBy) {
+            FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
                 let cells = $0.map {
                     WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: false)
                 }
@@ -152,6 +147,34 @@ struct WebViewModel {
             view?.orderBy = orderBys[itemIdx]
         }))
         view.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    public func searchWebVoca(searchText: String, orderBy: String, loadLimit: Int, view: WebViewController) {
+        if AuthManager.shared.checkUserLoggedIn() {
+            getUserLikes { result in
+                switch result {
+                case .success(let likes):
+                    FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
+                        let cells = $0.filter { $0.title.contains(searchText) || $0.description.contains(searchText) }
+                            .map {
+                                WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
+                            }
+                        webDataSubject.onNext(cells)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+        else {
+            FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
+                let cells = $0.filter { $0.title.contains(searchText) || $0.description.contains(searchText) }
+                    .map {
+                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: false)
+                    }
+                webDataSubject.onNext(cells)
+            }
+        }
     }
     
     // MARK: - For LoginViewConroller
