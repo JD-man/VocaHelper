@@ -37,6 +37,7 @@ class SearchViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 30, weight: .bold)
         label.textAlignment = .center
         label.textColor = .systemGray4
+        label.adjustsFontSizeToFitWidth = true
         label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

@@ -133,6 +133,22 @@ final class FirestoreManager {
         }
     }
     
+    public func getUserDocuments(email: String, completion: @escaping ((Result<[String : Any], Error>) -> Void)) {
+        db.collection("UserCollection").document(email).getDocument { snapshot, error in
+            if let error = error {
+                print(error)
+                completion(.failure(error))
+            }
+            else {
+                guard let snapshot = snapshot,
+                      let dictionary = snapshot.data() else {
+                    return
+                }
+                completion(.success(dictionary))
+            }
+        }
+    }
+    
     public func getUserNickName(email: String, completion: @escaping ((Result<String, Error>) -> Void)) {
         db.collection("UserCollection").document(email).getDocument { snapshot, error in
             if let error = error {

@@ -6,12 +6,11 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class SettingViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
+    
+    private var disposBag = DisposeBag()
+    
 }

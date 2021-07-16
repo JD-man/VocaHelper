@@ -244,7 +244,6 @@
 		89651FB62632BF2500949DEB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				89A8659D26A169FE005259E0 /* Setting */,
 				89CC7BE52691EF28009D008D /* Web */,
 				895AAB462633F8C800532021 /* Edit */,
 				895AAB472633F8CE00532021 /* Practice */,
@@ -328,14 +327,6 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
-		89A8659D26A169FE005259E0 /* Setting */ = {
-			isa = PBXGroup;
-			children = (
-				89A8659E26A16A29005259E0 /* SettingViewController.swift */,
-			);
-			path = Setting;
-			sourceTree = "<group>";
-		};
 		89CC7BE52691EF28009D008D /* Web */ = {
 			isa = PBXGroup;
 			children = (
@@ -345,6 +336,7 @@
 				89C812D9269961B9000CA8F9 /* LoginViewController.swift */,
 				89C812DB269961CF000CA8F9 /* CreateUserViewController.swift */,
 				89A70AE7269C18E20065EA8D /* UploadModalViewController.swift */,
+				89A8659E26A16A29005259E0 /* SettingViewController.swift */,
 			);
 			path = Web;
 			sourceTree = "<group>";
