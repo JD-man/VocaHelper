@@ -13,8 +13,8 @@ class MainTabBarController: UITabBarController {
     
     let disposeBag = DisposeBag()
     
-    let tabbarImages: [String] = ["book", "magnifyingglass.circle", "network"]
-    let selectedTabbarImages: [String] = ["book.fill", "magnifyingglass.circle.fill", "network"]
+    let tabbarImages: [String] = ["book", "magnifyingglass.circle", "network", "gearshape"]
+    let selectedTabbarImages: [String] = ["book.fill", "magnifyingglass.circle.fill", "network", "gearshape.fill"]
     
     let wordsNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WordsViewController())
@@ -31,6 +31,12 @@ class MainTabBarController: UITabBarController {
     let webNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WebViewController())
         nav.navigationItem.title = "Web"
+        return nav
+    }()
+    
+    let settingNavVC: UINavigationController = {
+        let nav = UINavigationController(rootViewController: SettingViewController())
+        nav.navigationItem.title = "Setting"
         return nav
     }()
     
@@ -65,7 +71,7 @@ class MainTabBarController: UITabBarController {
     private func configure() {
         tabBar.barTintColor = .systemBackground
         tabBar.tintColor = .label
-        setViewControllers([wordsNavVC, searchNavVC, webNavVC], animated: true)
+        setViewControllers([wordsNavVC, searchNavVC, webNavVC, settingNavVC], animated: true)
         changeTabbarImage(title: "Words")
         
         rx.didSelect

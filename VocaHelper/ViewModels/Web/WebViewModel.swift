@@ -22,35 +22,33 @@ struct WebViewModel {
     // MARK: - For WebViewController
     
     public func makeWebDataSubject(orderBy: String = "date") {
-        // 로그인 상태면 WebCell로 map. 아니면 WebData 형식으로 받아야됨. 그래야 로그아웃 상태에서도 게시물을 확인할 수 있음.
-        // getUserLikes를 getVocaDouments 안으로 집어넣어야 한다.
-//        getUserLikes { result in
-//            switch result {
-//            case .success(let likes):
-//                FirestoreManager.shared.getVocaDocuments(orderBy: orderBy) {
-//                    let cells = $0.map {
-//                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
-//                    }
-//                    webDataSubject.onNext(cells)
-//                }
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
-        
-        webDataSubject.onNext(
-            [WebCell(date: "3", title: "title", description: "description", writer: "writer", like: 888, download: 888, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
-            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
-            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
-            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
-            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
-            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true),
-            WebCell(date: "3", title: "title", description: "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescri", writer: "writer", like: 1, download: 1, vocas: [Voca(idx: 0, word: "0", meaning: "0")], liked: true)
-            ])
+        if AuthManager.shared.checkUserLoggedIn() {
+            getUserLikes { result in
+                switch result {
+                case .success(let likes):
+                    FirestoreManager.shared.getVocaDocuments(orderBy: orderBy) {
+                        let cells = $0.map {
+                            WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
+                        }
+                        webDataSubject.onNext(cells)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+        else {
+            FirestoreManager.shared.getVocaDocuments(orderBy: orderBy) {
+                let cells = $0.map {
+                    WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: false)
+                }
+                webDataSubject.onNext(cells)
+            }
+        }
     }
     
     public func getUserLikes(completion: @escaping ( (Result<[String],Error>)  -> Void)) {
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {            
             return
         }
         FirestoreManager.shared.getUserLike(email: email) { result in
@@ -294,7 +292,7 @@ struct WebViewModel {
             guard let handleView = view?.handleView else {
                 return
             }
-            handleView.frame = CGRect(x: 0, y: height, width: handleView.frame.width, height: handleView.frame.height)
+            handleView.frame = CGRect(x: handleView.frame.minX, y: height, width: handleView.frame.width, height: handleView.frame.height)
         }
         
         if height ==  view.handleView.frame.height {
@@ -326,7 +324,7 @@ struct WebViewModel {
                 y = view.minHeight
                 collectionViewHeight = view.handleView.frame.height - view.minHeight - view.bottomBlockView.frame.height - 25
             }
-            view.handleView.frame = CGRect(x: 0, y: y, width: view.handleView.frame.width, height: view.handleView.frame.height)
+            view.handleView.frame = CGRect(x: view.handleView.frame.minX, y: y, width: view.handleView.frame.width, height: view.handleView.frame.height)
             view.collectionView?.frame = CGRect(x: 0, y: view.collectionView?.frame.origin.y ?? 0, width: view.collectionView?.frame.width ?? 0, height: collectionViewHeight)
             view.bottomBlockView.frame = CGRect(x: 0, y: view.collectionView?.frame.maxY ?? 0 + view.bottomBlockView.frame.height, width: view.bottomBlockView.frame.width, height: view.bottomBlockView.frame.height)
         

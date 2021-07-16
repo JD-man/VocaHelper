@@ -66,7 +66,6 @@ class WebViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.isEnabled = true
         button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -83,6 +82,7 @@ class WebViewController: UIViewController {
         textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         textField.isEnabled = false
         textField.isUserInteractionEnabled = false
+        textField.adjustsFontSizeToFitWidth = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -100,7 +100,7 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray6
-        navigationItem.title = "찾아보기"
+        navigationItem.title = "단어장 다운받기"
         navigationController?.navigationBar.prefersLargeTitles = true
         configure()
         constraintsConfigure()

@@ -130,7 +130,7 @@ class LoginViewController: UIViewController {
         view.addSubview(passwordTextField)
         view.addSubview(loginButton)
         view.addSubview(signUpButton)
-        view.addSubview(findPasswordButton)
+        //view.addSubview(findPasswordButton)
         
         emailTextField.attributedPlaceholder = NSAttributedString(string: "이메일을 입력하세요...", attributes: [.foregroundColor : UIColor.lightGray])
         passwordTextField.attributedPlaceholder = NSAttributedString(string: "비밀번호를 입력하세요...", attributes: [.foregroundColor : UIColor.lightGray])
@@ -169,10 +169,10 @@ class LoginViewController: UIViewController {
         signUpButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.5).isActive = true
         signUpButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
         
-        findPasswordButton.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 1.5 * gap).isActive = true
-        findPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        findPasswordButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.6).isActive = true
-        findPasswordButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
+//        findPasswordButton.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 1.5 * gap).isActive = true
+//        findPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        findPasswordButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.6).isActive = true
+//        findPasswordButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
     }
     
     private func rxConfigure() {

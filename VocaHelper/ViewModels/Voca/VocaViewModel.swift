@@ -159,17 +159,19 @@ class VocaViewModel {
         actionSheet.addAction(UIAlertAction(title: "시험보기", style: .default, handler: { [weak view] _ in
             view?.viewModel.pushWebVocaExamViewController(view: view!)
         }))
-        switch isLiked {
-        case true:
-            actionSheet.addAction(UIAlertAction(title: "추천 취소", style: .default, handler: { _ in
-                FirestoreManager.shared.deleteThumbsUp(webVocaName: webVocaName)
-                view.isLiked = false
-            }))
-        case false:
-            actionSheet.addAction(UIAlertAction(title: "추천", style: .default, handler: { _ in
-                FirestoreManager.shared.thumbsUp(webVocaName: webVocaName)
-                view.isLiked = true
-            }))
+        if AuthManager.shared.checkUserLoggedIn() {
+            switch isLiked {
+            case true:
+                actionSheet.addAction(UIAlertAction(title: "추천 취소", style: .default, handler: { _ in
+                    FirestoreManager.shared.deleteThumbsUp(webVocaName: webVocaName)
+                    view.isLiked = false
+                }))
+            case false:
+                actionSheet.addAction(UIAlertAction(title: "추천", style: .default, handler: { _ in
+                    FirestoreManager.shared.thumbsUp(webVocaName: webVocaName)
+                    view.isLiked = true
+                }))
+            }
         }
         actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
         view.present(actionSheet, animated: true, completion: nil)
@@ -195,16 +197,17 @@ class VocaViewModel {
                 VocaManager.shared.saveVocas(fileName: fileName)
                 FirestoreManager.shared.downloadNumberUp(webVocaName: view!.webVocaName)
             }
-            DispatchQueue.global().sync {                
-                let alert = UIAlertController(title: "단어장이 저장됐습니다.", message: isLiked ? nil : "이 단어장을 추천해주세요!", preferredStyle: .alert)
-                if !isLiked {
+            DispatchQueue.global().sync {
+                let isLoggedIn = AuthManager.shared.checkUserLoggedIn()
+                let alert = UIAlertController(title: "단어장이 저장됐습니다.", message: nil, preferredStyle: .alert)
+                if !isLiked && isLoggedIn {
                     alert.addAction(UIAlertAction(title: "추천", style: .default, handler: { _ in
                         FirestoreManager.shared.thumbsUp(webVocaName: view!.webVocaName)
                         view?.tabBarController?.tabBar.isHidden.toggle()
                         view?.navigationController?.popViewController(animated: true)
                     }))
                 }
-                alert.addAction(UIAlertAction(title: isLiked ? "확인" : "나중에", style: .cancel, handler: { _ in
+                alert.addAction(UIAlertAction(title: isLiked || !isLoggedIn ? "확인" : "나중에", style: .cancel, handler: { _ in
                     view?.tabBarController?.tabBar.isHidden.toggle()
                     view?.navigationController?.popViewController(animated: true)
                 }))

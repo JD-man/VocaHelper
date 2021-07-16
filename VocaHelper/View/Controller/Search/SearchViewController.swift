@@ -45,7 +45,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "단어찾기"
+        navigationItem.title = "저장한 단어찾기"
         navigationController?.navigationBar.prefersLargeTitles = true
         searchBarConfigure()
         constraintsConfigure()

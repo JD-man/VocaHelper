@@ -52,7 +52,7 @@ final class FirestoreManager {
             return
         }
         
-        var uploadName = writer + " - " + title
+        var uploadName = email + " - " + title
         let webData = WebData(date: "\(Date())", title: title, description: description, writer: writer, like: 0, download: 0, vocas: vocas)
         getUserUpload(email: email) { [weak self] result in
             switch result {
