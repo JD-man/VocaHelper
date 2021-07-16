@@ -34,12 +34,6 @@ class MainTabBarController: UITabBarController {
         return nav
     }()
     
-    let settingNavVC: UINavigationController = {
-        let nav = UINavigationController(rootViewController: SettingViewController())
-        nav.navigationItem.title = "Setting"
-        return nav
-    }()
-    
     let launchView: UIView = {
         guard let launchScreen = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController(),
               let launchView = launchScreen.view else {
@@ -71,7 +65,7 @@ class MainTabBarController: UITabBarController {
     private func configure() {
         tabBar.barTintColor = .systemBackground
         tabBar.tintColor = .label
-        setViewControllers([wordsNavVC, searchNavVC, webNavVC, settingNavVC], animated: true)
+        setViewControllers([wordsNavVC, searchNavVC, webNavVC], animated: true)
         changeTabbarImage(title: "Words")
         
         rx.didSelect

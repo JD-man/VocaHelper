@@ -14,8 +14,10 @@
 
 
 ## 작업중
-프로필 탭
-오토레이아웃
+계정설정 뷰  
+스크롤 로딩
+단어장 검색
+오토레이아웃    
 
 ### 원본 프로젝트에 더해서 RxSwift, Firebase를 사용했습니다.
 [원본 깃허브 링크](https://github.com/JD-man/VocaHelperOrigin)

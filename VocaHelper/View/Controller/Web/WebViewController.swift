@@ -23,7 +23,17 @@ class WebViewController: UIViewController {
         bar.autocorrectionType = .no
         bar.autocapitalizationType = .none
         bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.backgroundColor = nil
         return bar
+    }()
+    
+    let searchButton : UIButton = {
+        let button = UIButton()
+        button.setTitle("검색", for: .normal)
+        button.setTitleColor(.link, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.textAlignment = .center
+        return button
     }()
     
     let sortButton: UIButton = {
@@ -120,6 +130,7 @@ class WebViewController: UIViewController {
     }
     
     private func configure() {
+        searchBar.addSubview(searchButton)
         view.addSubview(searchBar)
         view.addSubview(loginStatusTextField)
         view.addSubview(loginButton)
@@ -131,9 +142,14 @@ class WebViewController: UIViewController {
     private func constraintsConfigure() {
         let heightOffset: CGFloat = 15
         searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        searchBar.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        searchBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        searchBar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        searchBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.8).isActive = true
         searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        searchButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        searchButton.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor).isActive = true
+        searchButton.leftAnchor.constraint(equalTo: searchBar.rightAnchor).isActive = true
+        searchButton.heightAnchor.constraint(equalTo: searchBar.heightAnchor).isActive = true
         
         sortButton.topAnchor.constraint(equalTo: loginStatusTextField.topAnchor).isActive = true
         sortButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
@@ -162,7 +178,6 @@ class WebViewController: UIViewController {
     }
     
     private func rxConfigure() {
-        
         loginButton.rx.tap
             .bind { [weak self] in
                 self?.viewModel.didTapLoginButtonInWebViewController(button: self?.loginButton ?? UIButton(), view: self!)
@@ -173,10 +188,10 @@ class WebViewController: UIViewController {
                 self?.viewModel.presentUploadModal(view: self!)
             }.disposed(by: disposeBag)
         
-//        searchBar.rx.text
-//            .bind {
-//                print($0!)
-//            }.disposed(by: disposeBag)
+        searchBar.searchTextField.rx.controlEvent(.editingDidEnd)
+            .bind {
+                print("endedit")
+            }.disposed(by: disposeBag)
 
 
         viewModel.webDataSubject
