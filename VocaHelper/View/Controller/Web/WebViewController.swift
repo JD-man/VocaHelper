@@ -22,6 +22,8 @@ class WebViewController: UIViewController {
     public var isSearching: Bool = false
     public var searchText: String = ""
     
+    public var isStarting: Bool = true
+    
     
     let searchBar: UISearchBar = {
         let bar = UISearchBar()
@@ -181,6 +183,7 @@ class WebViewController: UIViewController {
         
         searchBar.searchTextField.rx.controlEvent(.editingDidEndOnExit)
             .bind { [weak self] in
+                self?.loadLimit = 5
                 self?.viewModel.searchWebVoca(
                     searchText: self?.searchBar.text ?? "",
                     orderBy: self?.orderBy ?? "date",
@@ -212,6 +215,27 @@ class WebViewController: UIViewController {
                     vocas: item.vocas,
                     view: self!)
                 }
+                
+                if self?.isStarting == true && indexPath == (self?.loadLimit ?? 5) - 1 {
+                    self?.isStarting = false
+                }
+                else if self?.isStarting == false && indexPath == (self?.loadLimit ?? 5) - 1 {
+                    self?.isStarting = true
+                    self?.loadLimit += 5
+                    if self?.isSearching == false {
+                        print("Normal Load")
+                        self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date", loadLimit: self?.loadLimit ?? 5)
+                    }
+                    else {
+                        print("searching Load")
+                        self?.viewModel.searchWebVoca(
+                            searchText: self?.searchText ?? "" ,
+                            orderBy: self?.orderBy ?? "date",
+                            loadLimit: self?.loadLimit ?? 5,
+                            view: self!
+                        )
+                    }
+                }
             }.disposed(by: disposeBag)
         
         Observable.of(sortTitle)
@@ -230,7 +254,7 @@ class WebViewController: UIViewController {
             .bind { [weak self] in
                 self?.searchText = ""
                 self?.isSearching = false
-                self?.isSearching = true
+                self?.isStarting = true
                 self?.loadLimit = 5
                 self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date")
                 refresher.endRefreshing()
@@ -240,6 +264,7 @@ class WebViewController: UIViewController {
     @objc private func addStateObserver() {
         searchText = ""
         isSearching = false
+        isStarting = true
         loadLimit = 5
         viewModel.setLoginButton(textField: loginStatusTextField, button: loginButton)
         viewModel.makeWebDataSubject(orderBy: orderBy)

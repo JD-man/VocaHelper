@@ -48,6 +48,10 @@ final class FirestoreManager {
         }
     }
     
+    public func getFilteredVoca() {
+        
+    }
+    
     public func putVocaDocuments(fileName: String, title: String, description: String, vocas: [Voca],
                                  completion: @escaping ((Bool) -> Void)) {
         guard let writer = UserDefaults.standard.value(forKey: "nickname") as? String,

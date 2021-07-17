@@ -143,7 +143,17 @@ struct WebViewModel {
             }
             let buttonTitle = view?.sortTitle[itemIdx]
             view?.sortButton.setTitle(buttonTitle, for: .normal)
-            view?.viewModel.makeWebDataSubject(orderBy: orderBys[itemIdx])
+            view?.loadLimit = 5
+            if view?.isSearching == false {
+                view?.viewModel.makeWebDataSubject(orderBy: orderBys[itemIdx])
+            }
+            else {
+                view?.viewModel.searchWebVoca(
+                    searchText: view?.searchText ?? "",
+                    orderBy: orderBys[itemIdx],
+                    loadLimit: view?.loadLimit ?? 5,
+                    view: view!)
+            }
             view?.orderBy = orderBys[itemIdx]
         }))
         view.present(actionSheet, animated: true, completion: nil)
