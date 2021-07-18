@@ -23,7 +23,7 @@ final class FirestoreManager {
             .limit(to: loadLimit)
             .getDocuments { querySnapShot, error in
             if let error = error {
-                print(error)
+                print(error)                
             }
             else {
                 guard let snapshot = querySnapShot else {
@@ -35,6 +35,7 @@ final class FirestoreManager {
                                                description: "",
                                                writer: "", like: 0,
                                                download: 0,
+                                               email: "",
                                                vocas: [Voca(idx: 0, word: "", meaning: "")])
                     do {
                         if let data = try $0.data(as : WebData.self) { returnedData = data }
@@ -48,10 +49,6 @@ final class FirestoreManager {
         }
     }
     
-    public func getFilteredVoca() {
-        
-    }
-    
     public func putVocaDocuments(fileName: String, title: String, description: String, vocas: [Voca],
                                  completion: @escaping ((Bool) -> Void)) {
         guard let writer = UserDefaults.standard.value(forKey: "nickname") as? String,
@@ -60,7 +57,7 @@ final class FirestoreManager {
         }
         
         var uploadName = email + " - " + title
-        let webData = WebData(date: "\(Date())", title: title, description: description, writer: writer, like: 0, download: 0, vocas: vocas)
+        let webData = WebData(date: "\(Date())", title: title, description: description, writer: writer, like: 0, download: 0, email: email, vocas: vocas)
         getUserUpload(email: email) { [weak self] result in
             switch result {
             case .success(let uploads):
@@ -98,6 +95,7 @@ final class FirestoreManager {
     }
     
     public func thumbsUp(webVocaName: String) {
+        
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return
         }
@@ -162,6 +160,7 @@ final class FirestoreManager {
                                                    description: "",
                                                    writer: "", like: 0,
                                                    download: 0,
+                                                   email: "",
                                                    vocas: [Voca(idx: 0, word: "", meaning: "")])
                         do {
                             if let data = try $0.data(as : WebData.self) { returnedData = data }

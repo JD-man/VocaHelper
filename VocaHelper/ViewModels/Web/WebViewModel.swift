@@ -25,7 +25,7 @@ struct WebViewModel {
                 case .success(let likes):
                     FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
                         let cells = $0.map {
-                            WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains(UserDefaults.standard.value(forKey: "email") as! String + " - " + $0.title))
+                            WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.email + " - " + $0.title), email: $0.email)
                         }
                         webDataSubject.onNext(cells)
                         indiciator.stopAnimating()
@@ -38,7 +38,7 @@ struct WebViewModel {
         else {
             FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
                 let cells = $0.map {
-                    WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: false)
+                    WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: false, email: $0.email)
                 }
                 webDataSubject.onNext(cells)
                 indiciator.stopAnimating()
@@ -60,10 +60,8 @@ struct WebViewModel {
         }
     }
     
-    public func getWebVocas(title: String, isLiked: Bool, vocas: [Voca], view: WebViewController) {
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-            return
-        }
+    public func getWebVocas(email: String, title: String, isLiked: Bool, vocas: [Voca], view: WebViewController) {
+        // 닉네임으로 이메일을 가져와야함.
         VocaManager.shared.vocas = vocas
         let vc = WebVocaViewController()
         vc.webVocaName = email + " - " + title
@@ -295,7 +293,7 @@ struct WebViewModel {
                     }
                 }                
             case false:
-                let failAlert = UIAlertController(title: "닉네임 또는 이메일이 이미 사용중입니다.", message: "계속 이런 현상이 나타나면 문의해주세요.", preferredStyle: .alert)
+                let failAlert = UIAlertController(title: "유저 생성에 실패했습니다.", message: "계속 이런 현상이 나타나면 문의해주세요.", preferredStyle: .alert)
                 failAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
                 view.present(failAlert, animated: true, completion: nil)
             }
@@ -480,7 +478,7 @@ struct WebViewModel {
             case .success(let likes):
                 FirestoreManager.shared.getWebVocaByWriter(nickName: nickName) {
                     let cells = $0.map {
-                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains(UserDefaults.standard.value(forKey: "email") as! String + " - " + $0.title))
+                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains(UserDefaults.standard.value(forKey: "email") as! String + " - " + $0.title), email: $0.email)
                     }
                     userUploadVocaSubject.onNext(cells)
                 }

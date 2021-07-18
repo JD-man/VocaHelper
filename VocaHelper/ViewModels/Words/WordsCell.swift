@@ -78,10 +78,15 @@ struct WordsCell: Equatable, IdentifiableType {
         
         // Delete 버튼 터치
         popupVC.deleteClosure = { [weak popupVC, weak view] in
-            VocaManager.shared.deleteFile(fileName: fileName)
-            view?.viewModels.makeNewViewModels(isAddButton: false)
-            view?.tabBarController?.tabBar.isHidden.toggle()
-            popupVC?.dismiss(animated: true, completion: nil)
+            let deleteAlert = UIAlertController(title: "이 단어장을 삭제하시겠습니까?", message: nil, preferredStyle: .alert)
+            deleteAlert.addAction(UIAlertAction(title: "삭제", style: .destructive, handler: { _ in
+                VocaManager.shared.deleteFile(fileName: fileName)
+                view?.viewModels.makeNewViewModels(isAddButton: false)
+                view?.tabBarController?.tabBar.isHidden.toggle()
+                popupVC?.dismiss(animated: true, completion: nil)
+            }))
+            deleteAlert.addAction(UIAlertAction(title: "취소", style: .default, handler: nil))
+            view?.present(deleteAlert, animated: true, completion: nil)
         }
         
         // Exit 버튼 터치

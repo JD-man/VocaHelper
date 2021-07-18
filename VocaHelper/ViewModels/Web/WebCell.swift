@@ -34,4 +34,5 @@ struct WebCell: Equatable {
     let download: Int
     let vocas: [Voca]
     let liked: Bool
+    let email: String
 }

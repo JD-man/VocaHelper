@@ -190,6 +190,7 @@ class WebViewController: UIViewController {
                 cell.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
 
                 cell.tapFunction = { self?.viewModel.getWebVocas(
+                    email: item.email,
                     title: item.title,
                     isLiked: item.liked,
                     vocas: item.vocas,

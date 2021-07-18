@@ -14,6 +14,7 @@ struct WebData: Codable {
     let writer: String
     let like: Int
     let download: Int
+    let email: String
     let vocas: [Voca]
     
     enum CodingKeys: String, CodingKey {
@@ -23,6 +24,7 @@ struct WebData: Codable {
         case writer
         case like
         case download
+        case email        
         case vocas
     }
 }
