@@ -102,7 +102,7 @@ class CreateUserViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemTeal
+        view.backgroundColor = .darkGray
         viewConfigure()
         constraintsConfigure()
         rxConfigure()
@@ -168,7 +168,6 @@ class CreateUserViewController: UIViewController {
     }
     
     private func rxConfigure() {
-        
         signUpButton.rx.tap
             .bind { [weak self] in
                 guard let strongSelf = self,

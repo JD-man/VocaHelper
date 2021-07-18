@@ -17,7 +17,8 @@ struct WebViewModel {
     
     // MARK: - For WebViewController
     
-    public func makeWebDataSubject(orderBy: String = "date", loadLimit: Int = 5) {
+    public func makeWebDataSubject(orderBy: String = "date", loadLimit: Int = 5, indiciator: UIActivityIndicatorView) {
+        indiciator.startAnimating()
         if AuthManager.shared.checkUserLoggedIn() {
             getUserLikes { result in
                 switch result {
@@ -27,6 +28,7 @@ struct WebViewModel {
                             WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains(UserDefaults.standard.value(forKey: "email") as! String + " - " + $0.title))
                         }
                         webDataSubject.onNext(cells)
+                        indiciator.stopAnimating()
                     }
                 case .failure(let error):
                     print(error)
@@ -39,6 +41,7 @@ struct WebViewModel {
                     WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: false)
                 }
                 webDataSubject.onNext(cells)
+                indiciator.stopAnimating()
             }
         }
     }
@@ -101,7 +104,7 @@ struct WebViewModel {
                                   let prevNickname = UserDefaults.standard.value(forKey: "nickname") as? String else {
                                 return
                             }
-                            FirestoreManager.shared.putUserDocuments(nickName: newNickname, email: email) { isPut in
+                            FirestoreManager.shared.changeUserNickname(newNickname: newNickname, email: email) { isPut in
                                 switch isPut {
                                 case true:
                                     let successAlert = UIAlertController(title: "닉네임 변경이 완료됐습니다.", message: nil, preferredStyle: .alert)
@@ -204,7 +207,7 @@ struct WebViewModel {
             let buttonTitle = view?.sortTitle[itemIdx]
             view?.sortButton.setTitle(buttonTitle, for: .normal)
             view?.loadLimit = 5
-            view?.viewModel.makeWebDataSubject(orderBy: orderBys[itemIdx])
+            view?.viewModel.makeWebDataSubject(orderBy: orderBys[itemIdx], indiciator: view!.activityIndicator)
             view?.orderBy = orderBys[itemIdx]
         }))
         view.present(actionSheet, animated: true, completion: nil)
@@ -292,7 +295,7 @@ struct WebViewModel {
                     }
                 }                
             case false:
-                let failAlert = UIAlertController(title: "가입이 실패했습니다.", message: "닉네임과 이메일을 확인해주세요.", preferredStyle: .alert)
+                let failAlert = UIAlertController(title: "닉네임 또는 이메일이 이미 사용중입니다.", message: "계속 이런 현상이 나타나면 문의해주세요.", preferredStyle: .alert)
                 failAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
                 view.present(failAlert, animated: true, completion: nil)
             }

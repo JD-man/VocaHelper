@@ -296,5 +296,17 @@ final class FirestoreManager {
             }
         }
     }
+    
+    public func changeUserNickname(newNickname: String, email: String, completion: @escaping ((Bool) -> Void)) {
+        db.collection("UserCollection").document(email).updateData(["nickname" : newNickname]) { error in
+            if let error = error {
+                print(error)
+                completion(false)
+            }
+            else {
+                completion(true)
+            }
+        }
+    }
 }
 

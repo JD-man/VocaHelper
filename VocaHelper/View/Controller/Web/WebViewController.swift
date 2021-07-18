@@ -20,6 +20,13 @@ class WebViewController: UIViewController {
     public var loadLimit: Int = 10
     public var isStarting: Bool = true
     
+    let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
     let sortButton: UIButton = {
         let button = UIButton()
         button.setTitle("최신순", for: .normal)
@@ -120,6 +127,7 @@ class WebViewController: UIViewController {
         view.addSubview(sortButton)
         view.addSubview(uploadButton)
         view.addSubview(wordsTableView)
+        view.addSubview(activityIndicator)
     }
     
     private func constraintsConfigure() {
@@ -148,7 +156,12 @@ class WebViewController: UIViewController {
         wordsTableView.topAnchor.constraint(equalTo: loginStatusTextField.bottomAnchor, constant: heightOffset).isActive = true
         wordsTableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
         wordsTableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
-        wordsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true       
+        wordsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+        activityIndicator.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        activityIndicator.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor).isActive = true
     }
     
     private func rxConfigure() {
@@ -189,7 +202,10 @@ class WebViewController: UIViewController {
                 else if self?.isStarting == false && indexPath == (self?.loadLimit ?? 5) - 1 {
                     self?.isStarting = true
                     self?.loadLimit += 5
-                    self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date", loadLimit: self?.loadLimit ?? 5)
+                    self?.viewModel.makeWebDataSubject(
+                        orderBy: self?.orderBy ?? "date",
+                        loadLimit: self?.loadLimit ?? 5,
+                        indiciator: self?.activityIndicator ?? UIActivityIndicatorView())
                 }
             }.disposed(by: disposeBag)
         
@@ -209,7 +225,7 @@ class WebViewController: UIViewController {
             .bind { [weak self] in
                 self?.isStarting = true
                 self?.loadLimit = 5
-                self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date")
+                self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date", indiciator: self?.activityIndicator ?? UIActivityIndicatorView())
                 refresher.endRefreshing()
             }.disposed(by: disposeBag)
     }
@@ -218,6 +234,6 @@ class WebViewController: UIViewController {
         isStarting = true
         loadLimit = 5
         viewModel.setLoginButton(textField: loginStatusTextField, button: loginButton)
-        viewModel.makeWebDataSubject(orderBy: orderBy)
+        viewModel.makeWebDataSubject(orderBy: orderBy, indiciator: activityIndicator)
     }
 }

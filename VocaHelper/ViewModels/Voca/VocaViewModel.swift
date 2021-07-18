@@ -227,8 +227,7 @@ class VocaViewModel {
         }
         guard let navi = view.navigationController else {
             return
-        }
-        //view.tabBarController?.tabBar.isHidden.toggle()
+        }        
         navi.popViewController(animated: true)
         let examVC = ExamViewController()
         navi.pushViewController(examVC, animated: true)
