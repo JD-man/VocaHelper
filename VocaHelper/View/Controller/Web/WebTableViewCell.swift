@@ -123,6 +123,7 @@ class WebTableViewCell: UITableViewCell {
         gradient.frame = backgroundButton.layer.bounds
     }
     
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         titleLabel.text = "초기화"

@@ -19,7 +19,7 @@ final class FirestoreManager {
     
     public func getVocaDocuments(orderBy: String, loadLimit: Int, completion: @escaping ([WebData]) -> Void ) {
         db.collection("VocaCollection")
-            .order(by:orderBy, descending: true)
+            .order(by:orderBy, descending: true)            
             .limit(to: loadLimit)
             .getDocuments { querySnapShot, error in
             if let error = error {
@@ -125,6 +125,54 @@ final class FirestoreManager {
         db.collection("VocaCollection").document(webVocaName).updateData([
             "download" : FieldValue.increment(Int64(1))
         ])
+    }
+    
+    public func changeWebVocaWriter(prevNickname: String, newNickname: String, completion: @escaping ((Bool) -> Void)) {
+        db.collection("VocaCollection")
+            .whereField("writer", isEqualTo: prevNickname)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print(error)
+                }
+                else {
+                    guard let snapshot = snapshot else {
+                        return
+                    }
+                    for doc in snapshot.documents {
+                        self.db.collection("VocaCollection").document(doc.documentID).updateData([ "writer" : newNickname])
+                    }
+                }
+            }
+    }
+    
+    public func getWebVocaByWriter(nickName: String, completion: @escaping (([WebData]) -> Void)) {
+        db.collection("VocaCollection")
+            .whereField("writer", isEqualTo: nickName)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print(error)
+                }
+                else {
+                    guard let snapshot = snapshot else {
+                        return
+                    }
+                    let webDatas: [WebData] =  snapshot.documents.map {
+                        var returnedData = WebData(date: "",
+                                                   title: "",
+                                                   description: "",
+                                                   writer: "", like: 0,
+                                                   download: 0,
+                                                   vocas: [Voca(idx: 0, word: "", meaning: "")])
+                        do {
+                            if let data = try $0.data(as : WebData.self) { returnedData = data }
+                        } catch {
+                            print(error)
+                        }
+                        return returnedData
+                    }
+                    completion(webDatas)
+                }
+            }
     }
     
     // MARK: - UserCollection functions
@@ -249,3 +297,4 @@ final class FirestoreManager {
         }
     }
 }
+

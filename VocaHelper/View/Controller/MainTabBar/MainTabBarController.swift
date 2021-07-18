@@ -13,8 +13,8 @@ class MainTabBarController: UITabBarController {
     
     let disposeBag = DisposeBag()
     
-    let tabbarImages: [String] = ["book", "magnifyingglass.circle", "network", "gearshape"]
-    let selectedTabbarImages: [String] = ["book.fill", "magnifyingglass.circle.fill", "network", "gearshape.fill"]
+    let tabbarImages: [String] = ["book", "magnifyingglass.circle", "network", "person"]
+    let selectedTabbarImages: [String] = ["book.fill", "magnifyingglass.circle.fill", "network", "person.fill"]
     
     let wordsNavVC: UINavigationController = {
         let nav = UINavigationController(rootViewController: WordsViewController())

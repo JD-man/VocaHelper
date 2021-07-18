@@ -147,7 +147,7 @@ class UploadModalViewController: UIViewController {
             return cell
         }
         
-        viewModel.webModalSubject
+        viewModel.uploadModalSubject
             .bind(to: collectionView!.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         

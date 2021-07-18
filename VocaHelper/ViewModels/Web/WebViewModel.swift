@@ -12,7 +12,8 @@ struct WebViewModel {
     private let disposeBag = DisposeBag()
     
     public var webDataSubject = PublishSubject<[WebCell]>()
-    public var webModalSubject = BehaviorSubject<[SectionOfWordsCell]>(value: [])
+    public var uploadModalSubject = BehaviorSubject<[SectionOfWordsCell]>(value: [])
+    public var userUploadVocaSubject = BehaviorSubject<[WebCell]>(value: [])
     
     // MARK: - For WebViewController
     
@@ -23,7 +24,7 @@ struct WebViewModel {
                 case .success(let likes):
                     FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
                         let cells = $0.map {
-                            WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
+                            WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains(UserDefaults.standard.value(forKey: "email") as! String + " - " + $0.title))
                         }
                         webDataSubject.onNext(cells)
                     }
@@ -56,10 +57,13 @@ struct WebViewModel {
         }
     }
     
-    public func getWebVocas(writer: String, title: String, isLiked: Bool, vocas: [Voca], view: WebViewController) {
+    public func getWebVocas(title: String, isLiked: Bool, vocas: [Voca], view: WebViewController) {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
         VocaManager.shared.vocas = vocas
         let vc = WebVocaViewController()
-        vc.webVocaName = writer + " - " + title
+        vc.webVocaName = email + " - " + title
         vc.isLiked = isLiked
         view.tabBarController?.tabBar.isHidden.toggle()
         view.navigationController?.pushViewController(vc, animated: true)
@@ -73,19 +77,75 @@ struct WebViewModel {
             view.present(loginVC, animated: true, completion: nil)
         }
         else {
-            let alert = UIAlertController(title: "로그아웃 하시겠습니까?", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "예", style: .destructive, handler: { _ in
-                AuthManager.shared.logoutUser()
-                NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            actionSheet.addAction(UIAlertAction(title: "닉네임 수정", style: .default, handler: { [weak view] _ in
+                let nicknameAlert = UIAlertController(title: "사용할 닉네임을 입력해주세요.", message: nil, preferredStyle: .alert)
+                nicknameAlert.addTextField {
+                    $0.placeholder = "사용할 닉네임..."
+                }
+                nicknameAlert.addAction(UIAlertAction(title: "변경", style: .default, handler: { [weak view] _ in
+                    guard let textField = nicknameAlert.textFields,
+                          let newNickname = textField[0].text else {
+                        return
+                    }
+                    FirestoreManager.shared.checkNickNameExist(nickName: newNickname) { isChecked in
+                        switch isChecked {
+                        case true:
+                            let existAlert = UIAlertController(title: "이미 존재하는 닉네임입니다.", message: "다른 닉네임으로 변경해주세요.", preferredStyle: .alert)
+                            existAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: { _ in
+                                view?.present(nicknameAlert, animated: true, completion: nil)
+                            }))
+                            view?.present(existAlert, animated: true, completion: nil)
+                        case false:
+                            guard let email = UserDefaults.standard.value(forKey: "email") as? String,
+                                  let prevNickname = UserDefaults.standard.value(forKey: "nickname") as? String else {
+                                return
+                            }
+                            FirestoreManager.shared.putUserDocuments(nickName: newNickname, email: email) { isPut in
+                                switch isPut {
+                                case true:
+                                    let successAlert = UIAlertController(title: "닉네임 변경이 완료됐습니다.", message: nil, preferredStyle: .alert)
+                                    successAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
+                                        // 유저디폴트 닉네임 변경
+                                        UserDefaults.standard.setValue(newNickname, forKey: "nickname")
+                                        // 웹뷰 컨트롤러에 포스트
+                                        NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
+                                        // 이메일로 찾아서 VocaCollection에서 writer 변경
+                                        FirestoreManager.shared.changeWebVocaWriter(prevNickname: prevNickname, newNickname: newNickname) { isChanged in
+                                            print(isChanged)
+                                        }
+                                    }))
+                                    view?.present(successAlert, animated: true, completion: nil)
+                                case false:
+                                    let failureAlert = UIAlertController(title: "닉네임 변경에 실패했습니다.", message: "계속 이런 현상이 나타나면 문의해주세요.", preferredStyle: .alert)
+                                    failureAlert.addAction(UIAlertAction(title: "확인", style: .default, handler: { _ in
+                                        view?.present(nicknameAlert, animated: true, completion: nil)
+                                    }))
+                                    view?.present(failureAlert, animated: true, completion: nil)
+                                }
+                            }
+                        }
+                    }
+                }))
+                nicknameAlert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+                view?.present(nicknameAlert, animated: true, completion: nil)
             }))
-            alert.addAction(UIAlertAction(title: "아니오", style: .cancel, handler: nil))
-            view.present(alert, animated: true, completion: nil)
+            actionSheet.addAction(UIAlertAction(title: "업로드한 단어장", style: .default, handler: { [weak view] _ in
+                let userWebVocaVC = UserWebVocaViewController()
+                userWebVocaVC.viewModel = view?.viewModel
+                view?.present(userWebVocaVC, animated: true, completion: nil)
+            }))
+            actionSheet.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { [weak view] _ in
+                didTapLogout(view: view!)
+            }))
+            actionSheet.addAction(UIAlertAction(title: "취소", style: .default, handler: nil))
+            view.present(actionSheet, animated: true, completion: nil)
         }
     }
     
     public func setLoginButton(textField: UITextField, button: UIButton) {
         if AuthManager.shared.checkUserLoggedIn() {
-            button.setTitle("로그아웃", for: .normal)
+            button.setTitle("프로필", for: .normal)
             guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
                 return
             }
@@ -144,47 +204,10 @@ struct WebViewModel {
             let buttonTitle = view?.sortTitle[itemIdx]
             view?.sortButton.setTitle(buttonTitle, for: .normal)
             view?.loadLimit = 5
-            if view?.isSearching == false {
-                view?.viewModel.makeWebDataSubject(orderBy: orderBys[itemIdx])
-            }
-            else {
-                view?.viewModel.searchWebVoca(
-                    searchText: view?.searchText ?? "",
-                    orderBy: orderBys[itemIdx],
-                    loadLimit: view?.loadLimit ?? 5,
-                    view: view!)
-            }
+            view?.viewModel.makeWebDataSubject(orderBy: orderBys[itemIdx])
             view?.orderBy = orderBys[itemIdx]
         }))
         view.present(actionSheet, animated: true, completion: nil)
-    }
-    
-    public func searchWebVoca(searchText: String, orderBy: String, loadLimit: Int, view: WebViewController) {
-        if AuthManager.shared.checkUserLoggedIn() {
-            getUserLikes { result in
-                switch result {
-                case .success(let likes):
-                    FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
-                        let cells = $0.filter { $0.title.contains(searchText) || $0.description.contains(searchText) }
-                            .map {
-                                WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains($0.writer + " - " + $0.title))
-                            }
-                        webDataSubject.onNext(cells)
-                    }
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        }
-        else {
-            FirestoreManager.shared.getVocaDocuments(orderBy: orderBy, loadLimit: loadLimit) {
-                let cells = $0.filter { $0.title.contains(searchText) || $0.description.contains(searchText) }
-                    .map {
-                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: false)
-                    }
-                webDataSubject.onNext(cells)
-            }
-        }
     }
     
     // MARK: - For LoginViewConroller
@@ -317,7 +340,7 @@ struct WebViewModel {
         let cells = temp.map {
             WordsCell(identity: $0, fileName: changeToRealName(fileName: $0))
         }
-        webModalSubject.onNext([SectionOfWordsCell(idx: 0, items: cells)])
+        uploadModalSubject.onNext([SectionOfWordsCell(idx: 0, items: cells)])
     }
     
     public func handleAnimation(height: CGFloat, view: UploadModalViewController) {
@@ -430,4 +453,39 @@ struct WebViewModel {
         alert.addAction(UIAlertAction(title: "취소", style: .destructive, handler: nil))
         view.present(alert, animated: true, completion: nil)
     }
+    
+    // MARK : - For Profile
+
+    public func didTapLogout(view: WebViewController) {
+        let alert = UIAlertController(title: "로그아웃 하시겠습니까?", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "예", style: .destructive, handler: { _ in
+            AuthManager.shared.logoutUser()
+            NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "아니오", style: .cancel, handler: nil))
+        view.present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK: - For UserWebVocaViewController
+    
+    public func makeUserUploadSubject() {
+        guard let nickName = UserDefaults.standard.value(forKey: "nickname") as? String else {
+            return
+        }
+        getUserLikes { result in
+            switch result {
+            case .success(let likes):
+                FirestoreManager.shared.getWebVocaByWriter(nickName: nickName) {
+                    let cells = $0.map {
+                        WebCell(date: $0.date, title: $0.title, description: $0.description, writer: $0.writer, like: $0.like, download: $0.download, vocas: $0.vocas, liked: likes.contains(UserDefaults.standard.value(forKey: "email") as! String + " - " + $0.title))
+                    }
+                    userUploadVocaSubject.onNext(cells)
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
 }
+
+

@@ -17,22 +17,8 @@ class WebViewController: UIViewController {
     public var userLikeList: [String] = []
     public var viewModel = WebViewModel()
     
-    public var loadLimit: Int = 5
-    
-    public var isSearching: Bool = false
-    public var searchText: String = ""
-    
+    public var loadLimit: Int = 10
     public var isStarting: Bool = true
-    
-    
-    let searchBar: UISearchBar = {
-        let bar = UISearchBar()
-        bar.autocorrectionType = .no
-        bar.autocapitalizationType = .none
-        bar.translatesAutoresizingMaskIntoConstraints = false
-        bar.backgroundColor = nil
-        return bar
-    }()
     
     let sortButton: UIButton = {
         let button = UIButton()
@@ -73,6 +59,7 @@ class WebViewController: UIViewController {
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 10
         button.isEnabled = true
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -98,8 +85,8 @@ class WebViewController: UIViewController {
     let wordsTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(WebTableViewCell.self, forCellReuseIdentifier: WebTableViewCell.identifier)
+        tableView.rowHeight = 240
         tableView.separatorStyle = .none
-        tableView.rowHeight = 250
         tableView.allowsSelection = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
@@ -128,7 +115,6 @@ class WebViewController: UIViewController {
     }
     
     private func configure() {
-        view.addSubview(searchBar)
         view.addSubview(loginStatusTextField)
         view.addSubview(loginButton)
         view.addSubview(sortButton)
@@ -138,10 +124,6 @@ class WebViewController: UIViewController {
     
     private func constraintsConfigure() {
         let heightOffset: CGFloat = 15
-        searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        searchBar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
-        searchBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
-        searchBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         sortButton.topAnchor.constraint(equalTo: loginStatusTextField.topAnchor).isActive = true
         sortButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
@@ -158,7 +140,7 @@ class WebViewController: UIViewController {
         loginButton.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.12).isActive = true
         loginButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        loginStatusTextField.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: heightOffset).isActive = true
+        loginStatusTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         loginStatusTextField.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
         loginStatusTextField.rightAnchor.constraint(lessThanOrEqualTo: loginButton.leftAnchor, constant: -10).isActive = true
         loginStatusTextField.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -181,19 +163,6 @@ class WebViewController: UIViewController {
                 self?.viewModel.presentUploadModal(view: self!)
             }.disposed(by: disposeBag)
         
-        searchBar.searchTextField.rx.controlEvent(.editingDidEndOnExit)
-            .bind { [weak self] in
-                self?.loadLimit = 5
-                self?.viewModel.searchWebVoca(
-                    searchText: self?.searchBar.text ?? "",
-                    orderBy: self?.orderBy ?? "date",
-                    loadLimit: self?.loadLimit ?? 0,
-                    view: self!)
-                self?.searchBar.text = ""
-                self?.searchBar.resignFirstResponder()
-            }.disposed(by: disposeBag)
-
-
         viewModel.webDataSubject
             .distinctUntilChanged({
                 return $0 == $1
@@ -205,11 +174,9 @@ class WebViewController: UIViewController {
                 cell.likeLabel.text = String(item.like)
                 
                 let likeImage = item.liked ? "hand.thumbsup.fill" : "hand.thumbsup"
-                
                 cell.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
 
                 cell.tapFunction = { self?.viewModel.getWebVocas(
-                    writer: item.writer,
                     title: item.title,
                     isLiked: item.liked,
                     vocas: item.vocas,
@@ -222,19 +189,7 @@ class WebViewController: UIViewController {
                 else if self?.isStarting == false && indexPath == (self?.loadLimit ?? 5) - 1 {
                     self?.isStarting = true
                     self?.loadLimit += 5
-                    if self?.isSearching == false {
-                        print("Normal Load")
-                        self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date", loadLimit: self?.loadLimit ?? 5)
-                    }
-                    else {
-                        print("searching Load")
-                        self?.viewModel.searchWebVoca(
-                            searchText: self?.searchText ?? "" ,
-                            orderBy: self?.orderBy ?? "date",
-                            loadLimit: self?.loadLimit ?? 5,
-                            view: self!
-                        )
-                    }
+                    self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date", loadLimit: self?.loadLimit ?? 5)
                 }
             }.disposed(by: disposeBag)
         
@@ -252,8 +207,6 @@ class WebViewController: UIViewController {
         wordsTableView.refreshControl = refresher
         refresher.rx.controlEvent(.valueChanged)
             .bind { [weak self] in
-                self?.searchText = ""
-                self?.isSearching = false
                 self?.isStarting = true
                 self?.loadLimit = 5
                 self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date")
@@ -262,8 +215,6 @@ class WebViewController: UIViewController {
     }
     
     @objc private func addStateObserver() {
-        searchText = ""
-        isSearching = false
         isStarting = true
         loadLimit = 5
         viewModel.setLoginButton(textField: loginStatusTextField, button: loginButton)
