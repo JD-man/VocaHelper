@@ -86,6 +86,7 @@ class EditViewController: UIViewController {
     private func registerKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(willShowKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willHideKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didHideKeyboard), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     
     @objc private func willShowKeyboard(_ notification: Notification) {
@@ -124,8 +125,9 @@ class EditViewController: UIViewController {
         }
         footer.isUserInteractionEnabled = true
         footer.addButton.tintColor = .systemGreen
-        
-        tableView.deselectRow(at: IndexPath(row: 0, section: selectedSection ?? 0), animated: false)
+    }
+    
+    @objc private func didHideKeyboard(_ notification: Notification) {
         cellDeselected()
     }
     
@@ -215,7 +217,7 @@ extension EditViewController: UITableViewDelegate
 
 extension EditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        textField.endEditing(true)
         return true
     }
 }
