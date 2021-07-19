@@ -31,14 +31,15 @@ class SearchViewModel {
             return cell
         }
         
-        let flat = filteredResults.flatMap{$0}        
+        let flat = filteredResults.flatMap{$0}
+        print(flat)
         if flat.count == 0 {
             noResultView.isHidden = false
             tableView.isHidden = true
         }
         else {
-            noResultView.isHidden.toggle()
-            tableView.isHidden.toggle()
+            noResultView.isHidden = true
+            tableView.isHidden = false
             searchResultSubject.onNext(flat)
         }
     }

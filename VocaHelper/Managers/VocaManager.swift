@@ -65,7 +65,7 @@ final class VocaManager {
         fileNames.insert(newFileName, at: insertIdx)
         
         // 빈 파일 하나 추가
-        let newVocaData = VocaData(fileName: newFileName, vocas: [Voca(idx: vocas.count, word: "word", meaning: "meaning")])
+        let newVocaData = VocaData(fileName: newFileName, vocas: [Voca(idx: 0, word: "word", meaning: "meaning")])
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         do {

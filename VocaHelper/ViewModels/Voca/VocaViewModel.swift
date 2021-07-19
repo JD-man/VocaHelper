@@ -100,6 +100,7 @@ class VocaViewModel {
 //        }
         let newIdx = VocaManager.shared.vocas.count
         VocaManager.shared.vocas.append(Voca(idx: newIdx, word: "", meaning: ""))
+        print(VocaManager.shared.vocas)
         VocaManager.shared.saveVocas(fileName: fileName)
         makeViewModelsFromVocas()
     }

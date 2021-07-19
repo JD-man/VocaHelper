@@ -58,7 +58,7 @@ class UserWebVocaViewController: UIViewController {
         viewModel.makeUserUploadSubject()
         
         viewModel.userUploadVocaSubject
-            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
+            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { indexPath, item, cell in
                 cell.titleLabel.text = item.title
                 cell.descriptionLabel.text = item.description
                 cell.writerLabel.text = item.writer
