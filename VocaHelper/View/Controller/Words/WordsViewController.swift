@@ -21,7 +21,7 @@ class WordsViewController: UIViewController {
         super.viewDidLoad()        
         viewConfigure()        
         rxConfigure()
-        print(VocaManager.directoryURL?.absoluteString)
+        //print(VocaManager.directoryURL?.absoluteString)
     }
     
     override func viewDidLayoutSubviews() {

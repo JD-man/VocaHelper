@@ -18,7 +18,6 @@ final class VocaManager {
     var fileNames: [String] = []
     lazy var fileCount = fileNames.count
     
-    
     // 검색을 위한 모든 단어장 데이터, 메모리에 남아있지않게 검색이 끝나면 nil을 넣어 해제해줘야한다.
     var allVocasForSearch: [VocaData]?
         

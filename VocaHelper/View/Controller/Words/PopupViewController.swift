@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class PopupViewController: UIViewController {
     
@@ -13,11 +15,11 @@ class PopupViewController: UIViewController {
         print("deinit PopUpView")
     }
     
-    public var editClosure: (() -> Void)?
-    public var practiceClosure: (() -> Void)?
-    public var examClosure: (() -> Void)?
-    public var deleteClosure: (() -> Void)?
-    public var exitClosure: (() -> Void)?
+    public var presenting: WordsViewController?
+    public var viewModel: WordsViewModel?
+    public var fileName: String = ""
+    
+    private var disposeBag = DisposeBag()
     
     let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -90,11 +92,11 @@ class PopupViewController: UIViewController {
         stackViewConfigure()
         addSubViews()
         configure()
+        rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        addTarget()
         textField.delegate = self        
     }
     
@@ -127,75 +129,63 @@ class PopupViewController: UIViewController {
         view.addSubview(stackView)
     }
     
-    private func addTarget() {
-        editButton.addTarget(self, action: #selector(didTapEditButton), for: .touchUpInside)
-        practiceButton.addTarget(self, action: #selector(didTapPracticeButton), for: .touchUpInside)
-        examButton.addTarget(self, action: #selector(didTapExamButton), for: .touchUpInside)
-        deleteButton.addTarget(self, action: #selector(didTapDeleteButton), for: .touchUpInside)
-        exitButton.addTarget(self, action: #selector(didTapExitButton), for: .touchUpInside)
+    func changeToRealName(fileName: String) -> String {
+        return String(fileName[fileName.index(fileName.startIndex, offsetBy: 25) ..< fileName.endIndex])
     }
     
-    @objc private func didTapEditButton() {
-        UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.editButton.backgroundColor = .systemGray4
-            self?.editButton.backgroundColor = .systemBackground
-        }
-        guard let editClosure = editClosure,
-              let exitClosure = exitClosure else {
-            return
-        }
-        exitClosure()
-        editClosure()
+    private func rxConfigure() {
+        exitButton.rx.tap
+            .bind { [weak self] in
+                self?.viewModel?.willExit(view: self!)
+                self?.dismiss(animated: true, completion: nil)
+            }.disposed(by: disposeBag)
+        
+        // Edit 버튼 터치
+        editButton.rx.tap
+            .bind { [weak self] in
+                self?.viewModel?.didTapEditButton(view: self!)                
+            }.disposed(by: disposeBag)
+        
+
+//        // Practice 버튼 터치
+//        popupVC.practiceClosure = { [weak view] in
+//            let practiceVC = PracticeViewController()
+//            practiceVC.navigationItem.title = changeToRealName(fileName: fileName)
+//            practiceVC.fileName = fileName
+//            view?.navigationController?.pushViewController(practiceVC, animated: true)
+//            view?.tabBarController?.tabBar.isHidden.toggle()
+//        }
+//
+//        // Exam 버튼 터치
+//
+//        popupVC.examClosure = { [weak view] in
+//            guard VocaManager.shared.vocas.count >= 5 else {
+//                let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+//                view?.present(alert, animated: true, completion: nil)
+//                return
+//            }
+//            let examVC = ExamViewController()
+//            examVC.navigationItem.title = changeToRealName(fileName: fileName)
+//            examVC.fileName = fileName
+//            view?.navigationController?.pushViewController(examVC, animated: true)
+//            view?.tabBarController?.tabBar.isHidden.toggle()
+//        }
+//
+//        // Delete 버튼 터치
+//        popupVC.deleteClosure = { [weak popupVC, weak view] in
+//            let deleteAlert = UIAlertController(title: "이 단어장을 삭제하시겠습니까?", message: nil, preferredStyle: .alert)
+//            deleteAlert.addAction(UIAlertAction(title: "삭제", style: .destructive, handler: { _ in
+//                VocaManager.shared.deleteFile(fileName: fileName)
+//                view?.viewModels.makeNewViewModels(isAddButton: false)
+//                view?.tabBarController?.tabBar.isHidden.toggle()
+//                popupVC?.dismiss(animated: true, completion: nil)
+//            }))
+//            deleteAlert.addAction(UIAlertAction(title: "취소", style: .default, handler: nil))
+//            view?.present(deleteAlert, animated: true, completion: nil)
+//        }
     }
     
-    @objc private func didTapPracticeButton() {
-        UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.practiceButton.backgroundColor = .systemGray4
-            self?.practiceButton.backgroundColor = .systemBackground
-        }
-        guard let practiceClosure = practiceClosure,
-              let exitClosure = exitClosure else {
-            return
-        }
-        exitClosure()
-        practiceClosure()
-    }
-
-    @objc private func didTapExamButton() {
-        UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.examButton.backgroundColor = .systemGray4
-            self?.examButton.backgroundColor = .systemBackground
-        }
-        guard let exitClosure = exitClosure,
-              let examClosure = examClosure else {
-            return
-        }
-        exitClosure()
-        examClosure()
-    }
-
-    @objc private func didTapDeleteButton() {
-        UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.deleteButton.backgroundColor = .systemGray4
-            self?.deleteButton.backgroundColor = .systemBackground
-        }
-        guard let deleteClosure = deleteClosure else {
-            return
-        }
-        deleteClosure()
-    }
-
-    @objc private func didTapExitButton() {
-        UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.exitButton.backgroundColor = .systemGray4
-            self?.exitButton.backgroundColor = .systemBackground
-        }
-        guard  let exitClosure = exitClosure else {
-            return
-        }
-        exitClosure()
-    }
-
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         textField.resignFirstResponder()
     }
