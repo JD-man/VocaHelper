@@ -140,50 +140,25 @@ class PopupViewController: UIViewController {
                 self?.dismiss(animated: true, completion: nil)
             }.disposed(by: disposeBag)
         
-        // Edit 버튼 터치
         editButton.rx.tap
             .bind { [weak self] in
                 self?.viewModel?.didTapEditButton(view: self!)                
             }.disposed(by: disposeBag)
         
-
-//        // Practice 버튼 터치
-//        popupVC.practiceClosure = { [weak view] in
-//            let practiceVC = PracticeViewController()
-//            practiceVC.navigationItem.title = changeToRealName(fileName: fileName)
-//            practiceVC.fileName = fileName
-//            view?.navigationController?.pushViewController(practiceVC, animated: true)
-//            view?.tabBarController?.tabBar.isHidden.toggle()
-//        }
-//
-//        // Exam 버튼 터치
-//
-//        popupVC.examClosure = { [weak view] in
-//            guard VocaManager.shared.vocas.count >= 5 else {
-//                let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-//                view?.present(alert, animated: true, completion: nil)
-//                return
-//            }
-//            let examVC = ExamViewController()
-//            examVC.navigationItem.title = changeToRealName(fileName: fileName)
-//            examVC.fileName = fileName
-//            view?.navigationController?.pushViewController(examVC, animated: true)
-//            view?.tabBarController?.tabBar.isHidden.toggle()
-//        }
-//
-//        // Delete 버튼 터치
-//        popupVC.deleteClosure = { [weak popupVC, weak view] in
-//            let deleteAlert = UIAlertController(title: "이 단어장을 삭제하시겠습니까?", message: nil, preferredStyle: .alert)
-//            deleteAlert.addAction(UIAlertAction(title: "삭제", style: .destructive, handler: { _ in
-//                VocaManager.shared.deleteFile(fileName: fileName)
-//                view?.viewModels.makeNewViewModels(isAddButton: false)
-//                view?.tabBarController?.tabBar.isHidden.toggle()
-//                popupVC?.dismiss(animated: true, completion: nil)
-//            }))
-//            deleteAlert.addAction(UIAlertAction(title: "취소", style: .default, handler: nil))
-//            view?.present(deleteAlert, animated: true, completion: nil)
-//        }
+        practiceButton.rx.tap
+            .bind { [weak self] in
+                self?.viewModel?.didTapPracticeButton(view: self!)
+            }.disposed(by: disposeBag)
+        
+        examButton.rx.tap
+            .bind { [weak self] in
+                self?.viewModel?.didTapExamButton(view: self!)
+            }.disposed(by: disposeBag)
+        
+        deleteButton.rx.tap
+            .bind { [weak self] in
+                self?.viewModel?.didTapDeleteButton(view: self!)                
+            }.disposed(by: disposeBag)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
