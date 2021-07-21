@@ -47,30 +47,31 @@ class WordsViewModel {
     // MARK: - For PopUpViewContoller
     
     public func willExit(view: PopupViewController) {
-        guard let fileNameFromText = view.textField.text,
-              let presenting = view.presenting else {
+        view.presenting?.tabBarController?.tabBar.isHidden.toggle()
+        guard let fileNameFromText = view.textField.text else {
             return
         }
         //change file name
         let realName = view.fileName
         let datePart = String(realName[realName.startIndex ..< realName.index(realName.startIndex, offsetBy: 25)])
         let currRealName = datePart + fileNameFromText
+        
+        if view.fileName != currRealName {
+            guard let directory = VocaManager.directoryURL else {
+                return
+            }
+            let prevName = directory.appendingPathComponent(realName).path
+            let currName = directory.appendingPathComponent(currRealName).path
 
-        guard let directory = VocaManager.directoryURL else {
-            return
+            do {
+                try FileManager.default.moveItem(atPath: prevName, toPath: currName)
+            } catch {
+                print(error)
+            }
+            VocaManager.shared.saveVocas(fileName: currRealName)
+            view.fileName = currRealName
+            makeViewModels()
         }
-        let prevName = directory.appendingPathComponent(realName).path
-        let currName = directory.appendingPathComponent(currRealName).path
-
-        do {
-            try FileManager.default.moveItem(atPath: prevName, toPath: currName)
-        } catch {
-            print(error)
-        }
-        VocaManager.shared.saveVocas(fileName: currRealName)
-        view.fileName = currRealName
-        presenting.tabBarController?.tabBar.isHidden.toggle()
-        makeViewModels()
     }
     
     public func didTapEditButton(view: PopupViewController) {
