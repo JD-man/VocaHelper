@@ -134,7 +134,7 @@ struct WebViewModel {
             actionSheet.addAction(UIAlertAction(title: "업로드한 단어장", style: .default, handler: { [weak view] _ in
                 let userWebVocaVC = UserWebVocaViewController()
                 userWebVocaVC.viewModel = view?.viewModel
-                view?.present(userWebVocaVC, animated: true, completion: nil)
+                view?.navigationController?.pushViewController(userWebVocaVC, animated: true)
             }))
             actionSheet.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { [weak view] _ in
                 didTapLogout(view: view!)
@@ -496,7 +496,7 @@ struct WebViewModel {
         }
     }
     
-    public func getWebVocas(email: String, title: String, isLiked: Bool, vocas: [Voca], view: UserWebVocaViewController) {
+    public func getWebVocasToUserWebView(email: String, title: String, isLiked: Bool, vocas: [Voca], view: UserWebVocaViewController) {
         // 닉네임으로 이메일을 가져와야함.
         VocaManager.shared.vocas = vocas
         let vc = WebVocaViewController()

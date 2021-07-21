@@ -67,7 +67,7 @@ class UserWebVocaViewController: UIViewController {
                 
                 let likeImage = item.liked ? "hand.thumbsup.fill" : "hand.thumbsup"
                 cell.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
-                cell.tapFunction = { self?.viewModel?.getWebVocas(
+                cell.tapFunction = { self?.viewModel?.getWebVocasToUserWebView(
                     email: item.email,
                     title: item.title,
                     isLiked: item.liked,

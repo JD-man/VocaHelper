@@ -64,21 +64,33 @@ class ResultTableViewFooter: UIView {
     }
     
     private func constraintsConfigure() {
-        let offset: CGFloat = 100
-        
         scoreLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scoreLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         scoreLabel.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         scoreLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25).isActive = true
         
-        examButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 0.5 * offset).isActive = true
-        examButton.rightAnchor.constraint(equalTo: centerXAnchor, constant: -0.5 * offset).isActive = true
-        examButton.topAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        examButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        examButton.widthAnchor.constraint(equalTo: scoreLabel.widthAnchor, multiplier: 0.25).isActive = true
+        examButton.heightAnchor.constraint(equalTo: examButton.widthAnchor, multiplier: 0.5).isActive = true
+        examButton.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor, constant: 10).isActive = true
+        NSLayoutConstraint(
+            item: examButton,
+            attribute: .centerX,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .centerX,
+            multiplier: 0.5,
+            constant: 0).isActive = true
         
-        homeButton.leftAnchor.constraint(equalTo: centerXAnchor, constant: 0.5 * offset).isActive = true
-        homeButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -0.5 * offset).isActive = true
-        homeButton.topAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        homeButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        homeButton.widthAnchor.constraint(equalTo: scoreLabel.widthAnchor, multiplier: 0.25).isActive = true
+        homeButton.heightAnchor.constraint(equalTo: examButton.widthAnchor, multiplier: 0.5).isActive = true
+        homeButton.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor, constant: 10).isActive = true
+        NSLayoutConstraint(
+            item: homeButton,
+            attribute: .centerX,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .centerX,
+            multiplier: 1.5,
+            constant: 0).isActive = true
     }
 }
