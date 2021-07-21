@@ -31,8 +31,7 @@ class SearchViewModel {
             return cell
         }
         
-        let flat = filteredResults.flatMap{$0}
-        print(flat)
+        let flat = filteredResults.flatMap{$0}        
         if flat.count == 0 {
             noResultView.isHidden = false
             tableView.isHidden = true

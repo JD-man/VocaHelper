@@ -58,7 +58,7 @@ class UserWebVocaViewController: UIViewController {
         viewModel.makeUserUploadSubject()
         
         viewModel.userUploadVocaSubject
-            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { indexPath, item, cell in
+            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
                 cell.titleLabel.text = item.title
                 cell.descriptionLabel.text = item.description
                 cell.writerLabel.text = item.writer
@@ -67,13 +67,13 @@ class UserWebVocaViewController: UIViewController {
                 
                 let likeImage = item.liked ? "hand.thumbsup.fill" : "hand.thumbsup"
                 cell.likeButton.setImage(UIImage(systemName: likeImage), for: .normal)
-//                cell.tapFunction = { self?.viewModel.getWebVocas(
-//                    writer: item.writer,
-//                    title: item.title,
-//                    isLiked: item.liked,
-//                    vocas: item.vocas,
-//                    view: self!)
-//                }
+                cell.tapFunction = { self?.viewModel?.getWebVocas(
+                    email: item.email,
+                    title: item.title,
+                    isLiked: item.liked,
+                    vocas: item.vocas,
+                    view: self!)
+                }
             }.disposed(by: disposeBag)
     }
 }

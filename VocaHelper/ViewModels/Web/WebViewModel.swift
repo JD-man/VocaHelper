@@ -398,6 +398,14 @@ struct WebViewModel {
         let fileName = VocaManager.shared.fileNames[fileIndex]
         VocaManager.shared.loadVocasLocal(fileName: fileName)
         
+        // 단어 10개 이상 단어장만 업로드 가능하게 제한
+        guard VocaManager.shared.vocas.count >= 10 else {
+            let lackVocaAlert = UIAlertController(title: "단어장의 단어수가 부족합니다.", message: "10개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
+            lackVocaAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+            view.present(lackVocaAlert, animated: true, completion: nil)
+            return
+        }
+        
         // alert띄우고 타이틀, 간단설명 적게 한 후에 OK하면 올리기
         let alert = UIAlertController(title: "제목과 간단한 설명을 입력해주세요.", message: nil, preferredStyle: .alert)
         alert.addTextField { textField in
@@ -486,6 +494,16 @@ struct WebViewModel {
                 print(error)
             }
         }
+    }
+    
+    public func getWebVocas(email: String, title: String, isLiked: Bool, vocas: [Voca], view: UserWebVocaViewController) {
+        // 닉네임으로 이메일을 가져와야함.
+        VocaManager.shared.vocas = vocas
+        let vc = WebVocaViewController()
+        vc.webVocaName = email + " - " + title
+        vc.isLiked = isLiked
+        view.tabBarController?.tabBar.isHidden.toggle()
+        view.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

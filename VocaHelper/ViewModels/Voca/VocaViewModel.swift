@@ -84,23 +84,13 @@ class VocaViewModel {
     
     /// Navigation BackButton Function : Update Vocas, Save Vocas
     public func didTapBackButton(fileName: String) {
-//        if let row = row, let cell = cell {
-//            VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
-//            VocaManager.shared.vocas[row].meaning = cell.meaningTextField.text ?? ""
-//            print(VocaManager.shared.vocas[row].word)
-//        }
         VocaManager.shared.saveVocas(fileName: fileName)
     }
     
     /// Table Footer Button Function : Update Vocas, Add New Line, OnNext NewViewModel, Save Vocas
     public func didTapAddButton(fileName: String) {
-//        if let row = row, let cell = cell {
-//            VocaManager.shared.vocas[row].word = cell.wordTextField.text ?? ""
-//            VocaManager.shared.vocas[row].meaning = cell.meaningTextField.text ?? ""
-//        }
         let newIdx = (VocaManager.shared.vocas.last?.idx ?? -1) + 1
         VocaManager.shared.vocas.append(Voca(idx: newIdx, word: "", meaning: ""))
-        print(VocaManager.shared.vocas)
         VocaManager.shared.saveVocas(fileName: fileName)
         makeViewModelsFromVocas()
     }
