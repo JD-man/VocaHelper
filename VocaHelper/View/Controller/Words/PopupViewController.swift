@@ -47,7 +47,7 @@ class PopupViewController: UIViewController {
     
     let editButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Edit", for: .normal)
+        button.setTitle("단어장", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         button.layer.masksToBounds = true
@@ -56,7 +56,7 @@ class PopupViewController: UIViewController {
     
     let practiceButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Practice", for: .normal)
+        button.setTitle("연습하기", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         return button
@@ -64,7 +64,7 @@ class PopupViewController: UIViewController {
     
     let examButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Exam", for: .normal)
+        button.setTitle("시험보기", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         return button
@@ -72,7 +72,7 @@ class PopupViewController: UIViewController {
     
     let deleteButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Delete", for: .normal)
+        button.setTitle("삭제하기", for: .normal)
         button.setTitleColor(.systemRed, for: .normal)
         button.backgroundColor = .systemBackground
         return button
@@ -80,7 +80,7 @@ class PopupViewController: UIViewController {
     
     let exitButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Exit", for: .normal)
+        button.setTitle("취소", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         button.layer.masksToBounds = true

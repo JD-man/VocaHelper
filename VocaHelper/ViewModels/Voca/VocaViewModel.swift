@@ -69,6 +69,7 @@ class VocaViewModel {
     
     public func didDeleteCell(section: Int) {
         VocaManager.shared.vocas.remove(at: section)
+        makeViewModelsFromVocas()
     }
     
     /// Load ViewModel From VocaData Vocas

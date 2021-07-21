@@ -128,7 +128,7 @@ class EditViewController: UIViewController {
     }
     
     @objc private func didHideKeyboard(_ notification: Notification) {
-        cellDeselected()
+        viewModel.cellDeselected(section: selectedSection, cell: selectedCell)
     }
     
     private func rxConfigure() {
@@ -178,7 +178,7 @@ class EditViewController: UIViewController {
             }.disposed(by: disposeBag)
         
         tableView.rx.itemSelected
-            .bind() { [weak self] indexPath in
+            .bind() { [weak self] indexPath in                
                 self?.selectedSection = indexPath.section
                 self?.selectedCell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell
                 self?.viewModel.cellSelected(cell: self?.selectedCell, width: self?.tableView.frame.size.width, touchXPos: self?.touchXPos)
@@ -186,17 +186,14 @@ class EditViewController: UIViewController {
         
         tableView.rx.itemDeselected
             .bind() { [weak self] indexPath in
-                self?.cellDeselected()
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.viewModel.cellDeselected(section: strongSelf.selectedSection, cell: strongSelf.selectedCell)
             }.disposed(by: disposeBag)
         
         // 셀 삭제를 위한 델리게이트 설정
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
-    }
-    
-    private func cellDeselected() {
-        self.viewModel.cellDeselected(section: selectedSection, cell: selectedCell)
-        self.selectedSection = nil
-        self.selectedCell = nil
     }
 }
 
@@ -207,9 +204,6 @@ extension EditViewController: UITableViewDelegate
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, _) in
             self?.viewModel.didDeleteCell(section: indexPath.section)
-            self?.viewModel.makeViewModelsFromVocas()
-            self?.selectedSection = nil
-            self?.selectedCell = nil
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
