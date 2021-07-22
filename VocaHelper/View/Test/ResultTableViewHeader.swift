@@ -11,7 +11,7 @@ class ResultTableViewHeader: UIView {
     
     let wordLabel: UILabel = {
         let label = UILabel()
-        label.text = "단어"
+        label.text = "문제"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -20,7 +20,7 @@ class ResultTableViewHeader: UIView {
     
     let userAnswerLabel: UILabel = {
         let label = UILabel()
-        label.text = "제출한답"
+        label.text = "결과"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
