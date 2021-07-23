@@ -24,8 +24,10 @@ class PopupViewController: UIViewController {
     let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.layer.masksToBounds = true
-        stackView.layer.cornerRadius = 15
+        stackView.layer.cornerRadius = 15        
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.backgroundColor = .label
+        stackView.spacing = 1
         return stackView
     }()
     

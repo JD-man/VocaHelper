@@ -101,6 +101,7 @@ class ExamViewController: UIViewController {
         stackView.backgroundColor = .label
         stackView.axis = .vertical
         stackView.clipsToBounds = true
+        stackView.spacing = 1        
         stackView.distribution = .fillEqually
         stackView.layer.cornerRadius = 30
         view.addSubview(stackView)
