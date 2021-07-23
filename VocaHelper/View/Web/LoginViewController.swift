@@ -19,6 +19,12 @@ class LoginViewController: UIViewController {
     var disposeBag = DisposeBag()
     var presentingView: WebViewController?
     
+    let scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        return scroll
+    }()
+    
     
     let handleView: UIView = {
         let view = UIView()
@@ -103,6 +109,15 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    let exitButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = nil
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(.link, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -117,20 +132,22 @@ class LoginViewController: UIViewController {
     }
     
     private func viewConfigure() {
-        if UIDevice.current.orientation != .portrait {
-            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
-        }
-        UINavigationController.attemptRotationToDeviceOrientation()
+//        if UIDevice.current.orientation != .portrait {
+//            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+//        }
+//        UINavigationController.attemptRotationToDeviceOrientation()
         
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 40
-        view.addSubview(handleView)
-        view.addSubview(logoImageView)
-        view.addSubview(emailTextField)
-        view.addSubview(passwordTextField)
-        view.addSubview(loginButton)
-        view.addSubview(signUpButton)
-        //view.addSubview(findPasswordButton)
+        scrollView.addSubview(exitButton)
+        scrollView.addSubview(handleView)
+        scrollView.addSubview(logoImageView)
+        scrollView.addSubview(emailTextField)
+        scrollView.addSubview(passwordTextField)
+        scrollView.addSubview(loginButton)
+        scrollView.addSubview(signUpButton)
+        //scrollView.addSubview(findPasswordButton)
+        view.addSubview(scrollView)
         
         emailTextField.attributedPlaceholder = NSAttributedString(string: "이메일을 입력하세요...", attributes: [.foregroundColor : UIColor.lightGray])
         passwordTextField.attributedPlaceholder = NSAttributedString(string: "비밀번호를 입력하세요...", attributes: [.foregroundColor : UIColor.lightGray])
@@ -139,35 +156,46 @@ class LoginViewController: UIViewController {
     private func constraintsConfigure() {
         let gap: CGFloat = 10
         
-        handleView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: gap).isActive = true
-        handleView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        handleView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.1).isActive = true
-        handleView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.01).isActive = true
+        scrollView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        handleView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: gap).isActive = true
+        handleView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        handleView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 0.1).isActive = true
+        handleView.heightAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 0.01).isActive = true
         
         logoImageView.topAnchor.constraint(equalTo: handleView.bottomAnchor, constant: 2 * gap).isActive = true
-        logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        logoImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/2).isActive = true
-        logoImageView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/4).isActive = true
+        logoImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        logoImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1/2).isActive = true
+        logoImageView.heightAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1/4).isActive = true
         
         emailTextField.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 2 * gap).isActive = true
-        emailTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        emailTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/1.3).isActive = true
-        emailTextField.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/12).isActive = true
+        emailTextField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        emailTextField.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1/1.3).isActive = true
+        emailTextField.heightAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1/12).isActive = true
         
         passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 2 * gap).isActive = true
-        passwordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        passwordTextField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         passwordTextField.widthAnchor.constraint(equalTo: emailTextField.widthAnchor).isActive = true
         passwordTextField.heightAnchor.constraint(equalTo: emailTextField.heightAnchor).isActive = true
         
         loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 1.5 * gap).isActive = true
-        loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         loginButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.5).isActive = true
         loginButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
         
         signUpButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 1.5 * gap).isActive = true
-        signUpButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        signUpButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         signUpButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.5).isActive = true
         signUpButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
+        
+        exitButton.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 1.5 * gap).isActive = true
+        exitButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        exitButton.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.5).isActive = true
+        exitButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor).isActive = true
+        exitButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30).isActive = true
         
 //        findPasswordButton.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 1.5 * gap).isActive = true
 //        findPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -187,6 +215,11 @@ class LoginViewController: UIViewController {
         signUpButton.rx.tap
             .bind { [weak self] in
                 self?.viewModel?.didTapSignUpButton(view: self!, presenting: self!.presentingView!)
+            }.disposed(by: disposeBag)
+        
+        exitButton.rx.tap
+            .bind { [weak self] in
+                self?.dismiss(animated: true, completion: nil)
             }.disposed(by: disposeBag)
     }
 }
