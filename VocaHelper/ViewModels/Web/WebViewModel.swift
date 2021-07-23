@@ -328,6 +328,12 @@ struct WebViewModel {
         }
     }
     
+    public func checkEmailNicknameAlert(view: CreateUserViewController) {
+        let alert = UIAlertController(title: "닉네임 또는 이메일이 이미 사용중입니다.", message: "다른 닉네임, 이메일을 사용해주세요.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+        view.present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - For UploadModalViewController
     
     func changeToRealName(fileName: String) -> String {

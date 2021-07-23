@@ -198,7 +198,7 @@ class CreateUserViewController: UIViewController {
         signUpButton.rx.tap
             .bind { [weak self] in
                 guard let strongSelf = self,
-                      let viewModel = self?.viewModel else {
+                      let viewModel = strongSelf.viewModel else {
                     return
                 }
                 if strongSelf.isNickNameUsable, strongSelf.isEmailUsable {
@@ -209,7 +209,7 @@ class CreateUserViewController: UIViewController {
                         view: strongSelf)
                 }
                 else {
-                    print("닉네임, 이메일 확인")
+                    viewModel.checkEmailNicknameAlert(view: strongSelf)
                 }
             }.disposed(by: disposeBag)
         
