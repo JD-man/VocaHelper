@@ -85,9 +85,9 @@ class PracticeViewController: UIViewController {
     private func addSubviews() {
         view.addSubview(wordLabel)
         view.addSubview(meaningLabel)
-        view.addSubview(blind)
         view.addSubview(prevButton)
         view.addSubview(nextButton)
+        view.addSubview(blind)
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.backward"))
     }

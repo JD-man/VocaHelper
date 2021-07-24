@@ -90,10 +90,11 @@ final class VocaManager {
         }
         let path = directory.appendingPathComponent(fileName)
         fileNames.remove(at: index)
-        if let error = try? FileManager.default.removeItem(atPath: path.path) {
+        do {
+            try FileManager.default.removeItem(atPath: path.path)
+        }
+        catch {
             print(error)
-        } else {
-            return
         }
     }
     

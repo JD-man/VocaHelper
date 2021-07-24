@@ -301,6 +301,7 @@ struct WebViewModel {
     }
     
     public func nickNameExistCheck(nickName: String, view: CreateUserViewController) {
+        // 닉네임 길이 제한 필요
         FirestoreManager.shared.checkNickNameExist(nickName: nickName) { isChecked in
             switch isChecked {
             case true:
