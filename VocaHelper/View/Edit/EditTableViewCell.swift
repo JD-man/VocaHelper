@@ -23,8 +23,7 @@ class EditTableViewCell: UITableViewCell {
         textfield.autocapitalizationType = .none
         textfield.adjustsFontSizeToFitWidth = true
         textfield.font = UIFont.systemFont(ofSize: 30)
-        textfield.returnKeyType = .done
-        textfield.keyboardType = .alphabet
+        textfield.returnKeyType = .done        
         textfield.clipsToBounds = true
         textfield.layer.cornerRadius = 10
         textfield.layer.borderWidth = 1.5
