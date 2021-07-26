@@ -23,6 +23,7 @@ class VocaViewModel {
     public lazy var userAnswer: [String] = []
     
     public lazy var examCellObservable: Observable<[String]> = buttonCountSubject.map { [weak self] in
+        print($0)
         let word = self?.shuffledVocas[$0].word ?? "Not exist Word"
         let meaning = self?.shuffledVocas[$0].meaning ?? "Not exist Meaning"
         var wrongAnswers: [String] = []
@@ -41,9 +42,6 @@ class VocaViewModel {
     }
     
     public lazy var resultCellSubject = BehaviorSubject<[ResultCell]>(value: [])
-    
-    
-    //public lazy var testCellSubject = BehaviorSubject<>()
     
     private let disposeBag = DisposeBag()
     

@@ -172,7 +172,7 @@
 			path = Practice;
 			sourceTree = "<group>";
 		};
-		895AAB482633F8D500532021 /* Test */ = {
+		895AAB482633F8D500532021 /* Exam */ = {
 			isa = PBXGroup;
 			children = (
 				89B15C7D263A7F1B007C29E1 /* ExamViewController.swift */,
@@ -181,7 +181,7 @@
 				89014772263BD5C60054962A /* ResultTableViewFooter.swift */,
 				8936FB9226907692007F7753 /* ResultTableViewHeader.swift */,
 			);
-			path = Test;
+			path = Exam;
 			sourceTree = "<group>";
 		};
 		89651F902632BE4900949DEB = {
@@ -227,7 +227,7 @@
 				89651FBA2632BF5D00949DEB /* Words */,
 				89CC7BE52691EF28009D008D /* Web */,
 				895AAB472633F8CE00532021 /* Practice */,
-				895AAB482633F8D500532021 /* Test */,
+				895AAB482633F8D500532021 /* Exam */,
 				89651FBB2632BF6800949DEB /* Search */,
 			);
 			path = View;
@@ -633,7 +633,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Z2SX2S8N8L;
 				INFOPLIST_FILE = VocaHelper/Info.plist;
@@ -644,6 +645,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.JDman.VocaHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = VocaHelperProvisioningProfile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -655,7 +657,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = Z2SX2S8N8L;
 				INFOPLIST_FILE = VocaHelper/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -665,6 +668,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.JDman.VocaHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = VocaHelperProvisioningProfile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

@@ -13,10 +13,10 @@ final class VocaManager {
     static let directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     
     var vocas: [Voca] = []
-    lazy var vocasCount = vocas.count
+    //lazy var vocasCount = vocas.count
     
     var fileNames: [String] = []
-    lazy var fileCount = fileNames.count
+    //lazy var fileCount = fileNames.count
     
     // 검색을 위한 모든 단어장 데이터, 메모리에 남아있지않게 검색이 끝나면 nil을 넣어 해제해줘야한다.
     var allVocasForSearch: [VocaData]?
@@ -120,7 +120,6 @@ final class VocaManager {
         else {
             allVocasForSearch = nil
         }
-        //print(allVocasForSearch)
     }
 
     

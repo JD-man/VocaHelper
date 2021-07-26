@@ -130,7 +130,7 @@ class ExamViewController: UIViewController {
                 .bind() { [weak self] in
                     self?.index += 1
                     self?.viewModel.userAnswer.append(button.titleLabel?.text ?? "")
-                    if self?.index ?? 0 >= VocaManager.shared.vocasCount {
+                    if self?.index ?? 0 >= VocaManager.shared.vocas.count {
                         self?.index = 0
                         let alert = UIAlertController(title: "마지막 문제입니다.", message: "결과화면이 표시됩니다.", preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { [weak self] _ in

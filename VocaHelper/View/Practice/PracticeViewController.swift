@@ -150,7 +150,7 @@ class PracticeViewController: UIViewController {
     
     private func nextMoveFrame() {
         index += 1
-        if index >= VocaManager.shared.vocasCount {
+        if index >= VocaManager.shared.vocas.count {
             index -= 1
             let alert = UIAlertController(title: "마지막 단어입니다.", message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
