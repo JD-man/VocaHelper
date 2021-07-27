@@ -21,6 +21,8 @@ class CreateUserViewController: UIViewController {
     public var emailErrorLabelHeightAnchor = NSLayoutConstraint()
     public var passwordErrorLabelHeightAnchor = NSLayoutConstraint()
     
+    public var checkGroup = DispatchGroup()
+    
     let scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
@@ -253,18 +255,33 @@ class CreateUserViewController: UIViewController {
                       let viewModel = strongSelf.viewModel else {
                     return
                 }
-                strongSelf.passwordTextField.endEditing(true)
-                strongSelf.emailTextField.endEditing(true)
-                strongSelf.nickNameTextField.endEditing(true)
-                if strongSelf.isNickNameUsable, strongSelf.isEmailUsable, strongSelf.isPasswordUsable {
-                    viewModel.createNewUser(
-                        nickName: strongSelf.nickNameTextField.text ?? "",
-                        email: strongSelf.emailTextField.text ?? "",
-                        password: strongSelf.passwordTextField.text ?? "",
-                        view: strongSelf)
+                if strongSelf.nickNameTextField.isFirstResponder {
+                    DispatchQueue.main.async(group: strongSelf.checkGroup) {
+                        strongSelf.nickNameTextField.endEditing(true)
+                    }
                 }
-                else {
-                    viewModel.checkEmailNicknameAlert(view: strongSelf)
+                else if strongSelf.emailTextField.isFirstResponder {
+                    DispatchQueue.main.async(group: strongSelf.checkGroup) {
+                        strongSelf.emailTextField.endEditing(true)
+                    }
+                }
+                else if strongSelf.passwordTextField.isFirstResponder {
+                    DispatchQueue.main.async(group: strongSelf.checkGroup) {
+                        strongSelf.passwordTextField.endEditing(true)
+                    }
+                }
+                strongSelf.checkGroup.notify(queue: DispatchQueue.main) {
+                    print("유저만들기 시작")
+                    if strongSelf.isNickNameUsable, strongSelf.isEmailUsable, strongSelf.isPasswordUsable {
+                        viewModel.createNewUser(
+                            nickName: strongSelf.nickNameTextField.text ?? "",
+                            email: strongSelf.emailTextField.text ?? "",
+                            password: strongSelf.passwordTextField.text ?? "",
+                            view: strongSelf)
+                    }
+                    else {
+                        viewModel.checkEmailNicknameAlert(view: strongSelf)
+                    }
                 }
             }.disposed(by: disposeBag)
         

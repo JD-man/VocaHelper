@@ -301,20 +301,29 @@ struct WebViewModel {
     }
     
     public func nickNameExistCheck(nickName: String, view: CreateUserViewController) {
+        view.checkGroup.enter()
         let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn) { [weak view] in
             view?.view.layoutIfNeeded()
         }
         guard nickName.count <= 8 else {
             view.isNickNameUsable = false
-            view.nickNameErrorLabel.text = "8자 이하로 만들어주세요.     "
-            view.nickNameErrorLabelHeightAnchor.isActive = false
-            animator.startAnimation()
+            DispatchQueue.main.async {
+                view.nickNameErrorLabel.text = "8자 이하로 만들어주세요.     "
+                view.nickNameErrorLabelHeightAnchor.isActive = false
+                animator.startAnimation()
+            }
+            view.checkGroup.leave()
+            print("닉네임 체크")
             return
         }
         guard nickName.count != 0 else {
             view.isNickNameUsable = false
-            view.nickNameErrorLabelHeightAnchor.isActive = true
-            animator.startAnimation()
+            DispatchQueue.main.async {
+                view.nickNameErrorLabelHeightAnchor.isActive = true
+                animator.startAnimation()
+            }
+            view.checkGroup.leave()
+            print("닉네임 체크")
             return
         }
         
@@ -322,18 +331,27 @@ struct WebViewModel {
             switch isChecked {
             case true:
                 view.isNickNameUsable = false
-                view.nickNameErrorLabel.text = "이미 존재하는 닉네임입니다."
-                view.nickNameErrorLabelHeightAnchor.isActive = false
-                animator.startAnimation()
+                DispatchQueue.main.async {
+                    view.nickNameErrorLabel.text = "이미 존재하는 닉네임입니다."
+                    view.nickNameErrorLabelHeightAnchor.isActive = false
+                    animator.startAnimation()
+                }
+                view.checkGroup.leave()
+                print("닉네임 체크")
             case false:
                 view.isNickNameUsable = true
-                view.nickNameErrorLabelHeightAnchor.isActive = true
-                animator.startAnimation()
+                DispatchQueue.main.async {
+                    view.nickNameErrorLabelHeightAnchor.isActive = true
+                    animator.startAnimation()
+                }
+                view.checkGroup.leave()
+                print("닉네임 체크")
             }
         }
     }
     
     public func emailExistCheck(email: String, view: CreateUserViewController) {
+        view.checkGroup.enter()
         let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn) { [weak view] in
             view?.view.layoutIfNeeded()
         }
@@ -343,9 +361,12 @@ struct WebViewModel {
         
         guard emailPred.evaluate(with: email) else {
             view.isEmailUsable = false
-            view.emailErrorLabel.text = "정확한 메일을 입력해주세요."
-            view.emailErrorLabelHeightAnchor.isActive = false
-            animator.startAnimation()
+            DispatchQueue.main.async {
+                view.emailErrorLabel.text = "정확한 메일을 입력해주세요."
+                view.emailErrorLabelHeightAnchor.isActive = false
+                animator.startAnimation()
+            }
+            view.checkGroup.leave()
             return
         }
         
@@ -353,13 +374,19 @@ struct WebViewModel {
             switch isChecked {
             case true:
                 view.isEmailUsable = false
-                view.emailErrorLabel.text = "이미 존재하는 이메일입니다."
-                view.emailErrorLabelHeightAnchor.isActive = false
-                animator.startAnimation()
+                DispatchQueue.main.async {
+                    view.emailErrorLabel.text = "이미 존재하는 이메일입니다."
+                    view.emailErrorLabelHeightAnchor.isActive = false
+                    animator.startAnimation()
+                }
+                view.checkGroup.leave()
             case false:
                 view.isEmailUsable = true
-                view.emailErrorLabelHeightAnchor.isActive = true
-                animator.startAnimation()
+                DispatchQueue.main.async {
+                    view.emailErrorLabelHeightAnchor.isActive = true
+                    animator.startAnimation()
+                }
+                view.checkGroup.leave()
             }
         }
     }
@@ -378,27 +405,37 @@ struct WebViewModel {
     }
     
     public func passwordCheck(password: String, view: CreateUserViewController) {
+        view.checkGroup.enter()
         let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn) { [weak view] in
             view?.view.layoutIfNeeded()
         }
         guard password.count >= 8 else {
             view.isPasswordUsable = false
-            view.passwordErrorLabel.text = "8자 이상으로 만들어주세요."
-            view.passwordErrorLabelHeightAnchor.isActive = false
-            animator.startAnimation()
+            DispatchQueue.main.async {
+                view.passwordErrorLabel.text = "8자 이상으로 만들어주세요."
+                view.passwordErrorLabelHeightAnchor.isActive = false
+                animator.startAnimation()
+            }
+            view.checkGroup.leave()
             return
         }
         
         guard password.count != 0 else {
             view.isPasswordUsable = false
-            view.passwordErrorLabelHeightAnchor.isActive = true
-            animator.startAnimation()
+            DispatchQueue.main.async {
+                view.passwordErrorLabelHeightAnchor.isActive = true
+                animator.startAnimation()
+            }
+            view.checkGroup.leave()
             return
         }
         
         view.isPasswordUsable = true
-        view.passwordErrorLabelHeightAnchor.isActive = true
-        animator.startAnimation()
+        DispatchQueue.main.async {
+            view.passwordErrorLabelHeightAnchor.isActive = true
+            animator.startAnimation()
+        }
+        view.checkGroup.leave()
     }
     
     // MARK: - For UploadModalViewController
