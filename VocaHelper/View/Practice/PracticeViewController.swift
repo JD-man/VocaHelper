@@ -82,6 +82,17 @@ class PracticeViewController: UIViewController {
         super.viewDidLayoutSubviews()
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        if size.width > size.height {
+            wordLabel.font = UIFont.systemFont(ofSize: 50)
+            meaningLabel.font = UIFont.systemFont(ofSize: 50)
+        }
+        else {
+            wordLabel.font = UIFont.systemFont(ofSize: 25)
+            meaningLabel.font = UIFont.systemFont(ofSize: 25)
+        }
+    }
+    
     private func addSubviews() {
         view.addSubview(wordLabel)
         view.addSubview(meaningLabel)
@@ -118,6 +129,11 @@ class PracticeViewController: UIViewController {
         blind.centerYAnchor.constraint(equalTo: meaningLabel.centerYAnchor).isActive = true
         blind.widthAnchor.constraint(equalTo: meaningLabel.widthAnchor, constant: 10).isActive = true
         blind.heightAnchor.constraint(equalTo: meaningLabel.heightAnchor, constant: 10).isActive = true
+        
+        if view.bounds.width > view.bounds.height {
+            wordLabel.font = UIFont.systemFont(ofSize: 50)
+            meaningLabel.font = UIFont.systemFont(ofSize: 50)
+        }
     }
     
     private func rxConfigure() {

@@ -26,6 +26,8 @@ class ExamViewController: UIViewController {
     private var userAnswers: [String] = []
     
     private var currVocaIndex: Int = 0
+    private var stackViewHeightAnchor = NSLayoutConstraint()
+    
 
     private let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -106,10 +108,25 @@ class ExamViewController: UIViewController {
         stackView.layer.cornerRadius = 30
         view.addSubview(stackView)
         
+        let stackViewHeightMultiplier: CGFloat = view.bounds.width > view.bounds.height ? 0.85 : 0.65
+        
         stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         stackView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.8).isActive = true
-        stackView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.8).isActive = true
+        stackViewHeightAnchor = stackView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: stackViewHeightMultiplier)
+        stackViewHeightAnchor.isActive = true
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        stackViewHeightAnchor.isActive = false
+        if size.width > size.height {
+            stackViewHeightAnchor = stackView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.85)
+            stackViewHeightAnchor.isActive = true
+        }
+        else {
+            stackViewHeightAnchor = stackView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.65)
+            stackViewHeightAnchor.isActive = true
+        }
     }
     
     private func rxConfigure() {
