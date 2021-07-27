@@ -301,38 +301,104 @@ struct WebViewModel {
     }
     
     public func nickNameExistCheck(nickName: String, view: CreateUserViewController) {
-        // 닉네임 길이 제한 필요
+        let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn) { [weak view] in
+            view?.view.layoutIfNeeded()
+        }
+        guard nickName.count <= 8 else {
+            view.isNickNameUsable = false
+            view.nickNameErrorLabel.text = "8자 이하로 만들어주세요.     "
+            view.nickNameErrorLabelHeightAnchor.isActive = false
+            animator.startAnimation()
+            return
+        }
+        guard nickName.count != 0 else {
+            view.isNickNameUsable = false
+            view.nickNameErrorLabelHeightAnchor.isActive = true
+            animator.startAnimation()
+            return
+        }
+        
         FirestoreManager.shared.checkNickNameExist(nickName: nickName) { isChecked in
             switch isChecked {
             case true:
                 view.isNickNameUsable = false
-                let alert = UIAlertController(title: "이미 존재하는 닉네임입니다.", message: "다른 닉네임을 사용해주세요", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-                view.present(alert, animated: true, completion: nil)
+                view.nickNameErrorLabel.text = "이미 존재하는 닉네임입니다."
+                view.nickNameErrorLabelHeightAnchor.isActive = false
+                animator.startAnimation()
             case false:
                 view.isNickNameUsable = true
+                view.nickNameErrorLabelHeightAnchor.isActive = true
+                animator.startAnimation()
             }
         }
     }
     
     public func emailExistCheck(email: String, view: CreateUserViewController) {
+        let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn) { [weak view] in
+            view?.view.layoutIfNeeded()
+        }
+        
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        
+        guard emailPred.evaluate(with: email) else {
+            view.isEmailUsable = false
+            view.emailErrorLabel.text = "정확한 메일을 입력해주세요."
+            view.emailErrorLabelHeightAnchor.isActive = false
+            animator.startAnimation()
+            return
+        }
+        
         FirestoreManager.shared.checkEmailExist(email: email) { isChecked in
             switch isChecked {
             case true:
                 view.isEmailUsable = false
-                let alert = UIAlertController(title: "이미 존재하는 이메일입니다.", message: "다른 이메일을 사용해주세요", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-                view.present(alert, animated: true, completion: nil)
+                view.emailErrorLabel.text = "이미 존재하는 이메일입니다."
+                view.emailErrorLabelHeightAnchor.isActive = false
+                animator.startAnimation()
             case false:
                 view.isEmailUsable = true
+                view.emailErrorLabelHeightAnchor.isActive = true
+                animator.startAnimation()
             }
         }
     }
     
     public func checkEmailNicknameAlert(view: CreateUserViewController) {
-        let alert = UIAlertController(title: "닉네임 또는 이메일이 이미 사용중입니다.", message: "다른 닉네임, 이메일을 사용해주세요.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-        view.present(alert, animated: true, completion: nil)
+        if !view.isEmailUsable || !view.isNickNameUsable {
+            let alert = UIAlertController(title: "닉네임 또는 이메일을 다시 작성해주세요.", message: "사용이 불가능하거나 이미 사용중입니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+            view.present(alert, animated: true, completion: nil)
+        }
+        else if !view.isPasswordUsable {
+            let alert = UIAlertController(title: "비밀번호를 다시 작성해주세요.", message: "비밀번호는 8자 이상으로 만들어주세요.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+            view.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    public func passwordCheck(password: String, view: CreateUserViewController) {
+        let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn) { [weak view] in
+            view?.view.layoutIfNeeded()
+        }
+        guard password.count >= 8 else {
+            view.isPasswordUsable = false
+            view.passwordErrorLabel.text = "8자 이상으로 만들어주세요."
+            view.passwordErrorLabelHeightAnchor.isActive = false
+            animator.startAnimation()
+            return
+        }
+        
+        guard password.count != 0 else {
+            view.isPasswordUsable = false
+            view.passwordErrorLabelHeightAnchor.isActive = true
+            animator.startAnimation()
+            return
+        }
+        
+        view.isPasswordUsable = true
+        view.passwordErrorLabelHeightAnchor.isActive = true
+        animator.startAnimation()
     }
     
     // MARK: - For UploadModalViewController

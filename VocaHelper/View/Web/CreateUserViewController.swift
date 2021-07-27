@@ -15,8 +15,11 @@ class CreateUserViewController: UIViewController {
         print("deinit CreateUserVC")
     }
     
-    var viewModel: WebViewModel?
-    var disposeBag = DisposeBag()
+    public var viewModel: WebViewModel?
+    private var disposeBag = DisposeBag()
+    public var nickNameErrorLabelHeightAnchor = NSLayoutConstraint()
+    public var emailErrorLabelHeightAnchor = NSLayoutConstraint()
+    public var passwordErrorLabelHeightAnchor = NSLayoutConstraint()
     
     let scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -57,6 +60,15 @@ class CreateUserViewController: UIViewController {
         return textField
     }()
     
+    let nickNameErrorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "닉네임을 입력해주세요."
+        label.textColor = .systemRed
+        label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let emailTextField: UITextField = {
         let textField = UITextField()
         textField.textColor = .white
@@ -72,6 +84,15 @@ class CreateUserViewController: UIViewController {
         textField.adjustsFontSizeToFitWidth = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
+    }()
+    
+    let emailErrorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "이메일을 입력해주세요."
+        label.textColor = .systemRed
+        label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let passwordTextField: UITextField = {
@@ -90,6 +111,15 @@ class CreateUserViewController: UIViewController {
         textField.adjustsFontSizeToFitWidth = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
+    }()
+    
+    let passwordErrorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "패스워드를 입력해주세요."
+        label.textColor = .systemRed
+        label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let signUpButton: UIButton = {
@@ -112,8 +142,9 @@ class CreateUserViewController: UIViewController {
         return button
     }()
     
-    var isNickNameUsable: Bool = true
-    var isEmailUsable: Bool = true
+    public var isNickNameUsable: Bool = false
+    public var isEmailUsable: Bool = false
+    public var isPasswordUsable: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -138,8 +169,11 @@ class CreateUserViewController: UIViewController {
         scrollView.addSubview(handleView)
         scrollView.addSubview(logoImageView)
         scrollView.addSubview(nickNameTextField)
+        scrollView.addSubview(nickNameErrorLabel)
         scrollView.addSubview(emailTextField)
+        scrollView.addSubview(emailErrorLabel)
         scrollView.addSubview(passwordTextField)
+        scrollView.addSubview(passwordErrorLabel)
         scrollView.addSubview(signUpButton)
         scrollView.addSubview(exitButton)
         view.addSubview(scrollView)
@@ -172,17 +206,35 @@ class CreateUserViewController: UIViewController {
         nickNameTextField.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1/1.3).isActive = true
         nickNameTextField.heightAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 1/12).isActive = true
         
-        emailTextField.topAnchor.constraint(equalTo: nickNameTextField.bottomAnchor, constant: 2 * gap).isActive = true
+        nickNameErrorLabel.topAnchor.constraint(equalTo: nickNameTextField.bottomAnchor, constant: 3).isActive = true
+        nickNameErrorLabel.leftAnchor.constraint(equalTo: nickNameTextField.leftAnchor, constant: 10).isActive = true
+        nickNameErrorLabel.widthAnchor.constraint(equalTo: nickNameTextField.widthAnchor, multiplier: 0.5).isActive = true
+        nickNameErrorLabelHeightAnchor = nickNameErrorLabel.heightAnchor.constraint(equalTo: nickNameTextField.widthAnchor, multiplier: 0)
+        nickNameErrorLabelHeightAnchor.isActive = true
+        
+        emailTextField.topAnchor.constraint(equalTo: nickNameErrorLabel.bottomAnchor, constant: 2 * gap).isActive = true
         emailTextField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         emailTextField.widthAnchor.constraint(equalTo: nickNameTextField.widthAnchor).isActive = true
         emailTextField.heightAnchor.constraint(equalTo: nickNameTextField.heightAnchor).isActive = true
         
-        passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 2 * gap).isActive = true
+        emailErrorLabel.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 3).isActive = true
+        emailErrorLabel.leftAnchor.constraint(equalTo: emailTextField.leftAnchor, constant: 10).isActive = true
+        emailErrorLabel.widthAnchor.constraint(equalTo: emailTextField.widthAnchor, multiplier: 0.5).isActive = true
+        emailErrorLabelHeightAnchor = emailErrorLabel.heightAnchor.constraint(equalTo: emailErrorLabel.widthAnchor, multiplier: 0)
+        emailErrorLabelHeightAnchor.isActive = true
+        
+        passwordTextField.topAnchor.constraint(equalTo: emailErrorLabel.bottomAnchor, constant: 2 * gap).isActive = true
         passwordTextField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         passwordTextField.widthAnchor.constraint(equalTo: nickNameTextField.widthAnchor).isActive = true
         passwordTextField.heightAnchor.constraint(equalTo: nickNameTextField.heightAnchor).isActive = true
         
-        signUpButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 1.5 * gap).isActive = true
+        passwordErrorLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 3).isActive = true
+        passwordErrorLabel.leftAnchor.constraint(equalTo: passwordTextField.leftAnchor, constant: 10).isActive = true
+        passwordErrorLabel.widthAnchor.constraint(equalTo: passwordTextField.widthAnchor, multiplier: 0.5).isActive = true
+        passwordErrorLabelHeightAnchor = passwordErrorLabel.heightAnchor.constraint(equalTo: passwordErrorLabel.widthAnchor, multiplier: 0)
+        passwordErrorLabelHeightAnchor.isActive = true
+        
+        signUpButton.topAnchor.constraint(equalTo: passwordErrorLabel.bottomAnchor, constant: 1.5 * gap).isActive = true
         signUpButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         signUpButton.widthAnchor.constraint(equalTo: nickNameTextField.widthAnchor, multiplier: 0.5).isActive = true
         signUpButton.heightAnchor.constraint(equalTo: nickNameTextField.heightAnchor).isActive = true
@@ -201,7 +253,10 @@ class CreateUserViewController: UIViewController {
                       let viewModel = strongSelf.viewModel else {
                     return
                 }
-                if strongSelf.isNickNameUsable, strongSelf.isEmailUsable {
+                strongSelf.passwordTextField.endEditing(true)
+                strongSelf.emailTextField.endEditing(true)
+                strongSelf.nickNameTextField.endEditing(true)
+                if strongSelf.isNickNameUsable, strongSelf.isEmailUsable, strongSelf.isPasswordUsable {
                     viewModel.createNewUser(
                         nickName: strongSelf.nickNameTextField.text ?? "",
                         email: strongSelf.emailTextField.text ?? "",
@@ -221,6 +276,11 @@ class CreateUserViewController: UIViewController {
         emailTextField.rx.controlEvent(.editingDidEnd)
             .bind { [weak self] in
                 self?.viewModel?.emailExistCheck(email: self?.emailTextField.text ?? "" , view: self!)
+            }.disposed(by: disposeBag)
+        
+        passwordTextField.rx.controlEvent(.editingChanged)
+            .bind { [weak self] in
+                self?.viewModel?.passwordCheck(password: self?.passwordTextField.text ?? "" ,view: self!)
             }.disposed(by: disposeBag)
         
         exitButton.rx.tap
