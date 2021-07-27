@@ -102,18 +102,19 @@ class SearchViewController: UIViewController {
         
         // 키보드를 넣을때 word가 한번 더 방출된다. 그러면서 테이블뷰가 사라지는 버그가 발생함.
         // 그래서 distinctUntilChanged()를 넣음. 연속으로 같은게 오면 무시하는 오퍼레이터라고함.
-        searchBar.rx.text.distinctUntilChanged()
+        searchBar.rx.text
+            .distinctUntilChanged()
             .bind() { [weak self] in
                 self?.viewModel.makeSearchResultSubject(word: $0!, tableView: self?.tableView, noResultView: self?.noResultView)
             }.disposed(by: disposeBag)
-        
-        
         
         viewModel.searchResultSubject
             .bind(to: tableView.rx.items(cellIdentifier: SearchResultTableViewCell.identifier,
                                          cellType: SearchResultTableViewCell.self)) { row, item, cell in
                 cell.textLabel?.text = item.word + " : " + item.meaning
                 cell.fileName = item.fileName
+                cell.selectionStyle = .none
+                cell.accessoryType = .disclosureIndicator
             }.disposed(by: disposeBag)
         
         tableView.rx.itemSelected

@@ -26,8 +26,6 @@ class EditViewController: UIViewController {
     private var selectedCell: EditTableViewCell?
     
     private var touchXPos : CGFloat = 0
-    
-    
     private var tableViewConstraints: [NSLayoutConstraint] = []
     
     private let tableView: UITableView = {
