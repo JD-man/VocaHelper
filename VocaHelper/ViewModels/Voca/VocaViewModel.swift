@@ -87,7 +87,13 @@ class VocaViewModel {
     }
     
     /// Table Footer Button Function : Update Vocas, Add New Line, OnNext NewViewModel, Save Vocas
-    public func didTapAddButton(fileName: String) {
+    public func didTapAddButton(fileName: String, view: EditViewController) {
+        guard VocaManager.shared.vocas.count < 50 else {
+            let countAlert = UIAlertController(title: "단어가 가득 찼습니다.", message: "단어는 최대 50개 만들 수 있습니다.", preferredStyle: .alert)
+            countAlert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+            view.present(countAlert, animated: true, completion: nil)
+            return
+        }
         let newIdx = (VocaManager.shared.vocas.last?.idx ?? -1) + 1
         VocaManager.shared.vocas.append(Voca(idx: newIdx, word: "", meaning: ""))
         VocaManager.shared.saveVocas(fileName: fileName)

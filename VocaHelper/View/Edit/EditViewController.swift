@@ -165,7 +165,7 @@ class EditViewController: UIViewController {
         if let footer = tableView.tableFooterView as? EditTableViewFooter {
             footer.addButton.rx.tap
                 .bind() { [weak self] in
-                    self?.viewModel.didTapAddButton(fileName: self?.fileName ?? "")
+                    self?.viewModel.didTapAddButton(fileName: self?.fileName ?? "", view: self!)
                     self?.tableView.scrollToRow(at: IndexPath.init(row: 0, section: VocaManager.shared.vocas.count - 1), at: .top, animated: true)
                 }.disposed(by: disposeBag)
         }
