@@ -84,7 +84,7 @@ class PopupViewController: UIViewController {
     
     let exitButton: UIButton = {
         let button = UIButton()
-        button.setTitle("취소", for: .normal)
+        button.setTitle("닫기", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         button.layer.masksToBounds = true
