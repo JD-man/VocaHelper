@@ -90,6 +90,7 @@
 		89A789EB26774846004B5A54 /* ResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCell.swift; sourceTree = "<group>"; };
 		89A789EE26777385004B5A54 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		89B15C7D263A7F1B007C29E1 /* ExamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamViewController.swift; sourceTree = "<group>"; };
+		89B9050426B2D52300C4C8A4 /* VocaHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VocaHelper.entitlements; sourceTree = "<group>"; };
 		89C744BD263AE2A30013D620 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 		89C812D9269961B9000CA8F9 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		89C812DB269961CF000CA8F9 /* CreateUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUserViewController.swift; sourceTree = "<group>"; };
@@ -205,6 +206,7 @@
 		89651F9B2632BE4900949DEB /* VocaHelper */ = {
 			isa = PBXGroup;
 			children = (
+				89B9050426B2D52300C4C8A4 /* VocaHelper.entitlements */,
 				89F2E6002673A83E00890828 /* ViewModels */,
 				89F2E5FD2673A76A00890828 /* Managers */,
 				89651FB82632BF3D00949DEB /* Models */,
@@ -633,8 +635,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = VocaHelper/VocaHelper.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Z2SX2S8N8L;
 				INFOPLIST_FILE = VocaHelper/Info.plist;
@@ -645,7 +649,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.JDman.VocaHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = VocaHelperProvisioningProfile;
+				PROVISIONING_PROFILE_SPECIFIER = VocaHelperDistributionProfile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -657,8 +661,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = VocaHelper/VocaHelper.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = Z2SX2S8N8L;
 				INFOPLIST_FILE = VocaHelper/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -668,7 +674,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.JDman.VocaHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = VocaHelperProvisioningProfile;
+				PROVISIONING_PROFILE_SPECIFIER = VocaHelperDistributionProfile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
