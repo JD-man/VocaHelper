@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import Charts
 
 class VocaViewModel {    
     public var editCellSubject = BehaviorSubject<[SectionOfEditCell]>(value: [])
@@ -139,6 +140,33 @@ class VocaViewModel {
         // 다시 시험보는것을 대비한 답안지우기, 단어들 섞기
         userAnswer = []
         shuffledVocas.shuffle()
+    }
+    
+    public func setPieChart(datas: [Int], header: ResultTableViewHeader) {
+        let pieEntry = [
+            PieChartDataEntry(value: Double(datas[0]), label: "정답"),
+            PieChartDataEntry(value: Double(datas[1]), label: "오답")
+        ]
+        let dataset = PieChartDataSet(entries: pieEntry, label: nil)
+        dataset.colors = [.systemTeal, .systemPink]
+        let data = PieChartData(dataSet: dataset)
+        
+        let format = NumberFormatter()
+        format.numberStyle = .none
+        let formatter = DefaultValueFormatter(formatter: format)
+        
+        data.setValueFormatter(formatter)
+        data.setDrawValues(true)
+        data.setValueFont(NSUIFont.systemFont(ofSize: 20, weight: .semibold))
+        data.setValueTextColor(.label)
+        
+        header.pieChart.legend.enabled = false
+        header.pieChart.data = data
+        header.pieChart.centerAttributedText = NSAttributedString(
+            string: "\(datas[2])%",
+            attributes: [.font : UIFont.systemFont(ofSize: 30, weight: .bold)])
+        header.pieChart.drawEntryLabelsEnabled = false
+        header.pieChart.animate(xAxisDuration: 1, yAxisDuration: 1, easingOption: .easeInCirc)
     }
     
     public func presentResultVC(view: ExamViewController) {

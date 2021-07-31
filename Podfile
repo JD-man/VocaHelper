@@ -18,6 +18,9 @@ target 'VocaHelper' do
   pod 'Firebase/Firestore'
   pod 'FirebaseFirestoreSwift', '~> 7.0-beta'
 
+  # Charts
+  pod 'Charts'
+
   # Pods for VocaHelper
 
 end

@@ -32,7 +32,7 @@ class ResultViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(resultTableView)
         constraintsConfigure()
-        addFooter()
+        setHeaderFooter()
         rxConfigure()
     }
     
@@ -47,9 +47,9 @@ class ResultViewController: UIViewController {
         resultTableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor).isActive = true
     }
     
-    private func addFooter() {
-        let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 150))
-        let header = ResultTableViewHeader(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 60))
+    private func setHeaderFooter() {
+        let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 60))
+        let header = ResultTableViewHeader(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))        
         resultTableView.tableFooterView = footer
         resultTableView.tableHeaderView = header
     }
@@ -71,9 +71,9 @@ class ResultViewController: UIViewController {
                 cell.userAnswerLabel.textColor = item.score == "정답" ? .systemTeal : .systemPink
             }.disposed(by: disposeBag)
         
-                
-        // Footer 설정
-        guard let footer = resultTableView.tableFooterView as? ResultTableViewFooter else {
+        // Header 설정
+        
+        guard let header = resultTableView.tableHeaderView as? ResultTableViewHeader else {
             return
         }
         
@@ -81,13 +81,18 @@ class ResultViewController: UIViewController {
             .map { cell -> [Int] in
                 let wrongCount = cell.filter { resultCell in return resultCell.score == "오답" }.count
                 let answerCount = cell.filter { resultCell in return resultCell.score == "정답" }.count
-                // 정답개수 / (정답개수 + 오답개수) * 100% = 정답률
-                // 이거 이용해서 그래프 그리기
-                return [answerCount, wrongCount]
-            }.subscribe(onNext: {
-                footer.scoreLabel.text = " 정답/오답 : \($0[0]) / \($0[1])"
+                let answerRate = (Double(answerCount) / Double((wrongCount + answerCount))) * 100
+                return [answerCount, wrongCount, Int(answerRate)]
+            }.subscribe(onNext: { [weak self] in
+                self?.viewModel.setPieChart(datas: $0, header: header)
             })
             .disposed(by: disposeBag)
+        
+                
+        // Footer 설정
+        guard let footer = resultTableView.tableFooterView as? ResultTableViewFooter else {
+            return
+        }
         
         footer.homeButton.rx.tap
             .bind() { [weak self] in

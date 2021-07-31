@@ -6,21 +6,19 @@
 //
 
 import UIKit
+import Charts
 
 class ResultTableViewHeader: UIView {
     
-    let wordLabel: UILabel = {
-        let label = UILabel()
-        label.text = "문제"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    let pieChart: PieChartView = {
+        let chart = PieChartView()
+        chart.translatesAutoresizingMaskIntoConstraints = false
+        return chart
     }()
     
-    let userAnswerLabel: UILabel = {
+    let wordLabel: UILabel = {
         let label = UILabel()
-        label.text = "결과"
+        label.text = "오답정리"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -42,19 +40,20 @@ class ResultTableViewHeader: UIView {
     }
     
     private func addSubviews() {
+        self.addSubview(pieChart)
         self.addSubview(wordLabel)
-        self.addSubview(userAnswerLabel)
     }
     
     private func constraintsConfigure() {
-        wordLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        wordLabel.rightAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        wordLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        wordLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        pieChart.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        pieChart.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
+        pieChart.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.8).isActive = true
+        pieChart.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.8).isActive = true
         
-        userAnswerLabel.leftAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        userAnswerLabel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        userAnswerLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        userAnswerLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        wordLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor).isActive = true
+        wordLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
+        wordLabel.topAnchor.constraint(equalTo: pieChart.bottomAnchor, constant: 5).isActive = true
+        wordLabel.heightAnchor.constraint(equalTo: pieChart.heightAnchor, multiplier: 0.25).isActive = true
+        //wordLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
 }
