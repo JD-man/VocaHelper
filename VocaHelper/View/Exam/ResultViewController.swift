@@ -37,10 +37,9 @@ class ResultViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         setHeaderFooter()
         rxConfigure()
     }
@@ -65,7 +64,6 @@ class ResultViewController: UIViewController {
     }
     
     private func rxConfigure() {
-        
         viewModel.makeResultCellSubject()
         
         viewModel.resultCellSubject

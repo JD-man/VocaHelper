@@ -218,9 +218,9 @@ class VocaViewModel {
         actionSheet.addAction(UIAlertAction(title: "저장하기", style: .default, handler: { [weak view] _ in
             view?.viewModel.saveWebVocaToLocal(isLiked: isLiked, view: view!)
         }))
-        actionSheet.addAction(UIAlertAction(title: "시험보기", style: .default, handler: { [weak view] _ in
-            view?.viewModel.pushWebVocaExamViewController(view: view!)
-        }))
+//        actionSheet.addAction(UIAlertAction(title: "시험보기", style: .default, handler: { [weak view] _ in
+//            view?.viewModel.pushWebVocaExamViewController(view: view!)
+//        }))
         if AuthManager.shared.checkUserLoggedIn() {
             switch isLiked {
             case true:
@@ -280,18 +280,18 @@ class VocaViewModel {
         view.present(alert, animated: true, completion: nil)
     }
     
-    public func pushWebVocaExamViewController(view: WebVocaViewController) {
-        guard VocaManager.shared.vocas.count >= 5 else {
-            let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-            view.present(alert, animated: true, completion: nil)
-            return
-        }
-        guard let navi = view.navigationController else {
-            return
-        }        
-        navi.popViewController(animated: true)
-        let examVC = ExamViewController()
-        navi.pushViewController(examVC, animated: true)
-    }
+//    public func pushWebVocaExamViewController(view: WebVocaViewController) {
+//        guard VocaManager.shared.vocas.count >= 5 else {
+//            let alert = UIAlertController(title: "단어가 5개 미만입니다.", message: "단어장에 5개 이상의 단어가 있어야합니다.", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+//            view.present(alert, animated: true, completion: nil)
+//            return
+//        }
+//        guard let navi = view.navigationController else {
+//            return
+//        }
+//        navi.popViewController(animated: true)
+//        let examVC = ExamViewController()
+//        navi.pushViewController(examVC, animated: true)
+//    }
 }
