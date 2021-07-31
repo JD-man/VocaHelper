@@ -9,16 +9,6 @@ import UIKit
 
 class ResultTableViewFooter: UIView {
     
-    let scoreLabel: UILabel = {
-        let label = UILabel()
-        label.text = "결과"
-        label.adjustsFontSizeToFitWidth = true
-        label.font = UIFont.systemFont(ofSize: 25, weight: .regular)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     let examButton: UIButton = {
         let button = UIButton()
         button.setTitle("다시하기", for: .normal)
@@ -33,7 +23,7 @@ class ResultTableViewFooter: UIView {
     
     let homeButton: UIButton = {
         let button = UIButton()
-        button.setTitle("홈화면으로", for: .normal)
+        button.setTitle("나가기", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .label
         button.setTitleColor(.systemBackground, for: .normal)
@@ -58,20 +48,15 @@ class ResultTableViewFooter: UIView {
     }
     
     private func addSubviews() {
-        self.addSubview(scoreLabel)
         self.addSubview(examButton)
         self.addSubview(homeButton)
     }
     
     private func constraintsConfigure() {
-        scoreLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        scoreLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        scoreLabel.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-        scoreLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25).isActive = true
         
-        examButton.widthAnchor.constraint(equalTo: scoreLabel.widthAnchor, multiplier: 0.25).isActive = true
-        examButton.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor, constant: 10).isActive = true
-        examButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+        examButton.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.25).isActive = true
+        examButton.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.55).isActive = true
+        examButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
         NSLayoutConstraint(
             item: examButton,
             attribute: .centerX,
@@ -81,9 +66,9 @@ class ResultTableViewFooter: UIView {
             multiplier: 0.5,
             constant: 0).isActive = true
         
-        homeButton.widthAnchor.constraint(equalTo: scoreLabel.widthAnchor, multiplier: 0.25).isActive = true
-        homeButton.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor, constant: 10).isActive = true
-        homeButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+        homeButton.widthAnchor.constraint(equalTo: examButton.widthAnchor).isActive = true
+        homeButton.heightAnchor.constraint(equalTo: examButton.heightAnchor).isActive = true
+        homeButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
         NSLayoutConstraint(
             item: homeButton,
             attribute: .centerX,

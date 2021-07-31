@@ -32,12 +32,17 @@ class ResultViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(resultTableView)
         constraintsConfigure()
-        setHeaderFooter()
-        rxConfigure()
+        //setHeaderFooter()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        setHeaderFooter()
+        rxConfigure()
     }
     
     private func constraintsConfigure() {
@@ -48,8 +53,8 @@ class ResultViewController: UIViewController {
     }
     
     private func setHeaderFooter() {
-        let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 60))
-        let header = ResultTableViewHeader(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height))        
+        let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.safeAreaLayoutGuide.layoutFrame.width, height: 70))
+        let header = ResultTableViewHeader(frame: CGRect(x: 0, y: 0, width: view.safeAreaLayoutGuide.layoutFrame.width, height: view.safeAreaLayoutGuide.layoutFrame.height))
         resultTableView.tableFooterView = footer
         resultTableView.tableHeaderView = header
     }
@@ -64,11 +69,14 @@ class ResultViewController: UIViewController {
         viewModel.makeResultCellSubject()
         
         viewModel.resultCellSubject
+            .map({
+                $0.filter { $0.score == "오답" }
+            })
             .bind(to: resultTableView.rx.items(cellIdentifier: ResultTableViewCell.identifier,
-                                               cellType: ResultTableViewCell.self)) { row, item, cell in                
+                                               cellType: ResultTableViewCell.self)) { row, item, cell in
                 cell.wordLabel.text = item.questionWord
-                cell.userAnswerLabel.text = item.score == "정답" ? item.userAnswer : item.userAnswer + "\n 답: \(item.realAnswer)"
-                cell.userAnswerLabel.textColor = item.score == "정답" ? .systemTeal : .systemPink
+                cell.userAnswerLabel.text = item.userAnswer + "\n 답: \(item.realAnswer)"
+                cell.userAnswerLabel.textColor = .systemPink
             }.disposed(by: disposeBag)
         
         // Header 설정
@@ -84,9 +92,11 @@ class ResultViewController: UIViewController {
                 let answerRate = (Double(answerCount) / Double((wrongCount + answerCount))) * 100
                 return [answerCount, wrongCount, Int(answerRate)]
             }.subscribe(onNext: { [weak self] in
-                self?.viewModel.setPieChart(datas: $0, header: header)
+                self?.viewModel.setPieChart(datas: $0, chart: header.pieChart)
             })
             .disposed(by: disposeBag)
+        
+        viewModel.setLineChart(lineChart: header.lineChart)
         
                 
         // Footer 설정
@@ -95,8 +105,7 @@ class ResultViewController: UIViewController {
         }
         
         footer.homeButton.rx.tap
-            .bind() { [weak self] in
-                print("home")
+            .bind() { [weak self] in                
                 self?.dismiss(animated: true, completion: {
                     self?.presentingView?.tabBarController?.tabBar.isHidden.toggle()
                     self?.presentingView?.navigationController?.popToRootViewController(animated: true)

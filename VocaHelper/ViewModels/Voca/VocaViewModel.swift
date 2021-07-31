@@ -142,31 +142,65 @@ class VocaViewModel {
         shuffledVocas.shuffle()
     }
     
-    public func setPieChart(datas: [Int], header: ResultTableViewHeader) {
+    public func setPieChart(datas: [Int], chart: PieChartView) {
         let pieEntry = [
             PieChartDataEntry(value: Double(datas[0]), label: "정답"),
             PieChartDataEntry(value: Double(datas[1]), label: "오답")
         ]
         let dataset = PieChartDataSet(entries: pieEntry, label: nil)
         dataset.colors = [.systemTeal, .systemPink]
-        let data = PieChartData(dataSet: dataset)
         
+        let data = PieChartData(dataSet: dataset)
         let format = NumberFormatter()
         format.numberStyle = .none
         let formatter = DefaultValueFormatter(formatter: format)
-        
         data.setValueFormatter(formatter)
+        
         data.setDrawValues(true)
         data.setValueFont(NSUIFont.systemFont(ofSize: 20, weight: .semibold))
         data.setValueTextColor(.label)
         
-        header.pieChart.legend.enabled = false
-        header.pieChart.data = data
-        header.pieChart.centerAttributedText = NSAttributedString(
+        chart.legend.enabled = false
+        chart.data = data
+        
+        chart.centerAttributedText = NSAttributedString(
             string: "\(datas[2])%",
-            attributes: [.font : UIFont.systemFont(ofSize: 30, weight: .bold)])
-        header.pieChart.drawEntryLabelsEnabled = false
-        header.pieChart.animate(xAxisDuration: 1, yAxisDuration: 1, easingOption: .easeInCirc)
+            attributes: [.font : UIFont.systemFont(ofSize: 35, weight: .bold)])
+        chart.drawEntryLabelsEnabled = false
+        chart.animate(xAxisDuration: 1, yAxisDuration: 1, easingOption: .linear)
+    }
+    
+    public func setLineChart(lineChart: LineChartView) {
+        let examResults = [
+            [0,10],
+            [1,30],
+            [2,50],
+            [3,70],
+            [4,100]
+        ]
+        let lineEntry = examResults.map {
+            ChartDataEntry(x: Double($0[0]), y: Double($0[1]))
+        }
+        
+        let dataset = LineChartDataSet(entries: lineEntry, label: nil)
+        dataset.drawCirclesEnabled = false
+        dataset.drawCircleHoleEnabled = false        
+        dataset.lineWidth = 3
+        dataset.setColor(.systemGreen)
+        dataset.fill = Fill(color: .systemGreen)
+        dataset.fillAlpha = 0.2
+        dataset.mode = .cubicBezier
+        dataset.drawFilledEnabled = true        
+        
+        let data = LineChartData(dataSet: dataset)
+        data.setValueFont(NSUIFont.systemFont(ofSize: 10, weight: .medium))
+        let format = NumberFormatter()
+        format.numberStyle = .none
+        //format.maximumFractionDigits = 0
+        let formatter = DefaultValueFormatter(formatter: format)
+        data.setValueFormatter(formatter)
+        lineChart.data = data
+        lineChart.animate(yAxisDuration: 1, easingOption: .linear)
     }
     
     public func presentResultVC(view: ExamViewController) {
