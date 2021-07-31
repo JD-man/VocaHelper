@@ -27,6 +27,7 @@ class EditTableViewCell: UITableViewCell {
         textfield.clipsToBounds = true
         textfield.layer.cornerRadius = 10
         textfield.layer.borderWidth = 1.5
+        textfield.layer.borderColor = UIColor.whiteBlackDynamicColor.cgColor
         textfield.backgroundColor = UIColor(red: 93/255, green: 163/255, blue: 178/255, alpha: 1.0)
         textfield.textColor = .systemBackground
         textfield.translatesAutoresizingMaskIntoConstraints = false
@@ -44,6 +45,7 @@ class EditTableViewCell: UITableViewCell {
         textfield.clipsToBounds = true
         textfield.layer.cornerRadius = 10
         textfield.layer.borderWidth = 1.5
+        textfield.layer.borderColor = UIColor.whiteBlackDynamicColor.cgColor
         textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
@@ -71,6 +73,11 @@ class EditTableViewCell: UITableViewCell {
     private func addSubViews() {
         self.addSubview(wordTextField)
         self.addSubview(meaningTextField)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        wordTextField.layer.borderColor = UIColor.whiteBlackDynamicColor.cgColor
+        meaningTextField.layer.borderColor = UIColor.whiteBlackDynamicColor.cgColor
     }
     
     private func constraintConfigure() {

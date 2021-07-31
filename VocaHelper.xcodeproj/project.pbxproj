@@ -46,6 +46,7 @@
 		89C812DC269961CF000CA8F9 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C812DB269961CF000CA8F9 /* CreateUserViewController.swift */; };
 		89C812DE26998F9E000CA8F9 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C812DD26998F9E000CA8F9 /* UserData.swift */; };
 		89C812E0269991F7000CA8F9 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C812DF269991F7000CA8F9 /* AuthManager.swift */; };
+		89C91D5126B5654E007E6C4B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C91D5026B5654E007E6C4B /* Extensions.swift */; };
 		89CC7BE72691EF46009D008D /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CC7BE62691EF46009D008D /* WebViewController.swift */; };
 		89CC7BE92691F458009D008D /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CC7BE82691F458009D008D /* FirestoreManager.swift */; };
 		89ED977D2693624500374FC8 /* WebTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ED977C2693624500374FC8 /* WebTableViewCell.swift */; };
@@ -96,6 +97,7 @@
 		89C812DB269961CF000CA8F9 /* CreateUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUserViewController.swift; sourceTree = "<group>"; };
 		89C812DD26998F9E000CA8F9 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		89C812DF269991F7000CA8F9 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		89C91D5026B5654E007E6C4B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		89CC7BE62691EF46009D008D /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		89CC7BE82691F458009D008D /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		89ED977C2693624500374FC8 /* WebTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTableViewCell.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 		89651F9B2632BE4900949DEB /* VocaHelper */ = {
 			isa = PBXGroup;
 			children = (
+				89C91D4F26B56525007E6C4B /* Extensions */,
 				89B9050426B2D52300C4C8A4 /* VocaHelper.entitlements */,
 				89F2E6002673A83E00890828 /* ViewModels */,
 				89F2E5FD2673A76A00890828 /* Managers */,
@@ -279,6 +282,14 @@
 				89A789EE26777385004B5A54 /* SearchViewModel.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		89C91D4F26B56525007E6C4B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				89C91D5026B5654E007E6C4B /* Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		89CC7BE52691EF28009D008D /* Web */ = {
@@ -480,6 +491,7 @@
 				89014773263BD5C60054962A /* ResultTableViewFooter.swift in Sources */,
 				89B15C7E263A7F1B007C29E1 /* ExamViewController.swift in Sources */,
 				89014771263BC0000054962A /* ResultTableViewCell.swift in Sources */,
+				89C91D5126B5654E007E6C4B /* Extensions.swift in Sources */,
 				89A789EF26777385004B5A54 /* SearchViewModel.swift in Sources */,
 				890AAB6226985859001E2CE1 /* WebVocaViewController.swift in Sources */,
 				890AAB6026983860001E2CE1 /* WebViewModel.swift in Sources */,

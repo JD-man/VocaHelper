@@ -19,6 +19,8 @@ class ResultTableViewCell: UITableViewCell {
         label.backgroundColor = .systemIndigo
         label.clipsToBounds = true
         label.layer.cornerRadius = 15
+        label.layer.borderWidth = 1.5
+        label.layer.borderColor = UIColor.whiteBlackDynamicColor.cgColor
         label.textColor = .systemBackground
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -27,8 +29,12 @@ class ResultTableViewCell: UITableViewCell {
     let userAnswerLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
-        label.font = UIFont.systemFont(ofSize: 25, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textAlignment = .center
+        label.clipsToBounds = true
+        label.layer.cornerRadius = 15
+        label.layer.borderWidth = 1.5
+        label.layer.borderColor = UIColor.whiteBlackDynamicColor.cgColor
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 2
         return label
@@ -58,6 +64,11 @@ class ResultTableViewCell: UITableViewCell {
     private func addSubviews() {
         self.addSubview(wordLabel)
         self.addSubview(userAnswerLabel)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        wordLabel.layer.borderColor = UIColor.whiteBlackDynamicColor.cgColor
+        userAnswerLabel.layer.borderColor = UIColor.whiteBlackDynamicColor.cgColor
     }
     
     private func constraintsConfigure() {

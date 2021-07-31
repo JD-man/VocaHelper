@@ -32,14 +32,13 @@ class ResultViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(resultTableView)
         constraintsConfigure()
-        //setHeaderFooter()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         setHeaderFooter()
         rxConfigure()
     }
@@ -52,7 +51,7 @@ class ResultViewController: UIViewController {
     }
     
     private func setHeaderFooter() {
-        let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.safeAreaLayoutGuide.layoutFrame.width, height: 70))
+        let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.safeAreaLayoutGuide.layoutFrame.width, height: 37))
         let header = ResultTableViewHeader(frame: CGRect(x: 0, y: 0, width: view.safeAreaLayoutGuide.layoutFrame.width, height: view.safeAreaLayoutGuide.layoutFrame.height))
         resultTableView.tableFooterView = footer
         resultTableView.tableHeaderView = header
