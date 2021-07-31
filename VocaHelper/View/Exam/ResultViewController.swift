@@ -21,6 +21,7 @@ class ResultViewController: UIViewController {
     
     private let resultTableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = .tertiarySystemGroupedBackground
         tableView.rowHeight = 70
         tableView.register(ResultTableViewCell.self, forCellReuseIdentifier: ResultTableViewCell.identifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -29,7 +30,7 @@ class ResultViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .tertiarySystemGroupedBackground
         view.addSubview(resultTableView)
         constraintsConfigure()
     }
@@ -51,7 +52,7 @@ class ResultViewController: UIViewController {
     }
     
     private func setHeaderFooter() {
-        let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.safeAreaLayoutGuide.layoutFrame.width, height: 37))
+        let footer = ResultTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.safeAreaLayoutGuide.layoutFrame.width, height: 70))
         let header = ResultTableViewHeader(frame: CGRect(x: 0, y: 0, width: view.safeAreaLayoutGuide.layoutFrame.width, height: view.safeAreaLayoutGuide.layoutFrame.height))
         resultTableView.tableFooterView = footer
         resultTableView.tableHeaderView = header
@@ -74,6 +75,7 @@ class ResultViewController: UIViewController {
                 cell.wordLabel.text = item.questionWord
                 cell.userAnswerLabel.text = item.userAnswer + "\n 답: \(item.realAnswer)"
                 cell.userAnswerLabel.textColor = .systemPink
+                cell.backgroundColor = .tertiarySystemGroupedBackground
             }.disposed(by: disposeBag)
         
         // Header 설정

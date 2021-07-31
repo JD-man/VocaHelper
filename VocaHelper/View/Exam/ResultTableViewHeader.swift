@@ -10,11 +10,23 @@ import Charts
 
 class ResultTableViewHeader: UIView {
     
+    let pieChartBackground: UIView = {
+        let view = UIView()
+        view.layer.shadowOpacity = 1
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowRadius = 3
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        view.layer.cornerRadius = 5
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemBackground
+        return view
+    }()
+    
     let pieChartLabel: UILabel = {
         let label = UILabel()
         label.text = "시험결과"
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -25,11 +37,23 @@ class ResultTableViewHeader: UIView {
         return chart
     }()
     
+    let lineChartBackground: UIView = {
+        let view = UIView()
+        view.layer.shadowOpacity = 1
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowRadius = 3
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        view.layer.cornerRadius = 5
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemBackground
+        return view
+    }()
+    
     let lineChartLabel: UILabel = {
         let label = UILabel()
         label.text = "최근 5개 시험결과"
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -81,6 +105,8 @@ class ResultTableViewHeader: UIView {
     }
         
     private func addSubviews() {
+        addSubview(pieChartBackground)
+        addSubview(lineChartBackground)
         addSubview(pieChartLabel)
         addSubview(pieChart)
         addSubview(lineChartLabel)
@@ -89,31 +115,39 @@ class ResultTableViewHeader: UIView {
     }
     
     private func constraintsConfigure() {
-        pieChartLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-        pieChartLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
-        pieChartLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.05).isActive = true
-        pieChartLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor).isActive = true
-        pieChartLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
+        pieChartBackground.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        pieChartBackground.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
+        pieChartBackground.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.42).isActive = true
+        pieChartBackground.widthAnchor.constraint(equalTo: pieChartBackground.heightAnchor, multiplier: 1.05).isActive = true
+        
+        pieChartLabel.topAnchor.constraint(equalTo: pieChartBackground.topAnchor, constant: 10).isActive = true
+        pieChartLabel.centerXAnchor.constraint(equalTo: pieChartBackground.centerXAnchor).isActive = true
+        pieChartLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        pieChartLabel.widthAnchor.constraint(equalTo: pieChartBackground.widthAnchor).isActive = true
         
         pieChart.topAnchor.constraint(equalTo: pieChartLabel.bottomAnchor).isActive = true
-        pieChart.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
-        pieChart.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor).isActive = true
-        pieChart.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor).isActive = true
+        pieChart.centerXAnchor.constraint(equalTo: pieChartBackground.centerXAnchor).isActive = true
+        pieChart.widthAnchor.constraint(equalTo: pieChartBackground.widthAnchor).isActive = true
+        pieChart.bottomAnchor.constraint(equalTo: pieChartBackground.bottomAnchor).isActive = true
         
-        lineChartLabel.topAnchor.constraint(equalTo: pieChart.bottomAnchor).isActive = true
-        lineChartLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
-        lineChartLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.05).isActive = true
-        lineChartLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor).isActive = true
-        lineChartLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
+        lineChartBackground.topAnchor.constraint(equalTo: pieChartBackground.bottomAnchor, constant: 25).isActive = true
+        lineChartBackground.centerXAnchor.constraint(equalTo: pieChartBackground.centerXAnchor).isActive = true
+        lineChartBackground.widthAnchor.constraint(equalTo: pieChartBackground.widthAnchor).isActive = true
+        lineChartBackground.heightAnchor.constraint(equalTo: pieChartBackground.heightAnchor).isActive = true
         
-        checkWrongAnswerLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
-        checkWrongAnswerLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.05).isActive = true
-        checkWrongAnswerLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
-        checkWrongAnswerLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor).isActive = true
+        lineChartLabel.topAnchor.constraint(equalTo: lineChartBackground.topAnchor, constant: 10).isActive = true
+        lineChartLabel.centerXAnchor.constraint(equalTo: pieChartBackground.centerXAnchor).isActive = true
+        lineChartLabel.heightAnchor.constraint(equalTo: pieChartLabel.heightAnchor).isActive = true
+        lineChartLabel.widthAnchor.constraint(equalTo: pieChartBackground.widthAnchor).isActive = true
         
         lineChart.topAnchor.constraint(equalTo: lineChartLabel.bottomAnchor).isActive = true
-        lineChart.bottomAnchor.constraint(equalTo: checkWrongAnswerLabel.topAnchor).isActive = true
-        lineChart.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
-        lineChart.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.95).isActive = true
+        lineChart.bottomAnchor.constraint(equalTo: lineChartBackground.bottomAnchor).isActive = true
+        lineChart.centerXAnchor.constraint(equalTo: lineChartBackground.centerXAnchor).isActive = true
+        lineChart.widthAnchor.constraint(equalTo: lineChartBackground.widthAnchor).isActive = true
+        
+        checkWrongAnswerLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
+        checkWrongAnswerLabel.topAnchor.constraint(equalTo: lineChartBackground.bottomAnchor).isActive = true
+        checkWrongAnswerLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+        checkWrongAnswerLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor).isActive = true
     }
 }

@@ -41,7 +41,7 @@ class ResultTableViewCell: UITableViewCell {
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)        
         addSubviews()
         constraintsConfigure()
         self.isUserInteractionEnabled = false

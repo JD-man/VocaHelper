@@ -55,8 +55,8 @@ class ResultTableViewFooter: UIView {
     private func constraintsConfigure() {
         
         examButton.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.25).isActive = true
-        examButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 1).isActive = true
-        examButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 1).isActive = true
+        examButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
+        examButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         NSLayoutConstraint(
             item: examButton,
             attribute: .centerX,
@@ -67,8 +67,8 @@ class ResultTableViewFooter: UIView {
             constant: 0).isActive = true
         
         homeButton.widthAnchor.constraint(equalTo: examButton.widthAnchor).isActive = true
-        homeButton.heightAnchor.constraint(equalTo: examButton.heightAnchor).isActive = true
-        homeButton.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
+        homeButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
+        homeButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         NSLayoutConstraint(
             item: homeButton,
             attribute: .centerX,
