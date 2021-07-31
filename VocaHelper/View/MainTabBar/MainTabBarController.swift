@@ -45,7 +45,7 @@ class MainTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        showLaunchScreen(1, 0.5)
+        showLaunchScreen(0.5)
         configure()
     }
     
@@ -53,13 +53,13 @@ class MainTabBarController: UITabBarController {
         super.viewDidLayoutSubviews()
     }
     
-    private func showLaunchScreen(_ sleepTime: UInt32, _ duration: TimeInterval) {
+    private func showLaunchScreen(_ duration: TimeInterval) {
         view.addSubview(launchView)
         launchView.frame = view.bounds
-        sleep(sleepTime)
-        UIView.animate(withDuration: duration) { [weak self] in
+        let animator = UIViewPropertyAnimator(duration: duration, curve: .linear) { [weak self] in
             self?.launchView.alpha = 0.0
         }
+        animator.startAnimation()
     }
     
     private func configure() {
