@@ -50,7 +50,7 @@ class PracticeViewController: UIViewController {
     }()
     
     private let prevButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setBackgroundImage(UIImage(systemName: "backward"), for: .normal)
         button.tintColor = .label
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -58,7 +58,7 @@ class PracticeViewController: UIViewController {
     }()
     
     private let nextButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setBackgroundImage(UIImage(systemName: "forward"), for: .normal)
         button.tintColor = .label
         button.translatesAutoresizingMaskIntoConstraints = false

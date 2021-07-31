@@ -125,7 +125,7 @@ class CreateUserViewController: UIViewController {
     }()
     
     let signUpButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle("가입하기", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .link
@@ -136,7 +136,7 @@ class CreateUserViewController: UIViewController {
     }()
     
     let exitButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.backgroundColor = nil
         button.setTitle("취소", for: .normal)
         button.setTitleColor(.link, for: .normal)

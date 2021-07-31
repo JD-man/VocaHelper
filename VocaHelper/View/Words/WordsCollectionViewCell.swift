@@ -14,7 +14,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
     var didTap: (() -> Void)?
     
     let button: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setBackgroundImage(UIImage(systemName: "folder"), for: .normal)
         button.tintColor = .label
         button.translatesAutoresizingMaskIntoConstraints = false

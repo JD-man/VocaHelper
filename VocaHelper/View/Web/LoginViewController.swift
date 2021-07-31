@@ -79,7 +79,7 @@ class LoginViewController: UIViewController {
     }()
     
     let loginButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle("로그인", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .link
@@ -90,7 +90,7 @@ class LoginViewController: UIViewController {
     }()
     
     let signUpButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle("가입하기", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .link
@@ -101,7 +101,7 @@ class LoginViewController: UIViewController {
     }()
     
     let findPasswordButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.backgroundColor = nil
         button.setTitle("비밀번호찾기", for: .normal)
         button.setTitleColor(.link, for: .normal)
@@ -110,7 +110,7 @@ class LoginViewController: UIViewController {
     }()
     
     let exitButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.backgroundColor = nil
         button.setTitle("취소", for: .normal)
         button.setTitleColor(.link, for: .normal)

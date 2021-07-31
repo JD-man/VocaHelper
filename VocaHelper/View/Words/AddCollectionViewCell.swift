@@ -14,7 +14,7 @@ class AddCollectionViewCell: UICollectionViewCell {
     public var didTap: (() -> Void)?
     
     public let button: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setBackgroundImage(UIImage(systemName: "folder.badge.plus"), for: .normal)
         button.tintColor = .systemGreen
         button.translatesAutoresizingMaskIntoConstraints = false

@@ -48,7 +48,7 @@ class ExamViewController: UIViewController {
     private let buttons: [UIButton] = {
         var buttons = [UIButton]()
         for i in 0 ..< 5 {
-            let button = UIButton()
+            let button = UIButton(type: .system)
             button.setTitle("button\(i)", for: .normal)
             button.backgroundColor = .systemBackground
             button.setTitleColor(.label, for: .normal)

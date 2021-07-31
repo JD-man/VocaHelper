@@ -10,7 +10,7 @@ import UIKit
 class ResultTableViewFooter: UIView {
     
     let examButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle("다시하기", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .label
@@ -22,7 +22,7 @@ class ResultTableViewFooter: UIView {
     }()
     
     let homeButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle("나가기", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .label

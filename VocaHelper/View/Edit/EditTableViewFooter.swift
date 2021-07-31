@@ -10,7 +10,7 @@ import UIKit
 class EditTableViewFooter: UIView {
     
     public let addButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.tintColor = .systemGreen
         button.backgroundColor = .systemBackground
         button.translatesAutoresizingMaskIntoConstraints = false

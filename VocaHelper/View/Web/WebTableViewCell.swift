@@ -13,7 +13,7 @@ class WebTableViewCell: UITableViewCell {
     public var tapFunction: (() -> Void)?
     
     let backgroundButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.backgroundColor = .systemBackground
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 25
