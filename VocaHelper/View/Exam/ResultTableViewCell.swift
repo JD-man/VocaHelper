@@ -30,6 +30,7 @@ class ResultTableViewCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 25, weight: .regular)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 2
         return label
     }()
     

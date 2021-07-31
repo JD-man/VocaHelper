@@ -15,6 +15,8 @@ final class VocaManager {
     var vocas: [Voca] = []
     //lazy var vocasCount = vocas.count
     
+    // 시험성적들 추가
+    
     var fileNames: [String] = []
     //lazy var fileCount = fileNames.count
     
@@ -143,6 +145,7 @@ final class VocaManager {
             let data = try Data(contentsOf: path)
             let vocaData  = try decoder.decode(VocaData.self, from: data)
             vocas = vocaData.vocas
+            //시험성적 할당
         } catch {
             print(error)
         }

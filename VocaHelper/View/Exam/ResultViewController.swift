@@ -66,8 +66,8 @@ class ResultViewController: UIViewController {
         viewModel.resultCellSubject
             .bind(to: resultTableView.rx.items(cellIdentifier: ResultTableViewCell.identifier,
                                                cellType: ResultTableViewCell.self)) { row, item, cell in                
-                cell.wordLabel.text = item.realAnswer
-                cell.userAnswerLabel.text = item.userAnswer
+                cell.wordLabel.text = item.questionWord
+                cell.userAnswerLabel.text = item.score == "정답" ? item.userAnswer : item.userAnswer + "\n 답: \(item.realAnswer)"
                 cell.userAnswerLabel.textColor = item.score == "정답" ? .systemTeal : .systemPink
             }.disposed(by: disposeBag)
         
@@ -81,6 +81,8 @@ class ResultViewController: UIViewController {
             .map { cell -> [Int] in
                 let wrongCount = cell.filter { resultCell in return resultCell.score == "오답" }.count
                 let answerCount = cell.filter { resultCell in return resultCell.score == "정답" }.count
+                // 정답개수 / (정답개수 + 오답개수) * 100% = 정답률
+                // 이거 이용해서 그래프 그리기
                 return [answerCount, wrongCount]
             }.subscribe(onNext: {
                 footer.scoreLabel.text = " 정답/오답 : \($0[0]) / \($0[1])"

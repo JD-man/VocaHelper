@@ -56,6 +56,5 @@ class ResultTableViewHeader: UIView {
         userAnswerLabel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         userAnswerLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
         userAnswerLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
     }
 }

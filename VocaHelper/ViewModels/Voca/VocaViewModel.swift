@@ -22,8 +22,7 @@ class VocaViewModel {
     //public lazy var realAnswer: [String] = []
     public lazy var userAnswer: [String] = []
     
-    public lazy var examCellObservable: Observable<[String]> = buttonCountSubject.map { [weak self] in
-        print($0)
+    public lazy var examCellObservable: Observable<[String]> = buttonCountSubject.map { [weak self] in        
         let word = self?.shuffledVocas[$0].word ?? "Not exist Word"
         let meaning = self?.shuffledVocas[$0].meaning ?? "Not exist Meaning"
         var wrongAnswers: [String] = []
@@ -128,7 +127,12 @@ class VocaViewModel {
     
     public func makeResultCellSubject() {
         let resultTable = zip(shuffledVocas, userAnswer).map {
-            return ResultCell(realAnswer: $0.0.word, userAnswer: $0.1, score: $0.0.meaning == $0.1 ? "정답" : "오답")
+            return ResultCell(
+                questionWord: $0.0.word,
+                realAnswer: $0.0.meaning,
+                userAnswer: $0.1,
+                score: $0.0.meaning == $0.1 ? "정답" : "오답"
+            )
         }
         resultCellSubject.onNext(resultTable)
         
