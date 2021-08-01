@@ -63,6 +63,7 @@ struct WebViewModel {
     public func getWebVocas(email: String, title: String, isLiked: Bool, vocas: [Voca], view: WebViewController) {
         // 닉네임으로 이메일을 가져와야함.
         VocaManager.shared.vocas = vocas
+        VocaManager.shared.examResults = []
         let vc = WebVocaViewController()
         vc.webVocaName = email + " - " + title
         vc.isLiked = isLiked
