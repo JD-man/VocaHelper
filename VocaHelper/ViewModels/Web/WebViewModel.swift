@@ -147,8 +147,12 @@ struct WebViewModel {
     public func setLoginButton(textField: UITextField, button: UIButton) {
         if AuthManager.shared.checkUserLoggedIn() {
             button.setTitle("프로필", for: .normal)
-            guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-                return
+            var email = ""
+            if let userDefaultsEmail = UserDefaults.standard.value(forKey: "email") as? String {
+                email = userDefaultsEmail
+            } else {
+                email = AuthManager.shared.getUserEmail()
+                UserDefaults.standard.setValue(email, forKey: "email")
             }
             guard let nickName = UserDefaults.standard.value(forKey: "nickname") as? String else {
                 FirestoreManager.shared.getUserNickName(email: email) { result in

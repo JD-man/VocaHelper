@@ -33,6 +33,10 @@ final class AuthManager {
         }
     }
     
+    public func getUserEmail() -> String {
+        return Auth.auth().currentUser?.email ?? "Get User Email Error"
+    }
+    
     public func checkUserVeryfied() -> Bool {
         guard let currentUser = Auth.auth().currentUser else {
             return false
