@@ -14,7 +14,7 @@ class ResultTableViewHeader: UIView {
         let view = UIView()
         view.layer.shadowOpacity = 1
         view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 3
+        view.layer.shadowRadius = 2
         view.layer.shadowOffset = CGSize(width: 0, height: 0)
         view.layer.cornerRadius = 5
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -24,7 +24,7 @@ class ResultTableViewHeader: UIView {
     
     let pieChartLabel: UILabel = {
         let label = UILabel()
-        label.text = "시험결과"
+        label.text = "결과"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -41,7 +41,7 @@ class ResultTableViewHeader: UIView {
         let view = UIView()
         view.layer.shadowOpacity = 1
         view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 3
+        view.layer.shadowRadius = 2
         view.layer.shadowOffset = CGSize(width: 0, height: 0)
         view.layer.cornerRadius = 5
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +51,7 @@ class ResultTableViewHeader: UIView {
     
     let lineChartLabel: UILabel = {
         let label = UILabel()
-        label.text = "최근 5개 시험결과"
+        label.text = "최근 10번 성적"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -69,11 +69,11 @@ class ResultTableViewHeader: UIView {
         xAxis.labelPosition = .bottom
         xAxis.drawLabelsEnabled = false
         xAxis.drawGridLinesEnabled = false
-        xAxis.drawAxisLineEnabled = false
+        xAxis.drawAxisLineEnabled = true
         
         // y축 설정
         let yAxis = chart.leftAxis
-        yAxis.drawGridLinesEnabled  = false
+        yAxis.drawGridLinesEnabled  = true
         yAxis.drawLabelsEnabled = false
         yAxis.drawAxisLineEnabled = false
         

@@ -10,6 +10,7 @@ import Foundation
 struct VocaData: Codable {    
     var fileName: String
     var vocas: [Voca]
+    var examResults: [Int]
 }
 
 struct Voca: Codable {

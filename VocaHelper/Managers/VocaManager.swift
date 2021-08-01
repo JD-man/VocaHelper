@@ -16,6 +16,7 @@ final class VocaManager {
     //lazy var vocasCount = vocas.count
     
     // 시험성적들 추가
+    var examResults: [Int] = []
     
     var fileNames: [String] = []
     //lazy var fileCount = fileNames.count
@@ -66,7 +67,7 @@ final class VocaManager {
         fileNames.insert(newFileName, at: insertIdx)
         
         // 빈 파일 하나 추가
-        let newVocaData = VocaData(fileName: newFileName, vocas: [Voca(idx: 0, word: "word", meaning: "meaning")])
+        let newVocaData = VocaData(fileName: newFileName, vocas: [Voca(idx: 0, word: "word", meaning: "meaning")], examResults: [])
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         do {
@@ -105,10 +106,10 @@ final class VocaManager {
             allVocasForSearch = fileNames.filter {$0 != "ButtonCell"}.map {
                 let decoder = JSONDecoder()
                 guard let directory = VocaManager.directoryURL else {
-                    return VocaData(fileName: "", vocas: [])
+                    return VocaData(fileName: "", vocas: [], examResults: [])
                 }
                 let path = directory.appendingPathComponent($0)
-                var vocaData: VocaData = VocaData(fileName: "", vocas: [])
+                var vocaData: VocaData = VocaData(fileName: "", vocas: [], examResults: [])
                 do {
                     let data = try Data(contentsOf: path)
                     vocaData  = try decoder.decode(VocaData.self, from: data)
@@ -145,7 +146,7 @@ final class VocaManager {
             let data = try Data(contentsOf: path)
             let vocaData  = try decoder.decode(VocaData.self, from: data)
             vocas = vocaData.vocas
-            //시험성적 할당
+            examResults = vocaData.examResults
         } catch {
             print(error)
         }
@@ -153,7 +154,7 @@ final class VocaManager {
     
     /// Make and Save VocaData
     public func saveVocas(fileName: String) {
-        let vocaData = VocaData(fileName: fileName, vocas: vocas)        
+        let vocaData = VocaData(fileName: fileName, vocas: vocas, examResults: examResults)
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         

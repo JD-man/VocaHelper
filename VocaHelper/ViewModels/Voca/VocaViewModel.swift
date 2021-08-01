@@ -142,6 +142,14 @@ class VocaViewModel {
         shuffledVocas.shuffle()
     }
     
+    public func setExamResults(result: Int, fileName: String) {
+        if VocaManager.shared.examResults.count >= 10 {
+            VocaManager.shared.examResults.removeFirst()
+        }
+        VocaManager.shared.examResults.append(result)
+        VocaManager.shared.saveVocas(fileName: fileName)
+    }
+    
     public func setPieChart(datas: [Int], chart: PieChartView) {
         let pieEntry = [
             PieChartDataEntry(value: Double(datas[0]), label: "정답"),
@@ -157,8 +165,8 @@ class VocaViewModel {
         data.setValueFormatter(formatter)
         
         data.setDrawValues(true)
-        data.setValueFont(NSUIFont.systemFont(ofSize: 20, weight: .semibold))
-        data.setValueTextColor(.label)
+        data.setValueFont(NSUIFont.systemFont(ofSize: 15, weight: .regular))
+        data.setValueTextColor(.systemBackground)
         
         chart.legend.enabled = false
         chart.data = data
@@ -166,47 +174,56 @@ class VocaViewModel {
         chart.centerAttributedText = NSAttributedString(
             string: "\(datas[2])%",
             attributes: [.font : UIFont.systemFont(ofSize: 35, weight: .bold)])
-        chart.drawEntryLabelsEnabled = false
+        chart.drawEntryLabelsEnabled = true
+        chart.entryLabelColor = .systemBackground
         chart.animate(xAxisDuration: 1, yAxisDuration: 1, easingOption: .linear)
     }
     
     public func setLineChart(lineChart: LineChartView) {
-        let examResults = [
-            [0,10],
-            [1,30],
-            [2,50],
-            [3,70],
-            [4,100]
-        ]
-        let lineEntry = examResults.map {
-            ChartDataEntry(x: Double($0[0]), y: Double($0[1]))
+        let examResults: [[Int]] = {
+            var arr: [[Int]] = []
+            for (i, result) in VocaManager.shared.examResults.enumerated() {
+                arr.append([i,result])
+            }
+            return arr
+        }()
+        if examResults.isEmpty {
+            
         }
-        
-        let dataset = LineChartDataSet(entries: lineEntry, label: nil)
-        dataset.drawCirclesEnabled = false
-        dataset.drawCircleHoleEnabled = false        
-        dataset.lineWidth = 3
-        dataset.setColor(.systemGreen)
-        dataset.fill = Fill(color: .systemGreen)
-        dataset.fillAlpha = 0.2
-        dataset.mode = .cubicBezier
-        dataset.drawFilledEnabled = true        
-        
-        let data = LineChartData(dataSet: dataset)
-        data.setValueFont(NSUIFont.systemFont(ofSize: 10, weight: .medium))
-        let format = NumberFormatter()
-        format.numberStyle = .none
-        //format.maximumFractionDigits = 0
-        let formatter = DefaultValueFormatter(formatter: format)
-        data.setValueFormatter(formatter)
-        lineChart.data = data
-        lineChart.animate(yAxisDuration: 1, easingOption: .linear)
+        else {
+            let lineEntry = examResults.map {
+                ChartDataEntry(x: Double($0[0]), y: Double($0[1]))
+            }
+            
+            let dataset = LineChartDataSet(entries: lineEntry, label: nil)
+            dataset.drawCirclesEnabled = true
+            dataset.setCircleColors(.systemGreen)
+            dataset.circleRadius = 3
+            dataset.drawCircleHoleEnabled = false
+            dataset.lineWidth = 3
+            dataset.setColor(.systemGreen)
+            dataset.fill = Fill(color: .systemGreen)
+            dataset.fillAlpha = 0.2
+            dataset.mode = .cubicBezier
+            dataset.drawFilledEnabled = true
+            
+            let data = LineChartData(dataSet: dataset)
+            data.setValueFont(NSUIFont.systemFont(ofSize: 10, weight: .medium))
+            let format = NumberFormatter()
+            format.numberStyle = .none
+            //format.maximumFractionDigits = 0
+            let formatter = DefaultValueFormatter(formatter: format)
+            data.setValueFormatter(formatter)
+            lineChart.data = data
+            lineChart.animate(yAxisDuration: 1, easingOption: .linear)
+        }
     }
     
     public func presentResultVC(view: ExamViewController) {
         let resultVC = ResultViewController()
         resultVC.modalPresentationStyle = .fullScreen
         resultVC.presentingView = view
+        resultVC.fileName = view.fileName
         resultVC.viewModel = view.viewModel
         view.present(resultVC, animated: true, completion: nil)
     }

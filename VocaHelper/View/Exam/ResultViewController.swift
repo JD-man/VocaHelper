@@ -17,6 +17,7 @@ class ResultViewController: UIViewController {
     
     public weak var presentingView: ExamViewController?
     public var viewModel: VocaViewModel!
+    public var fileName: String = ""
     private let disposeBag = DisposeBag()
     
     private let resultTableView: UITableView = {
@@ -91,7 +92,11 @@ class ResultViewController: UIViewController {
                 let answerRate = (Double(answerCount) / Double((wrongCount + answerCount))) * 100
                 return [answerCount, wrongCount, Int(answerRate)]
             }.subscribe(onNext: { [weak self] in
-                self?.viewModel.setPieChart(datas: $0, chart: header.pieChart)
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.viewModel.setExamResults(result: $0[2], fileName: strongSelf.fileName)
+                strongSelf.viewModel.setPieChart(datas: $0, chart: header.pieChart)
             })
             .disposed(by: disposeBag)
         

@@ -98,6 +98,7 @@ class PopupViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        textField.delegate = self
         stackViewConfigure()
         addSubViews()
         configure()
@@ -106,7 +107,6 @@ class PopupViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        textField.delegate = self        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
