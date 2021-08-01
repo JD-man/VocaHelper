@@ -177,9 +177,8 @@ class WebViewController: UIViewController {
             }.disposed(by: disposeBag)
         
         viewModel.webDataSubject
-            .distinctUntilChanged({
-                return $0 == $1
-            }).bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
+            .distinctUntilChanged()
+            .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
                 cell.titleLabel.text = item.title
                 cell.descriptionLabel.text = item.description
                 cell.writerLabel.text = item.writer

@@ -16,8 +16,8 @@ struct WebCell: Equatable {
         let isDescriptionSame = lhs.description == rhs.description
         let isWriterSame = lhs.writer == rhs.writer
         let isDowloadSame = lhs.download == rhs.download
-        let isLikeSame = lhs.like == rhs.like
-        if isDateSame && isDescriptionSame && isWriterSame && isDowloadSame && isLikeSame
+        let isLikedSame = lhs.liked == rhs.liked
+        if isDateSame && isDescriptionSame && isWriterSame && isDowloadSame && isLikedSame
         {
             return true            
         }
