@@ -44,7 +44,6 @@ final class VocaManager {
                 fileNames.sort()
                 fileNames.append("ButtonCell")
                 VocaManager.shared.fileNames = fileNames
-                
                 emitter.onNext(fileNames)
             }
             catch {
@@ -146,7 +145,7 @@ final class VocaManager {
             let data = try Data(contentsOf: path)
             let vocaData  = try decoder.decode(VocaData.self, from: data)
             vocas = vocaData.vocas
-            examResults = vocaData.examResults
+            examResults = vocaData.examResults ?? []
         } catch {
             print(error)
         }
