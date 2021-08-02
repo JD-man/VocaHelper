@@ -101,7 +101,11 @@ class WebTableViewCell: UITableViewCell {
     
     let gradient: CAGradientLayer = {
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.init(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: CGFloat.random(in: 0.0...1.0)).cgColor, UIColor.tertiarySystemBackground.cgColor]
+        let randomRed = CGFloat.random(in: 0.0...1.0)
+        let randomGreen = CGFloat.random(in: 0.0...1.0)
+        let randomBlue = CGFloat.random(in: 0.0...1.0)
+        let randomAlpha = CGFloat.random(in: 0.0...1.0)
+        gradient.colors = [UIColor.init(red: randomRed, green: randomGreen, blue: randomBlue, alpha: randomAlpha).cgColor, UIColor.blackWhiteDynamicColor.cgColor]
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
@@ -121,6 +125,14 @@ class WebTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         gradient.frame = backgroundButton.layer.bounds
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        guard let gradientColor = gradient.colors,
+              let leftTopColor = gradientColor.first else {
+            return
+        }
+        gradient.colors = [leftTopColor, UIColor.grayBlackDynamicColor.cgColor]
     }
     
     

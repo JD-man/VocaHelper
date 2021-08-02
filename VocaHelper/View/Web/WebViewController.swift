@@ -61,7 +61,7 @@ class WebViewController: UIViewController {
     let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Login", for: .normal)
-        button.setTitleColor(.systemBackground, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .link
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 10
