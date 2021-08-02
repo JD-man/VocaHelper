@@ -20,6 +20,6 @@ extension UIColor {
     }
     open class var grayBlackDynamicColor: UIColor {
         // WebTableViewCell의 Bottom-Right 색상에 사용된다.
-        return UITraitCollection.current.userInterfaceStyle == .dark ? .lightGray : .white
+        return UITraitCollection.current.userInterfaceStyle == .dark ? .gray : .white
     }
 }

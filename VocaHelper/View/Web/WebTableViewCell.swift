@@ -105,7 +105,7 @@ class WebTableViewCell: UITableViewCell {
         let randomGreen = CGFloat.random(in: 0.0...1.0)
         let randomBlue = CGFloat.random(in: 0.0...1.0)
         let randomAlpha = CGFloat.random(in: 0.0...1.0)
-        gradient.colors = [UIColor.init(red: randomRed, green: randomGreen, blue: randomBlue, alpha: randomAlpha).cgColor, UIColor.blackWhiteDynamicColor.cgColor]
+        gradient.colors = [UIColor.init(red: randomRed, green: randomGreen, blue: randomBlue, alpha: randomAlpha).cgColor, UIColor.grayBlackDynamicColor.cgColor]
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)

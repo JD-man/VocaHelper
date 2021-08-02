@@ -176,8 +176,7 @@ class WebViewController: UIViewController {
                 self?.viewModel.presentUploadModal(view: self!)
             }.disposed(by: disposeBag)
         
-        viewModel.webDataSubject
-            .distinctUntilChanged()
+        viewModel.webDataSubject            
             .bind(to: wordsTableView.rx.items(cellIdentifier: WebTableViewCell.identifier, cellType: WebTableViewCell.self)) { [weak self] indexPath, item, cell in
                 cell.titleLabel.text = item.title
                 cell.descriptionLabel.text = item.description
