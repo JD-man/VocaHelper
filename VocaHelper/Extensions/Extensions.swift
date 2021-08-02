@@ -15,13 +15,11 @@ extension UIColor {
         return UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
     }
     open class var blackWhiteDynamicColor: UIColor {
-        // 다크모드를 위한 DynamicColor.
-        // 텍스트필드의 외곽선에 사용된다.
+        // WebTableViewCell의 텍스트에 사용된다.
         return UITraitCollection.current.userInterfaceStyle == .dark ? .black : .white
     }
     open class var grayBlackDynamicColor: UIColor {
-        // 다크모드를 위한 DynamicColor.
-        // 텍스트필드의 외곽선에 사용된다.
+        // WebTableViewCell의 Bottom-Right 색상에 사용된다.
         return UITraitCollection.current.userInterfaceStyle == .dark ? .lightGray : .white
     }
 }

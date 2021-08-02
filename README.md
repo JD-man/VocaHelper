@@ -14,6 +14,7 @@
 단어장 추천하기  
 서버에 올라간 단어장 다운받기    
 서버의 단어장 목록 정렬하기  
+다크모드 지원  
 
 ### 원본 프로젝트에 더해서 RxSwift, Firebase를 사용.
 [원본 링크](https://github.com/JD-man/VocaHelperOrigin)  
