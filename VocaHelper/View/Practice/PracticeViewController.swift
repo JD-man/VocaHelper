@@ -19,9 +19,9 @@ class PracticeViewController: UIViewController {
     private lazy var viewModel = VocaViewModel(fileName: fileName)
     private let disposeBag = DisposeBag()
     
-    private var index = 0
+    public var index = 0
     
-    private let wordLabel: UILabel = {
+    public let wordLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .label
         label.textAlignment = .center
@@ -35,7 +35,7 @@ class PracticeViewController: UIViewController {
         return label
     }()
     
-    private let meaningLabel: UILabel = {
+    public let meaningLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .label
         label.textAlignment = .center
@@ -49,7 +49,7 @@ class PracticeViewController: UIViewController {
         return label
     }()
     
-    private let prevButton: UIButton = {
+    public let prevButton: UIButton = {
         let button = UIButton(type: .system)
         button.setBackgroundImage(UIImage(systemName: "backward"), for: .normal)
         button.tintColor = .label
@@ -57,7 +57,7 @@ class PracticeViewController: UIViewController {
         return button
     }()
     
-    private let nextButton: UIButton = {
+    public let nextButton: UIButton = {
         let button = UIButton(type: .system)
         button.setBackgroundImage(UIImage(systemName: "forward"), for: .normal)
         button.tintColor = .label
@@ -65,7 +65,7 @@ class PracticeViewController: UIViewController {
         return button
     }()
     
-    private let blind: BlindUIView = {
+    public let blind: BlindUIView = {
         let view = BlindUIView()
         return view
     }()
@@ -149,12 +149,12 @@ class PracticeViewController: UIViewController {
         
         nextButton.rx.tap
             .bind() { [weak self] in
-                self?.nextMoveFrame()
+                self?.viewModel.nextMoveFrame(view: self!)
             }.disposed(by: disposeBag)
         
         prevButton.rx.tap
             .bind() { [weak self] in
-                self?.prevMoveFrame()
+                self?.viewModel.prevMoveFrame(view: self!)                
             }.disposed(by: disposeBag)
         
         navigationItem.leftBarButtonItem?.rx.tap
@@ -162,39 +162,5 @@ class PracticeViewController: UIViewController {
                 self?.tabBarController?.tabBar.isHidden.toggle()
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
-    }
-    
-    private func nextMoveFrame() {
-        index += 1
-        if index >= VocaManager.shared.vocas.count {
-            index -= 1
-            let alert = UIAlertController(title: "마지막 단어입니다.", message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return
-        }
-        let originLayerFrame = wordLabel.layer.frame.origin.x
-        wordLabel.layer.frame.origin.x = -wordLabel.bounds.width - 5
-        viewModel.buttonCountSubject.onNext(index)
-        UIView.animate(withDuration: 0.7) { [weak self] in
-            self?.wordLabel.frame.origin.x = originLayerFrame
-        }
-    }
-    
-    private func prevMoveFrame() {
-        index -= 1
-        if index <= -1{
-            index += 1
-            let alert = UIAlertController(title: "첫번째 단어입니다.", message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            return
-        }
-        let originLayerFrame = wordLabel.layer.frame.origin.x
-        self.wordLabel.layer.frame.origin.x = meaningLabel.frame.origin.x
-        viewModel.buttonCountSubject.onNext(index)
-        UIView.animate(withDuration: 0.7) { [weak self] in
-            self?.wordLabel.frame.origin.x = originLayerFrame
-        }
     }
 }

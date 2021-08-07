@@ -23,6 +23,7 @@ class WebViewController: UIViewController {
     let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.hidesWhenStopped = true
+        indicator.style = .large
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
@@ -224,7 +225,9 @@ class WebViewController: UIViewController {
             .bind { [weak self] in
                 self?.isStarting = true
                 self?.loadLimit = 5
-                self?.viewModel.makeWebDataSubject(orderBy: self?.orderBy ?? "date", indiciator: self?.activityIndicator ?? UIActivityIndicatorView())
+                self?.viewModel.makeWebDataSubject(
+                    orderBy: self?.orderBy ?? "date",
+                    indiciator: self?.activityIndicator ?? UIActivityIndicatorView())
                 refresher.endRefreshing()
             }.disposed(by: disposeBag)
     }

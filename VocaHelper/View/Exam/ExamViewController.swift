@@ -20,22 +20,22 @@ class ExamViewController: UIViewController {
     private let disposeBag = DisposeBag()
     public var index = 0
     
-    private var vocaIndices: [Int] = []         // 단어들 인덱스가 섞인 배열
-    private var realAnswers: [String] = []   // 섞인 인덱스로 정리된 진짜답안배열
-    private var prevQuestion: [Int] = []
-    private var userAnswers: [String] = []
+    public var vocaIndices: [Int] = []         // 단어들 인덱스가 섞인 배열
+    public var realAnswers: [String] = []   // 섞인 인덱스로 정리된 진짜답안배열
+    public var prevQuestion: [Int] = []
+    public var userAnswers: [String] = []
     
-    private var currVocaIndex: Int = 0
-    private var stackViewHeightAnchor = NSLayoutConstraint()
+    public var currVocaIndex: Int = 0
+    public var stackViewHeightAnchor = NSLayoutConstraint()
     
 
-    private let stackView: UIStackView = {
+    public let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
 
-    private let question: UILabel = {
+    public let question: UILabel = {
         let label = UILabel()
         label.text = "Exam"
         label.textAlignment = .center
@@ -45,7 +45,7 @@ class ExamViewController: UIViewController {
         return label
     }()
 
-    private let buttons: [UIButton] = {
+    public let buttons: [UIButton] = {
         var buttons = [UIButton]()
         for i in 0 ..< 5 {
             let button = UIButton(type: .system)
@@ -58,7 +58,7 @@ class ExamViewController: UIViewController {
         return buttons
     }()
     
-    private let gradient: CAGradientLayer = {
+    public let gradient: CAGradientLayer = {
         let gradient = CAGradientLayer()
         gradient.colors = [UIColor.systemTeal.cgColor, UIColor.systemGreen.cgColor]
         gradient.locations = [0.0, 1.0]
@@ -136,31 +136,13 @@ class ExamViewController: UIViewController {
         
         viewModel.examCellObservable
             .bind() { [weak self] in
-                self?.question.text = $0.last
-                for i in 0...4 {
-                    self?.buttons[i].setTitle($0[i], for: .normal)
-                }
+                self?.viewModel.setButtons(questions: $0, view: self!)
             }.disposed(by: disposeBag)
         
         for button in buttons {
             button.rx.tap
                 .bind() { [weak self] in
-                    self?.index += 1
-                    self?.viewModel.userAnswer.append(button.titleLabel?.text ?? "")
-                    if self?.index ?? 0 >= VocaManager.shared.vocas.count {
-                        self?.index = 0
-                        let alert = UIAlertController(title: "마지막 문제입니다.", message: "결과화면이 표시됩니다.", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { [weak self] _ in
-                            guard let strongSelf = self else {
-                                return
-                            }
-                            strongSelf.viewModel.presentResultVC(view: strongSelf)
-                        }))
-                        self?.present(alert, animated: true, completion: nil)
-                    }
-                    else {
-                        self?.viewModel.buttonCountSubject.onNext(self?.index ?? 0)
-                    }                    
+                    self?.viewModel.setNextButtons(button: button, view: self!)                    
                 }.disposed(by: disposeBag)
         }
         

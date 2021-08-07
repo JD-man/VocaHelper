@@ -13,14 +13,13 @@ class VocaViewModel {
     public var editCellSubject = BehaviorSubject<[SectionOfEditCell]>(value: [])
     
     public lazy var buttonCountSubject = BehaviorSubject<Int>(value: 0)
-    
     public lazy var practiceCellObservable = buttonCountSubject.map {
-        return Voca(idx: VocaManager.shared.vocas[$0].idx, word: VocaManager.shared.vocas[$0].word, meaning: VocaManager.shared.vocas[$0].meaning)
+        return Voca(
+            idx: VocaManager.shared.vocas[$0].idx,
+            word: VocaManager.shared.vocas[$0].word,
+            meaning: VocaManager.shared.vocas[$0].meaning)
     }
-    
     private lazy var shuffledVocas = VocaManager.shared.vocas.shuffled()
-    
-    //public lazy var realAnswer: [String] = []
     public lazy var userAnswer: [String] = []
     
     public lazy var examCellObservable: Observable<[String]> = buttonCountSubject.map { [weak self] in        
@@ -124,7 +123,66 @@ class VocaViewModel {
         makeViewModelsFromVocas()
     }
     
-    // MARK: - For Exam
+    // MARK: - For PracticeVC
+    
+    public func nextMoveFrame(view: PracticeViewController) {
+        view.index += 1
+        if view.index >= VocaManager.shared.vocas.count {
+            view.index -= 1
+            let alert = UIAlertController(title: "마지막 단어입니다.", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+            view.present(alert, animated: true, completion: nil)
+            return
+        }
+        let originLayerFrame = view.wordLabel.layer.frame.origin.x
+        view.wordLabel.layer.frame.origin.x = -view.wordLabel.bounds.width - 5
+        buttonCountSubject.onNext(view.index)
+        UIView.animate(withDuration: 0.7) { [weak view] in
+            view?.wordLabel.frame.origin.x = originLayerFrame
+        }
+    }
+    
+    public func prevMoveFrame(view: PracticeViewController) {
+        view.index -= 1
+        if view.index <= -1{
+            view.index += 1
+            let alert = UIAlertController(title: "첫번째 단어입니다.", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+            view.present(alert, animated: true, completion: nil)
+            return
+        }
+        let originLayerFrame = view.wordLabel.layer.frame.origin.x
+        view.wordLabel.layer.frame.origin.x = view.meaningLabel.frame.origin.x
+        buttonCountSubject.onNext(view.index)
+        UIView.animate(withDuration: 0.7) { [weak view] in
+            view?.wordLabel.frame.origin.x = originLayerFrame
+        }
+    }
+    
+    // MARK: - For ExamVC
+    
+    public func setButtons(questions: [String], view: ExamViewController) {
+        view.question.text = questions.last
+        for i in 0...4 {
+            view.buttons[i].setTitle(questions[i], for: .normal)
+        }
+    }
+    
+    public func setNextButtons(button: UIButton, view: ExamViewController) {
+        view.index += 1
+        userAnswer.append(button.titleLabel?.text ?? "")
+        if view.index >= VocaManager.shared.vocas.count {
+            view.index = 0
+            let alert = UIAlertController(title: "마지막 문제입니다.", message: "결과화면이 표시됩니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default, handler: { [weak self, weak view] _ in
+                self?.presentResultVC(view: view!)
+            }))
+            view.present(alert, animated: true, completion: nil)
+        }
+        else {
+            buttonCountSubject.onNext(view.index)
+        }
+    }
     
     public func makeResultCellSubject() {
         let resultTable = zip(shuffledVocas, userAnswer).map {
