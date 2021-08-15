@@ -36,14 +36,17 @@ class WordsViewController: UIViewController {
         navigationItem.title = "단어장"
         navigationController?.navigationBar.prefersLargeTitles = true
         let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        layout.itemSize = view.bounds.width < view.bounds.height ?
-            CGSize(width: view.bounds.width/3-15, height: view.bounds.width/3-20) :
-            CGSize(width: view.bounds.height/3-15, height: view.bounds.height/3-20)
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
         
+        let margin: CGFloat = 10
+        let numberOfCell: CGFloat = 3
+        let width = view.bounds.width < view.bounds.height ?
+            (view.bounds.width - 2*margin)/numberOfCell - margin/1.5 : (view.bounds.height - 2*margin)/numberOfCell - margin/1.5
+        
+        layout.sectionInset = UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
+        layout.itemSize = CGSize(width: width, height: width)
+        layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 10
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView?.translatesAutoresizingMaskIntoConstraints = false
