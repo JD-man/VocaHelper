@@ -36,7 +36,6 @@ class WordsCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = nil
         configure()
         constraintsConfigure()
     }
@@ -58,19 +57,25 @@ class WordsCollectionViewCell: UICollectionViewCell {
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
         contentView.addSubview(button)
         contentView.addSubview(label)
-        backgroundColor = .systemBackground
+        //backgroundColor = .systemBackground
+        contentView.backgroundColor = .systemBackground
+        
+        contentView.layer.cornerRadius = 5
+        contentView.layer.shadowColor = UIColor.black.cgColor
+        contentView.layer.shadowOpacity = 0.2
+        contentView.layer.shadowOffset = CGSize(width: 0, height: 0)
     }
     
     private func constraintsConfigure() {
         button.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        button.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        button.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -10).isActive = true
         button.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5).isActive = true
         button.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.45).isActive = true
         
         label.centerXAnchor.constraint(equalTo: button.centerXAnchor).isActive = true
         label.widthAnchor.constraint(equalTo: widthAnchor, constant: -20).isActive = true
         label.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 5).isActive = true
-        label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2).isActive = true
+        label.heightAnchor.constraint(equalTo: label.widthAnchor, multiplier: 0.25).isActive = true
     }
     
     @objc private func didTapButton() {
