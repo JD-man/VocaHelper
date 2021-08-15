@@ -32,11 +32,22 @@ class WordsViewController: UIViewController {
         viewModels.makeNewViewModels(isAddButton: false)
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.navigationBar.sizeToFit()
+        }, completion: nil)
+    }
+    
+    
     private func viewConfigure() {
         navigationItem.title = "단어장"
         navigationController?.navigationBar.prefersLargeTitles = true
-        let layout = UICollectionViewFlowLayout()
+        navigationItem.largeTitleDisplayMode = .always
         
+        let layout = UICollectionViewFlowLayout()
         let margin: CGFloat = 10
         let numberOfCell: CGFloat = 3
         let width = view.bounds.width < view.bounds.height ?
