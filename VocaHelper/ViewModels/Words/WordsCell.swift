@@ -15,7 +15,7 @@ struct WordsCell: Equatable, IdentifiableType {
     // true로 설정하면 메모리누수가 일어나지 않는다. 추가버튼을 다른곳에 만들어야할듯.
     static func == (lhs: WordsCell, rhs: WordsCell) -> Bool {
         if lhs.identity == rhs.identity { return true }
-        else {return true}
+        else { return false }
     }
     
     typealias Identity = String

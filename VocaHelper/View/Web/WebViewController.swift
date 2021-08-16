@@ -104,7 +104,7 @@ class WebViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = .secondarySystemBackground
         navigationItem.title = "단어장 다운받기"
         navigationController?.navigationBar.prefersLargeTitles = true
         configure()

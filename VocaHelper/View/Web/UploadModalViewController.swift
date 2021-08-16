@@ -24,6 +24,7 @@ class UploadModalViewController: UIViewController {
     private let blockView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.1, alpha: 0.3)
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -31,7 +32,9 @@ class UploadModalViewController: UIViewController {
         let view = UIView()
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 30
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.backgroundColor = .systemBackground
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -39,6 +42,7 @@ class UploadModalViewController: UIViewController {
         let view = UIView()
         view.layer.masksToBounds = true
         view.backgroundColor = .darkGray
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -47,13 +51,7 @@ class UploadModalViewController: UIViewController {
         view.backgroundColor = .lightGray
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 3
-        return view
-    }()
-    
-    public let bottomBlockView: UIView = {
-        let view = UIView()
-        view.isUserInteractionEnabled = false
-        view.backgroundColor = .systemBackground
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -63,41 +61,37 @@ class UploadModalViewController: UIViewController {
     public var minHeight: CGFloat = 0
     public var maxHeight: CGFloat = 0
     
+    public var handleViewHeightConstraint = NSLayoutConstraint()
+    public var startY: CGFloat = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewConfigure()
+        constraintConfigure()
         rxConfigure()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let bottomBlockHeight: CGFloat = view.safeAreaInsets.bottom
-        let handleViewWidth: CGFloat = view.safeAreaLayoutGuide.layoutFrame.width
-        
-        blockView.frame = view.bounds
-        handleView.frame = CGRect(x: 0.5 * (view.bounds.width - handleViewWidth) , y: view.bounds.height, width: handleViewWidth, height: view.bounds.height)
-        handleArea.frame = CGRect(x: handleView.bounds.minX, y: handleView.bounds.minY, width: handleView.frame.width, height: 25)
-        handleImage.frame = CGRect(x: 0.5 * (handleView.bounds.width - 30), y: 10 , width: 30, height: 5)
-        
-        collectionView?.frame = CGRect(x: 0, y: handleImage.frame.maxY + 10, width: handleView.frame.width, height: handleView.frame.height - minHeight - 25 - bottomBlockHeight)
-        bottomBlockView.frame = CGRect(x: 0, y: collectionView?.frame.maxY ?? 0 + bottomBlockHeight, width: handleView.frame.width, height: bottomBlockHeight)
-        
-        //Animate View when viewDidLoad
-        minHeight = view.bounds.height * 0.7
-        maxHeight = view.bounds.height * 0.3
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         viewModel?.handleAnimation(height: minHeight, view: self)
     }
     
     private func viewConfigure() {
         // CollectionView Layout Config
         let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        layout.itemSize = view.bounds.width < view.bounds.height ?
-            CGSize(width: view.bounds.width/3-15, height: view.bounds.width/3-20) :
-            CGSize(width: view.bounds.height/3-15, height: view.bounds.height/3-20)
+        let margin: CGFloat = 10
+        let numberOfCell: CGFloat = 3
+        let width = view.bounds.width < view.bounds.height ?
+            (view.bounds.width - 2*margin)/numberOfCell - margin/1.5 : (view.bounds.height - 2*margin)/numberOfCell - margin/1.5
+        
+        layout.sectionInset = UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
+        layout.itemSize = CGSize(width: width, height: width)
         layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
         
         // CollectionView Config
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -111,11 +105,48 @@ class UploadModalViewController: UIViewController {
         // Add Subviews
         handleView.addSubview(handleArea)
         handleView.addSubview(handleImage)
-        handleView.addSubview(collectionView!)
-        handleView.addSubview(bottomBlockView)
+        handleView.addSubview(collectionView!)        
         view.addSubview(blockView)
         view.addSubview(handleView)
         
+        //Animate View when viewDidAppear
+        minHeight = view.bounds.height * 0.3
+        maxHeight = view.bounds.height * 0.7
+    }
+    
+    private func constraintConfigure() {
+        let handleAreaHeight: CGFloat = 30
+        
+        blockView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        blockView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        blockView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        blockView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        handleView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        handleView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        handleView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        handleViewHeightConstraint = handleView.heightAnchor.constraint(
+            equalTo: view.heightAnchor,
+            multiplier: 0,
+            constant: 0
+        )
+        handleViewHeightConstraint.isActive = true        
+        
+        handleArea.topAnchor.constraint(equalTo: handleView.topAnchor).isActive = true
+        handleArea.leftAnchor.constraint(equalTo: handleView.leftAnchor).isActive = true
+        handleArea.rightAnchor.constraint(equalTo: handleView.rightAnchor).isActive = true
+        handleArea.heightAnchor.constraint(equalToConstant: handleAreaHeight).isActive = true
+        
+        handleImage.centerXAnchor.constraint(equalTo: handleArea.centerXAnchor).isActive = true
+        handleImage.centerYAnchor.constraint(equalTo: handleArea.centerYAnchor).isActive = true
+        handleImage.widthAnchor.constraint(equalToConstant: 30).isActive  = true
+        handleImage.heightAnchor.constraint(equalToConstant: 5).isActive  = true
+        
+        collectionView?.translatesAutoresizingMaskIntoConstraints = false
+        collectionView?.topAnchor.constraint(lessThanOrEqualTo: handleArea.bottomAnchor).isActive = true
+        collectionView?.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        collectionView?.leftAnchor.constraint(equalTo: handleView.leftAnchor).isActive = true
+        collectionView?.rightAnchor.constraint(equalTo: handleView.rightAnchor).isActive = true
     }
     
     private func rxConfigure() {
@@ -128,7 +159,7 @@ class UploadModalViewController: UIViewController {
         
         tapGesture.rx.event
             .bind { [weak self] _ in
-                self?.viewModel?.handleAnimation(height: self?.handleView.frame.height ?? 0, view: self!)
+                self?.viewModel?.handleAnimation(height: 0.0, view: self!)
             }.disposed(by: disposeBag)
         
         panGesture.rx.event

@@ -183,8 +183,8 @@ struct WebViewModel {
             uploadModal.viewModel = view.viewModel
             uploadModal.modalPresentationStyle = .overCurrentContext
             uploadModal.presenting = view
-            view.tabBarController?.tabBar.isHidden.toggle()
             view.present(uploadModal, animated: false, completion: nil)
+            view.tabBarController?.tabBar.isHidden.toggle()
         }
         else {
             let alert = UIAlertController(title: "로그인 중이 아닙니다!", message: "로그인 후 업로드가 가능합니다.", preferredStyle: .alert)
@@ -460,49 +460,38 @@ struct WebViewModel {
     }
     
     public func handleAnimation(height: CGFloat, view: UploadModalViewController) {
+        view.handleViewHeightConstraint.constant = height
         let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 1) { [weak view] in
-            guard let handleView = view?.handleView else {
-                return
-            }
-            handleView.frame = CGRect(x: handleView.frame.minX, y: height, width: handleView.frame.width, height: handleView.frame.height)
+            view?.view.layoutIfNeeded()
         }
-        
-        if height ==  view.handleView.frame.height {
+        if height ==  0.0 {
+            view.presenting?.tabBarController?.tabBar.isHidden.toggle()
             animator.addCompletion { [weak view] _ in
                 view?.dismiss(animated: false) {
                     NotificationCenter.default.post(name: NSNotification.Name("StateObserver"), object: nil)
-                    view?.presenting?.tabBarController?.tabBar.isHidden.toggle()
                 }
             }
         }
         animator.startAnimation()
     }
     
-    var startY: CGFloat = 0
-    var startHeight: CGFloat = 0
-    public mutating func grabHandle(recognizer: UIPanGestureRecognizer, view: UploadModalViewController) {
+        
+    public func grabHandle(recognizer: UIPanGestureRecognizer, view: UploadModalViewController) {        
         switch recognizer.state {
         case .began:
-            startY = view.handleView.frame.minY
-            startHeight = view.collectionView?.frame.height ?? 0
+            view.startY = view.handleViewHeightConstraint.constant
         case .changed:
-            var y = startY + recognizer.translation(in: view.handleView).y
-            var collectionViewHeight = startHeight - recognizer.translation(in: view.handleView).y
-            if y <= view.maxHeight {
+            var y = view.startY - recognizer.translation(in: view.handleArea).y
+            if y >= view.maxHeight {
                 y = view.maxHeight
-                collectionViewHeight = view.handleView.frame.height - view.maxHeight - view.bottomBlockView.frame.height - 25
             }
-            else if y >= view.minHeight {
+            else if y <= view.minHeight {
                 y = view.minHeight
-                collectionViewHeight = view.handleView.frame.height - view.minHeight - view.bottomBlockView.frame.height - 25
             }
-            view.handleView.frame = CGRect(x: view.handleView.frame.minX, y: y, width: view.handleView.frame.width, height: view.handleView.frame.height)
-            view.collectionView?.frame = CGRect(x: 0, y: view.collectionView?.frame.origin.y ?? 0, width: view.collectionView?.frame.width ?? 0, height: collectionViewHeight)
-            view.bottomBlockView.frame = CGRect(x: 0, y: view.collectionView?.frame.maxY ?? 0 + view.bottomBlockView.frame.height, width: view.bottomBlockView.frame.width, height: view.bottomBlockView.frame.height)
-        
+            view.handleViewHeightConstraint.constant = y
         case .ended:
             if recognizer.velocity(in: view.handleView).y >= 1550 {
-                handleAnimation(height: view.handleView.frame.height, view: view)
+                handleAnimation(height: 0.0, view: view)
             }
         default:
             break
