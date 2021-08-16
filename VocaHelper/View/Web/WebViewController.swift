@@ -97,6 +97,8 @@ class WebViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.layer.cornerRadius = 30
+        tableView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         return tableView
     }()
 
