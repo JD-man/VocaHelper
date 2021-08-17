@@ -10,9 +10,8 @@ import RxSwift
 import RxDataSources
 
 struct WordsCell: Equatable, IdentifiableType {
-    
-    // ==일때 false로 해야 파일추가가 제대로 된다. addbutton의 identity가 바뀌어서 그런듯.
     // true로 설정하면 메모리누수가 일어나지 않는다. 추가버튼을 다른곳에 만들어야할듯.
+    
     static func == (lhs: WordsCell, rhs: WordsCell) -> Bool {
         if lhs.identity == rhs.identity { return true }
         else { return false }

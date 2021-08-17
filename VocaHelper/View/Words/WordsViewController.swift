@@ -48,7 +48,7 @@ class WordsViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .always
         
         let layout = UICollectionViewFlowLayout()
-        let margin: CGFloat = 10
+        let margin: CGFloat = 20
         let numberOfCell: CGFloat = 3
         let width = view.bounds.width < view.bounds.height ?
             (view.bounds.width - 2*margin)/numberOfCell - margin/1.5 : (view.bounds.height - 2*margin)/numberOfCell - margin/1.5
@@ -82,7 +82,7 @@ class WordsViewController: UIViewController {
                                                          for: indexPath) as? WordsCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                cell.label.text = item.changeToRealName(fileName: item.fileName)
+                cell.fileNameTextField.text = item.changeToRealName(fileName: item.fileName)
                 cell.didTap = {
                     item.didTapWordButton(view: self!)
                 }

@@ -82,7 +82,7 @@ class UploadModalViewController: UIViewController {
     private func viewConfigure() {
         // CollectionView Layout Config
         let layout = UICollectionViewFlowLayout()
-        let margin: CGFloat = 10
+        let margin: CGFloat = 20
         let numberOfCell: CGFloat = 3
         let width = view.bounds.width < view.bounds.height ?
             (view.bounds.width - 2*margin)/numberOfCell - margin/1.5 : (view.bounds.height - 2*margin)/numberOfCell - margin/1.5
@@ -173,8 +173,8 @@ class UploadModalViewController: UIViewController {
                                                      for: indexPath) as? WordsCollectionViewCell else {
                 return UICollectionViewCell()
             }
-            cell.label.text = item.fileName
-            cell.button.isUserInteractionEnabled = false
+            cell.fileNameTextField.text = item.fileName
+            cell.backGroundButton.isUserInteractionEnabled = false
             return cell
         }
         
