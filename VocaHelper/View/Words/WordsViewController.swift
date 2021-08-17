@@ -63,9 +63,9 @@ class WordsViewController: UIViewController {
         collectionView?.translatesAutoresizingMaskIntoConstraints = false
         collectionView?.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: WordsCollectionViewCell.identifier)
         collectionView?.register(AddCollectionViewCell.self, forCellWithReuseIdentifier: AddCollectionViewCell.identifier)
-        collectionView?.backgroundColor = .tertiarySystemBackground
+        collectionView?.backgroundColor = .systemBackground
         
-        view.backgroundColor = .tertiarySystemBackground
+        view.backgroundColor = .systemBackground
         view.addSubview(collectionView!)
         
         collectionView?.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true

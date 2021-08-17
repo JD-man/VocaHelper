@@ -14,7 +14,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
     var didTap: (() -> Void)?
     
     let backGroundButton: UIButton = {
-        let button = UIButton(type: .system)        
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -70,7 +70,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(folderImageView)
         contentView.addSubview(fileNameTextField)
         //backgroundColor = .systemBackground
-        contentView.backgroundColor = .systemBackground
+        contentView.backgroundColor = .tertiarySystemBackground
         
         
         contentView.layer.cornerRadius = 5
