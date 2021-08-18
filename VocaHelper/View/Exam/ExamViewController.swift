@@ -140,10 +140,11 @@ class ExamViewController: UIViewController {
             }.disposed(by: disposeBag)
         
         for button in buttons {
-            button.rx.tap
-                .bind() { [weak self] in
+            button.rx.tap.asDriver()
+                .throttle(.milliseconds(1500), latest: false)
+                .drive(onNext: { [weak self] in
                     self?.viewModel.setNextButtons(button: button, view: self!)                    
-                }.disposed(by: disposeBag)
+                }).disposed(by: disposeBag)
         }
         
         navigationItem.leftBarButtonItem?.rx.tap
