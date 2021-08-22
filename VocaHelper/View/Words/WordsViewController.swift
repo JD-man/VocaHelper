@@ -29,6 +29,7 @@ class WordsViewController: UIViewController {
     }
     
     override func viewWillAppear (_ animated: Bool) {
+        navigationController?.navigationBar.sizeToFit()
         viewModels.makeNewViewModels(isAddButton: false)
     }
     

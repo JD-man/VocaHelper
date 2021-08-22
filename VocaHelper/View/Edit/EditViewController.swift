@@ -200,7 +200,7 @@ class EditViewController: UIViewController {
 extension EditViewController: UITableViewDelegate
 {
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, _) in
+        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] (_, _, _) in
             self?.viewModel.didDeleteCell(section: indexPath.section)
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
