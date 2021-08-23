@@ -52,7 +52,7 @@ class PopupViewController: UIViewController {
     let editButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("단어장", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         button.layer.masksToBounds = true
@@ -62,7 +62,7 @@ class PopupViewController: UIViewController {
     let practiceButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("연습하기", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         return button
@@ -71,7 +71,7 @@ class PopupViewController: UIViewController {
     let examButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("시험보기", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         return button
@@ -80,7 +80,7 @@ class PopupViewController: UIViewController {
     let deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("삭제하기", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
         button.setTitleColor(.systemRed, for: .normal)
         button.backgroundColor = .systemBackground
         return button
@@ -89,7 +89,7 @@ class PopupViewController: UIViewController {
     let exitButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("닫기", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         button.layer.masksToBounds = true

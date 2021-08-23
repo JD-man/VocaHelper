@@ -101,6 +101,7 @@ class PracticeViewController: UIViewController {
         view.addSubview(blind)
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.backward"))
+        navigationItem.leftBarButtonItem?.tintColor = .label
     }
     
     private func constraintsConfigure() {

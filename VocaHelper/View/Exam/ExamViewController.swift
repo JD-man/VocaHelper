@@ -85,6 +85,7 @@ class ExamViewController: UIViewController {
         view.layer.addSublayer(gradient)
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.backward"))
+        navigationItem.leftBarButtonItem?.tintColor = .label
     }
 
     private func configLabelButtons() {

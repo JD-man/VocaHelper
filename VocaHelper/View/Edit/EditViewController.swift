@@ -68,6 +68,7 @@ class EditViewController: UIViewController {
         
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem()
+        navigationItem.leftBarButtonItem?.tintColor = .label
         navigationItem.leftBarButtonItem?.image =  UIImage(systemName: "arrowshape.turn.up.backward")
         
         

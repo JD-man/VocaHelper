@@ -47,9 +47,11 @@ class WebVocaViewController: UIViewController {
         navigationItem.hidesBackButton = true
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationItem.leftBarButtonItem?.image =  UIImage(systemName: "arrowshape.turn.up.backward")
+        navigationItem.leftBarButtonItem?.tintColor = .label
         
         navigationItem.rightBarButtonItem = UIBarButtonItem()
         navigationItem.rightBarButtonItem?.image =  UIImage(systemName: "list.dash")
+        navigationItem.rightBarButtonItem?.tintColor = .label
         
         view.backgroundColor = .systemBackground
         view.addSubview(tableView)
