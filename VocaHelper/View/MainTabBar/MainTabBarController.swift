@@ -34,7 +34,7 @@ class MainTabBarController: UITabBarController {
         return nav
     }()
     
-    let launchView: UIView = {
+    var launchView: UIView! = {
         guard let launchScreen = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController(),
               let launchView = launchScreen.view else {
             return UIView()
@@ -55,11 +55,17 @@ class MainTabBarController: UITabBarController {
     
     private func showLaunchScreen(_ duration: TimeInterval) {
         view.addSubview(launchView)
-        launchView.frame = view.bounds
+        launchView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        launchView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        launchView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        launchView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         let animator = UIViewPropertyAnimator(duration: duration, curve: .linear) { [weak self] in
             self?.launchView.alpha = 0.0
         }
-        animator.startAnimation()
+        animator.addCompletion { [weak self] _ in
+            self?.launchView = nil
+        }
+        animator.startAnimation(afterDelay: 1)
     }
     
     private func configure() {
