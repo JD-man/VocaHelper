@@ -17,6 +17,11 @@ class AddCollectionViewCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         button.setBackgroundImage(UIImage(systemName: "folder.badge.plus"), for: .normal)
         button.tintColor = .systemGreen
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowRadius = 2
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowOffset = CGSize(width: 1, height: 1)
+        
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()

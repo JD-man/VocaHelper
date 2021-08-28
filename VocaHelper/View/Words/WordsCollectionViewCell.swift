@@ -75,7 +75,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
         
         contentView.layer.cornerRadius = 5
         contentView.layer.shadowColor = UIColor.black.cgColor
-        contentView.layer.shadowOpacity = 0.2
+        contentView.layer.shadowOpacity = 0.25
         contentView.layer.shadowOffset = CGSize(width: 0, height: 0)
     }
     

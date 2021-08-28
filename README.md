@@ -16,8 +16,13 @@
 서버의 단어장 목록 정렬하기  
 다크모드 지원  
 
+---
+## Youtube Link
+[![NewsApp Video](https://img.youtube.com/vi/RXktYlG6fEY/0.jpg)](https://youtu.be/RXktYlG6fEY)
+
 ### 원본 프로젝트에 더해서 RxSwift, Firebase를 사용.
 [원본 링크](https://github.com/JD-man/VocaHelperOrigin)  
 
-### 정리 블로그
+### 정리 블로그 (업데이트 중)
 [블로그 링크](https://jd-man.tistory.com/category/iOS/VocaHelper)
+
