@@ -10,61 +10,27 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-class WebVocaViewController: UIViewController {
+class WebVocaViewController: EditBaseViewController {
     
     deinit {
         print("deinit WebVocaView")
     }
     
-    public var fileName: String = ""
     public var webVocaName: String = ""
     public var isLiked: Bool = false
     
     lazy var viewModel = VocaViewModel(fileName: fileName)
     let disposeBag = DisposeBag()
     
-    private let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
-        tableView.rowHeight = 100
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        viewConfigure()
-        constraintsConfigure()
-        rxConfigure()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
-    private func viewConfigure() {
-        
-        navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem()
+    override func addBarButton() {
         navigationItem.leftBarButtonItem?.image =  UIImage(systemName: "arrowshape.turn.up.backward")
-        navigationItem.leftBarButtonItem?.tintColor = .label
         
         navigationItem.rightBarButtonItem = UIBarButtonItem()
         navigationItem.rightBarButtonItem?.image =  UIImage(systemName: "list.dash")
         navigationItem.rightBarButtonItem?.tintColor = .label
-        
-        view.backgroundColor = .systemBackground
-        view.addSubview(tableView)
     }
     
-    private func constraintsConfigure() {
-        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        tableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor).isActive = true
-    }
-    
-    private func rxConfigure() {
+    override func rxConfigure() {
         let dataSource = RxTableViewSectionedAnimatedDataSource<SectionOfEditCell>(animationConfiguration: AnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)) { dataSource, tableView, indexPath, item in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: EditTableViewCell.identifier, for: indexPath) as? EditTableViewCell else {
                 return UITableViewCell()

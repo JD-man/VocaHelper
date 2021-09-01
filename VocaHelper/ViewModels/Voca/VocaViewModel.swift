@@ -73,7 +73,7 @@ class VocaViewModel {
     public func makeViewModelsFromVocas() {
         let newViewModels: [SectionOfEditCell] = VocaManager.shared.vocas
             .map {
-                return EditCell(identity: $0.idx, word: $0.word, meaning: $0.meaning)
+                EditCell(identity: $0.idx, word: $0.word, meaning: $0.meaning)
             }.map {
                 SectionOfEditCell(idx: $0.identity, items: [$0])
             }

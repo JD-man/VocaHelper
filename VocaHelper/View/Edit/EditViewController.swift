@@ -10,128 +10,92 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-class EditViewController: UIViewController {
+class EditViewController: EditBaseViewController {
     
     deinit {
         print("deinit editview")
     }
     
-    public var fileName: String = ""
-    
     lazy var viewModel = VocaViewModel(fileName: fileName)    
     let disposeBag = DisposeBag()
     
-    private var prevTitle: String = ""
     private var selectedSection: Int?
     private var selectedCell: EditTableViewCell?
     
     private var touchXPos : CGFloat = 0
-    private var tableViewConstraints: [NSLayoutConstraint] = []
-    
-    private let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(EditTableViewCell.self, forCellReuseIdentifier: EditTableViewCell.identifier)
-        tableView.rowHeight = 100
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
+    private var tableViewHeightConstraints = NSLayoutConstraint()
     
     private var gesture = UITapGestureRecognizer()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        registerKeyboardNotification()
-        viewConfigure()        
-        rxConfigure()
-    }
+    // MARK: - Detail Function
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        tableViewConstraints = [
-            tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
-        ]
-        NSLayoutConstraint.activate(tableViewConstraints)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func viewConfigure() {
-        view.backgroundColor = .systemBackground
-        
-        navigationItem.hidesBackButton = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem()
-        navigationItem.leftBarButtonItem?.tintColor = .label
-        navigationItem.leftBarButtonItem?.image =  UIImage(systemName: "arrowshape.turn.up.backward")
-        
-        
+    private func setTableView() {
         let footer = EditTableViewFooter(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 50))
         tableView.tableFooterView = footer
-        
-        gesture = UITapGestureRecognizer()
-        gesture.cancelsTouchesInView = false        
+        gesture.cancelsTouchesInView = false
         tableView.addGestureRecognizer(gesture)
-        
-        view.addSubview(tableView)
     }
     
     private func registerKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(willShowKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willHideKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didHideKeyboard), name: UIResponder.keyboardDidHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(didHideKeyboard), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    // MARK: - Override BaseClass Function
+    
+    override func addDetail() {
+        registerKeyboardNotification()
+        setTableView()
+    }
+    
+    override func constraintConfigure() {
+        tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tableViewHeightConstraints = tableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
+        tableViewHeightConstraints.isActive = true
     }
     
     @objc private func willShowKeyboard(_ notification: Notification) {
         guard let info = notification.userInfo,
-              let rect = info["UIKeyboardFrameEndUserInfoKey"] as? CGRect else {
+              let rect = info["UIKeyboardFrameEndUserInfoKey"] as? CGRect,
+              let footer = tableView.tableFooterView as? EditTableViewFooter else {
             return
         }
-        NSLayoutConstraint.deactivate(tableViewConstraints)
-        tableViewConstraints.removeLast()
-        tableViewConstraints.append(
-            tableView.heightAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.heightAnchor,
-                constant: -rect.height + view.safeAreaInsets.bottom)
-        )
-        NSLayoutConstraint.activate(tableViewConstraints)
-        
+        tableViewHeightConstraints.constant = -rect.height + view.safeAreaInsets.bottom
         navigationItem.leftBarButtonItem?.isEnabled = false
-        guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
-            return
-        }
         footer.isUserInteractionEnabled = false
         footer.addButton.tintColor = .systemGray
     }
     
     @objc private func willHideKeyboard(_ notification: Notification) {
-        NSLayoutConstraint.deactivate(tableViewConstraints)
-        tableViewConstraints.removeLast()
-        tableViewConstraints.append(
-            tableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
-        )
-        NSLayoutConstraint.activate(tableViewConstraints)
-        
-        navigationItem.leftBarButtonItem?.isEnabled = true
         guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
             return
         }
-        footer.isUserInteractionEnabled = true
-        footer.addButton.tintColor = .systemGreen
-    }
-    
-    @objc private func didHideKeyboard(_ notification: Notification) {
-        viewModel.cellDeselected(section: selectedSection, cell: selectedCell)
-    }
-    
-    private func rxConfigure() {
         
+        tableViewHeightConstraints.constant = 0
+        let animation = UIViewPropertyAnimator(duration: 0.3, curve: .easeInOut) { [weak self] in
+            self?.view.layoutIfNeeded()
+        }
+        animation.addCompletion { [weak self] _ in
+            self?.navigationItem.leftBarButtonItem?.isEnabled = true
+            footer.isUserInteractionEnabled = true
+            footer.addButton.tintColor = .systemGreen
+            self?.viewModel.cellDeselected(section: self?.selectedSection, cell: self?.selectedCell)
+        }
+        animation.startAnimation()
+    }
+    
+//    @objc private func didHideKeyboard(_ notification: Notification) {
+//
+//    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func rxConfigure() {
         let dataSource = RxTableViewSectionedAnimatedDataSource<SectionOfEditCell>(animationConfiguration: AnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)) { [weak self] dataSource, tableView, indexPath, item in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: EditTableViewCell.identifier, for: indexPath) as? EditTableViewCell else {
                 return UITableViewCell()
@@ -151,7 +115,6 @@ class EditViewController: UIViewController {
         viewModel.editCellSubject
             .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
-        
         
         // 뒤로가기 버튼
         navigationItem.leftBarButtonItem?.rx.tap
@@ -210,6 +173,9 @@ extension EditViewController: UITableViewDelegate
 
 extension EditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let section = selectedSection {
+            tableView.deselectRow(at: IndexPath(item: 0, section: section), animated: false)
+        }
         textField.endEditing(true)
         return true
     }
