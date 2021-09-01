@@ -49,50 +49,33 @@ class PopupViewController: UIViewController {
         return textField
     }()
     
-    let editButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("단어장", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
-        button.setTitleColor(.label, for: .normal)
-        button.backgroundColor = .systemBackground
-        button.layer.masksToBounds = true
+    let editButton: PopupViewControllerButton = {
+        let button = PopupViewControllerButton(type: .system)
+        button.setPopupButton(title: "단어장")
         return button
     }()
     
-    let practiceButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("연습하기", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
-        button.setTitleColor(.label, for: .normal)
-        button.backgroundColor = .systemBackground
+    let practiceButton: PopupViewControllerButton = {
+        let button = PopupViewControllerButton(type: .system)
+        button.setPopupButton(title: "연습하기")
         return button
     }()
     
-    let examButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("시험보기", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
-        button.setTitleColor(.label, for: .normal)
-        button.backgroundColor = .systemBackground
+    let examButton: PopupViewControllerButton = {
+        let button = PopupViewControllerButton(type: .system)
+        button.setPopupButton(title: "시험보기")
         return button
     }()
     
-    let deleteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("삭제하기", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
-        button.setTitleColor(.systemRed, for: .normal)
-        button.backgroundColor = .systemBackground
+    let deleteButton: PopupViewControllerButton = {
+        let button = PopupViewControllerButton(type: .system)
+        button.setPopupButton(title: "삭제하기")
         return button
     }()
     
-    let exitButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("닫기", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
-        button.setTitleColor(.label, for: .normal)
-        button.backgroundColor = .systemBackground
-        button.layer.masksToBounds = true
+    let exitButton: PopupViewControllerButton = {
+        let button = PopupViewControllerButton(type: .system)
+        button.setPopupButton(title: "닫기")
         return button
     }()
 

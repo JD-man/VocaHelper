@@ -48,17 +48,7 @@ class WordsViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         
-        let layout = UICollectionViewFlowLayout()
-        let margin: CGFloat = 20
-        let numberOfCell: CGFloat = 3
-        let width = view.bounds.width < view.bounds.height ?
-            (view.bounds.width - 2*margin)/numberOfCell - margin/1.5 : (view.bounds.height - 2*margin)/numberOfCell - margin/1.5
-        
-        layout.sectionInset = UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
-        layout.itemSize = CGSize(width: width, height: width)
-        layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 10
+        let layout = WordsCollectionViewFlowLayout(view: view)
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView?.translatesAutoresizingMaskIntoConstraints = false

@@ -14,6 +14,8 @@
 		890AAB5D26983444001E2CE1 /* WebData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890AAB5C26983444001E2CE1 /* WebData.swift */; };
 		890AAB6026983860001E2CE1 /* WebViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890AAB5F26983860001E2CE1 /* WebViewModel.swift */; };
 		890AAB6226985859001E2CE1 /* WebVocaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890AAB6126985859001E2CE1 /* WebVocaViewController.swift */; };
+		891137D626DFAD2C00AD4319 /* PopupViewControllerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891137D526DFAD2C00AD4319 /* PopupViewControllerButton.swift */; };
+		891137D826DFC09100AD4319 /* WordsCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 891137D726DFC09100AD4319 /* WordsCollectionViewFlowLayout.swift */; };
 		8925EDEB26745CB70029F8AC /* WordsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEA26745CB70029F8AC /* WordsCell.swift */; };
 		8925EDEF26747F2B0029F8AC /* VocaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */; };
 		8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925EDF026749ABE0029F8AC /* EditCell.swift */; };
@@ -62,6 +64,8 @@
 		890AAB5C26983444001E2CE1 /* WebData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebData.swift; sourceTree = "<group>"; };
 		890AAB5F26983860001E2CE1 /* WebViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewModel.swift; sourceTree = "<group>"; };
 		890AAB6126985859001E2CE1 /* WebVocaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebVocaViewController.swift; sourceTree = "<group>"; };
+		891137D526DFAD2C00AD4319 /* PopupViewControllerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewControllerButton.swift; sourceTree = "<group>"; };
+		891137D726DFC09100AD4319 /* WordsCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		8925EDEA26745CB70029F8AC /* WordsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsCell.swift; sourceTree = "<group>"; };
 		8925EDEE26747F2B0029F8AC /* VocaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocaViewModel.swift; sourceTree = "<group>"; };
 		8925EDF026749ABE0029F8AC /* EditCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCell.swift; sourceTree = "<group>"; };
@@ -135,6 +139,15 @@
 				897B1750269DF0780078BD2E /* WebCell.swift */,
 			);
 			path = Web;
+			sourceTree = "<group>";
+		};
+		891137D426DFACFC00AD4319 /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				895AAB432633C6D400532021 /* PopupViewController.swift */,
+				891137D526DFAD2C00AD4319 /* PopupViewControllerButton.swift */,
+			);
+			path = Popup;
 			sourceTree = "<group>";
 		};
 		8925EDEC26745CCD0029F8AC /* Words */ = {
@@ -259,10 +272,11 @@
 		89651FBA2632BF5D00949DEB /* Words */ = {
 			isa = PBXGroup;
 			children = (
+				891137D426DFACFC00AD4319 /* Popup */,
 				89651FBD2632C0DF00949DEB /* WordsViewController.swift */,
-				895AAB432633C6D400532021 /* PopupViewController.swift */,
 				89651FC42632C4D700949DEB /* WordsCollectionViewCell.swift */,
 				89651FC72632D32500949DEB /* AddCollectionViewCell.swift */,
+				891137D726DFC09100AD4319 /* WordsCollectionViewFlowLayout.swift */,
 			);
 			path = Words;
 			sourceTree = "<group>";
@@ -469,9 +483,11 @@
 			files = (
 				89A42696263928F800555CCD /* PracticeViewController.swift in Sources */,
 				890AAB5D26983444001E2CE1 /* WebData.swift in Sources */,
+				891137D826DFC09100AD4319 /* WordsCollectionViewFlowLayout.swift in Sources */,
 				89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */,
 				89A42699263956B900555CCD /* BlindUIView.swift in Sources */,
 				8925EDF126749ABE0029F8AC /* EditCell.swift in Sources */,
+				891137D626DFAD2C00AD4319 /* PopupViewControllerButton.swift in Sources */,
 				89CC7BE92691F458009D008D /* FirestoreManager.swift in Sources */,
 				89C744BE263AE2A30013D620 /* ResultViewController.swift in Sources */,
 				897B1751269DF0780078BD2E /* WebCell.swift in Sources */,
