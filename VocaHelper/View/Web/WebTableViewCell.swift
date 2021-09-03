@@ -113,7 +113,7 @@ class WebTableViewCell: UITableViewCell {
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)        
         cellConfigure()
         constraintsConfigure()
     }
@@ -153,7 +153,8 @@ class WebTableViewCell: UITableViewCell {
         tapFunc()
     }
     
-    private func cellConfigure() {
+    private func cellConfigure() {        
+        backgroundColor = .clear
         backgroundButton.layer.addSublayer(gradient)
         contentView.addSubview(shadowView)
         contentView.addSubview(backgroundButton)

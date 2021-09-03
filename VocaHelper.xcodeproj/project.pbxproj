@@ -38,6 +38,7 @@
 		89651FC52632C4D700949DEB /* WordsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651FC42632C4D700949DEB /* WordsCollectionViewCell.swift */; };
 		89651FC82632D32500949DEB /* AddCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89651FC72632D32500949DEB /* AddCollectionViewCell.swift */; };
 		897B1751269DF0780078BD2E /* WebCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897B1750269DF0780078BD2E /* WebCell.swift */; };
+		899D0B4526E23135003C7C5B /* WebViewControllerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899D0B4426E23135003C7C5B /* WebViewControllerButton.swift */; };
 		89A42696263928F800555CCD /* PracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42695263928F800555CCD /* PracticeViewController.swift */; };
 		89A42699263956B900555CCD /* BlindUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A42698263956B900555CCD /* BlindUIView.swift */; };
 		89A70AE8269C18E20065EA8D /* UploadModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A70AE7269C18E20065EA8D /* UploadModalViewController.swift */; };
@@ -91,6 +92,7 @@
 		89651FC42632C4D700949DEB /* WordsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsCollectionViewCell.swift; sourceTree = "<group>"; };
 		89651FC72632D32500949DEB /* AddCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCollectionViewCell.swift; sourceTree = "<group>"; };
 		897B1750269DF0780078BD2E /* WebCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebCell.swift; sourceTree = "<group>"; };
+		899D0B4426E23135003C7C5B /* WebViewControllerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewControllerButton.swift; sourceTree = "<group>"; };
 		89A42695263928F800555CCD /* PracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewController.swift; sourceTree = "<group>"; };
 		89A42698263956B900555CCD /* BlindUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlindUIView.swift; sourceTree = "<group>"; };
 		89A70AE7269C18E20065EA8D /* UploadModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadModalViewController.swift; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 				89C812DB269961CF000CA8F9 /* CreateUserViewController.swift */,
 				89A70AE7269C18E20065EA8D /* UploadModalViewController.swift */,
 				8936505426A3F833001246DA /* UserWebVocaViewController.swift */,
+				899D0B4426E23135003C7C5B /* WebViewControllerButton.swift */,
 			);
 			path = Web;
 			sourceTree = "<group>";
@@ -498,6 +501,7 @@
 				89ED977D2693624500374FC8 /* WebTableViewCell.swift in Sources */,
 				89651FC12632C0EE00949DEB /* SearchViewController.swift in Sources */,
 				89651F9D2632BE4900949DEB /* AppDelegate.swift in Sources */,
+				899D0B4526E23135003C7C5B /* WebViewControllerButton.swift in Sources */,
 				89A789EC26774846004B5A54 /* ResultCell.swift in Sources */,
 				89651F9F2632BE4900949DEB /* SceneDelegate.swift in Sources */,
 				89651FBE2632C0DF00949DEB /* WordsViewController.swift in Sources */,

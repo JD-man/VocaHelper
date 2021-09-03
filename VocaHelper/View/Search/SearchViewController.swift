@@ -26,6 +26,7 @@ class SearchViewController: UIViewController {
         let bar = UISearchBar()
         bar.searchTextField.autocapitalizationType = .none
         bar.searchTextField.autocorrectionType = .no
+        bar.searchBarStyle = .minimal
         bar.translatesAutoresizingMaskIntoConstraints = false
         return bar
     }()

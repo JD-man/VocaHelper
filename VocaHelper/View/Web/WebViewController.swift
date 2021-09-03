@@ -28,16 +28,9 @@ class WebViewController: UIViewController {
         return indicator
     }()
     
-    let sortButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("최신순", for: .normal)
-        button.setTitleColor(.label, for: .normal)
-        button.backgroundColor = .systemBackground
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 10
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let sortButton: WebViewControllerButton = {
+        let button = WebViewControllerButton()
+        button.setWebButton(title: "최신순")
         return button
     }()
     
@@ -47,36 +40,21 @@ class WebViewController: UIViewController {
     }()
     
     let uploadButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("업로드", for: .normal)
-        button.setTitleColor(.label, for: .normal)
-        button.backgroundColor = .systemBackground
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 10
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        button.translatesAutoresizingMaskIntoConstraints = false
+        let button = WebViewControllerButton()
+        button.setWebButton(title: "업로드")
         return button
     }()
     
     let loginButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Login", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .link
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 10
-        button.isEnabled = true
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.translatesAutoresizingMaskIntoConstraints = false
+        let button = WebViewControllerButton()
+        button.setWebButton(title: "로그인")        
         return button
     }()
     
     let loginStatusTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .systemBackground
-        textField.layer.masksToBounds = true
+        //textField.layer.masksToBounds = true
         textField.layer.cornerRadius = 10
         textField.text = "로그아웃 상태입니다."
         textField.leftViewMode = .always
@@ -86,6 +64,10 @@ class WebViewController: UIViewController {
         textField.isEnabled = false
         textField.isUserInteractionEnabled = false
         textField.adjustsFontSizeToFitWidth = true
+        textField.layer.shadowColor = UIColor.black.cgColor
+        textField.layer.shadowRadius = 3
+        textField.layer.shadowOpacity = 0.2
+        textField.layer.shadowOffset = CGSize(width: 1, height: 1)
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -96,9 +78,15 @@ class WebViewController: UIViewController {
         tableView.rowHeight = 240
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.layer.masksToBounds = false
+        tableView.clipsToBounds = false
+        tableView.layer.shadowColor = UIColor.black.cgColor
+        tableView.layer.shadowRadius = 3
+        tableView.layer.shadowOpacity = 0.25
         tableView.layer.cornerRadius = 30
         tableView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        tableView.layer.shadowOffset = CGSize(width: 0, height: -0.5)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
 
