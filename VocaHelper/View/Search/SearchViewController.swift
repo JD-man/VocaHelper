@@ -124,8 +124,7 @@ class SearchViewController: UIViewController {
                 guard let cell = self?.tableView.cellForRow(at: $0) as? SearchResultTableViewCell,
                       let strongSelf = self else {
                     return
-                }
-                self?.tabBarController?.tabBar.isHidden.toggle()
+                }                
                 self?.viewModel.didTapResultCell(fileName: cell.fileName, view: strongSelf)
             }.disposed(by: disposeBag)
     }

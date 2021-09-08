@@ -51,8 +51,7 @@ class WebVocaViewController: EditBaseViewController {
             }.disposed(by: disposeBag)
         
         navigationItem.leftBarButtonItem?.rx.tap
-            .bind { [weak self] in
-                self?.tabBarController?.tabBar.isHidden.toggle()
+            .bind { [weak self] in                
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
     }

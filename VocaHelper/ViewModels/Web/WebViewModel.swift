@@ -67,7 +67,7 @@ struct WebViewModel {
         let vc = WebVocaViewController()
         vc.webVocaName = email + " - " + title
         vc.isLiked = isLiked
-        view.tabBarController?.tabBar.isHidden.toggle()
+        //view.tabBarController?.tabBar.isHidden.toggle()
         view.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -606,8 +606,7 @@ struct WebViewModel {
         VocaManager.shared.examResults = []
         let vc = WebVocaViewController()
         vc.webVocaName = email + " - " + title
-        vc.isLiked = isLiked
-        view.tabBarController?.tabBar.isHidden.toggle()
+        vc.isLiked = isLiked        
         view.navigationController?.pushViewController(vc, animated: true)
     }
 }

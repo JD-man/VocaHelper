@@ -11,7 +11,7 @@ import RxCocoa
 
 class PracticeViewController: UIViewController {
     deinit {
-        print("practice deinit")
+        print("deinit practice")
     }
     
     public var fileName: String = ""
@@ -78,10 +78,15 @@ class PracticeViewController: UIViewController {
         rxConfigure()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden.toggle()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden.toggle()
+    }
+    
+        
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         if size.width > size.height {
             wordLabel.font = UIFont.systemFont(ofSize: 50)

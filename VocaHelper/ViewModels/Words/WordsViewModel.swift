@@ -80,7 +80,6 @@ class WordsViewModel {
             let editVC = EditViewController()
             editVC.navigationItem.title = self?.changeToRealName(fileName: view!.fileName)
             editVC.fileName = view!.fileName
-            view?.presenting?.tabBarController?.tabBar.isHidden.toggle()
             view?.presenting?.navigationController?.pushViewController(editVC, animated: true)
         }
     }
@@ -91,7 +90,6 @@ class WordsViewModel {
             let practiceVC = PracticeViewController()
             practiceVC.navigationItem.title = self?.changeToRealName(fileName: view!.fileName)
             practiceVC.fileName = view!.fileName
-            view?.presenting?.tabBarController?.tabBar.isHidden.toggle()
             view?.presenting?.navigationController?.pushViewController(practiceVC, animated: true)
         }
     }
@@ -108,7 +106,6 @@ class WordsViewModel {
             let examVC = ExamViewController()
             examVC.navigationItem.title = self?.changeToRealName(fileName: view!.fileName)
             examVC.fileName = view!.fileName
-            view?.presenting?.tabBarController?.tabBar.isHidden.toggle()
             view?.presenting?.navigationController?.pushViewController(examVC, animated: true)
         }
     }
@@ -117,8 +114,8 @@ class WordsViewModel {
         let deleteAlert = UIAlertController(title: "이 단어장을 삭제하시겠습니까?", message: nil, preferredStyle: .alert)
         deleteAlert.addAction(UIAlertAction(title: "삭제", style: .destructive, handler: { [weak view] _ in
             VocaManager.shared.deleteFile(fileName: view!.fileName)
-            view!.presenting?.tabBarController?.tabBar.isHidden.toggle()
             view!.viewModel?.makeNewViewModels(isAddButton: false)
+            view!.presenting?.tabBarController?.tabBar.isHidden.toggle()
             view!.dismiss(animated: true, completion: nil)
         }))
         deleteAlert.addAction(UIAlertAction(title: "취소", style: .default, handler: nil))

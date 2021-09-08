@@ -75,6 +75,14 @@ class ExamViewController: UIViewController {
         configStackView()
         rxConfigure()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden.toggle()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden.toggle()
+    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

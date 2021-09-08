@@ -27,6 +27,14 @@ class EditBaseViewController: UIViewController {
         rxConfigure()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden.toggle()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {        
+        tabBarController?.tabBar.isHidden.toggle()
+    }
+    
     internal func viewConfigure() {
         view.backgroundColor = .systemBackground
         view.addSubview(tableView)

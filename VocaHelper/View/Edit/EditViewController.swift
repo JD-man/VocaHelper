@@ -45,7 +45,6 @@ class EditViewController: EditBaseViewController {
     // MARK: - Override BaseClass Function
     
     override func addDetail() {
-        registerKeyboardNotification()
         setTableView()
     }
     
@@ -64,6 +63,7 @@ class EditViewController: EditBaseViewController {
             return
         }
         tableViewHeightConstraints.constant = -rect.height + view.safeAreaInsets.bottom
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         navigationItem.leftBarButtonItem?.isEnabled = false
         footer.isUserInteractionEnabled = false
         footer.addButton.tintColor = .systemGray
@@ -80,14 +80,22 @@ class EditViewController: EditBaseViewController {
         }
         animation.addCompletion { [weak self] _ in
             self?.navigationItem.leftBarButtonItem?.isEnabled = true
+            self?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             footer.isUserInteractionEnabled = true
             footer.addButton.tintColor = .systemGreen            
         }
         animation.startAnimation()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
+        viewModel.didTapBackButton(fileName: fileName)
+        tabBarController?.tabBar.isHidden.toggle()
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        registerKeyboardNotification()        
+        tabBarController?.tabBar.isHidden.toggle()
     }
     
     override func rxConfigure() {
@@ -114,9 +122,7 @@ class EditViewController: EditBaseViewController {
         // 뒤로가기 버튼
         navigationItem.leftBarButtonItem?.rx.tap
             .bind() { [weak self] in
-                self?.viewModel.didTapBackButton(fileName: self?.fileName ?? "")
                 self?.navigationController?.popViewController(animated: true)
-                self?.tabBarController?.tabBar.isHidden.toggle()
             }.disposed(by: disposeBag)
         
         
@@ -158,7 +164,7 @@ class EditViewController: EditBaseViewController {
 // 셀 삭제를 위한 스와이프 액션
 extension EditViewController: UITableViewDelegate
 {
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] (_, _, _) in
             self?.viewModel.didDeleteCell(section: indexPath.section)
         }
