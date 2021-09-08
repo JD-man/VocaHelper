@@ -71,8 +71,8 @@ class EditTableViewCell: UITableViewCell {
     }
     
     private func addSubViews() {
-        self.addSubview(wordTextField)
-        self.addSubview(meaningTextField)
+        addSubview(wordTextField)
+        addSubview(meaningTextField)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -95,6 +95,7 @@ class WebViewController: UIViewController {
         view.backgroundColor = .secondarySystemBackground
         navigationItem.title = "단어장 다운받기"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
         configure()
         constraintsConfigure()
         rxConfigure()

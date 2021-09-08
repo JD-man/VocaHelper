@@ -81,15 +81,10 @@ class EditViewController: EditBaseViewController {
         animation.addCompletion { [weak self] _ in
             self?.navigationItem.leftBarButtonItem?.isEnabled = true
             footer.isUserInteractionEnabled = true
-            footer.addButton.tintColor = .systemGreen
-            self?.viewModel.cellDeselected(section: self?.selectedSection, cell: self?.selectedCell)
+            footer.addButton.tintColor = .systemGreen            
         }
         animation.startAnimation()
     }
-    
-//    @objc private func didHideKeyboard(_ notification: Notification) {
-//
-//    }
     
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -173,10 +168,11 @@ extension EditViewController: UITableViewDelegate
 
 extension EditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let section = selectedSection {
-            tableView.deselectRow(at: IndexPath(item: 0, section: section), animated: false)
+        if let section = selectedSection,
+           let cell = selectedCell {
+            viewModel.cellDeselected(section: section, cell: cell)
         }
-        textField.endEditing(true)
+        textField.resignFirstResponder()
         return true
     }
 }

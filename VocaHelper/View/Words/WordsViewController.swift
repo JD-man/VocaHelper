@@ -35,10 +35,7 @@ class WordsViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animate(alongsideTransition: { [weak self] _ in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.navigationController?.navigationBar.sizeToFit()
+            self?.navigationController?.navigationBar.sizeToFit()
         }, completion: nil)
     }
     
@@ -46,6 +43,7 @@ class WordsViewController: UIViewController {
     private func viewConfigure() {
         navigationItem.title = "단어장"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
         navigationItem.largeTitleDisplayMode = .always
         
         let layout = WordsCollectionViewFlowLayout(view: view)

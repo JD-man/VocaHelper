@@ -49,6 +49,7 @@ class SearchViewController: UIViewController {
         view.backgroundColor = .systemBackground
         navigationItem.title = "저장한 단어찾기"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
         searchBarConfigure()
         constraintsConfigure()
         rxConfigure()

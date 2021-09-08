@@ -117,7 +117,7 @@ class VocaViewModel {
         guard let section = section,
               let cell = cell else {
             return
-        }
+        }        
         VocaManager.shared.vocas[section].word = cell.wordTextField.text ?? ""
         VocaManager.shared.vocas[section].meaning = cell.meaningTextField.text ?? ""        
         makeViewModelsFromVocas()
