@@ -39,7 +39,6 @@ class EditViewController: EditBaseViewController {
     private func registerKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(willShowKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willHideKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(didHideKeyboard), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     
     // MARK: - Override BaseClass Function
@@ -144,7 +143,9 @@ class EditViewController: EditBaseViewController {
             .bind() { [weak self] indexPath in                
                 self?.selectedSection = indexPath.section
                 self?.selectedCell = self?.tableView.cellForRow(at: indexPath) as? EditTableViewCell
-                self?.viewModel.cellSelected(cell: self?.selectedCell, width: self?.tableView.frame.size.width, touchXPos: self?.touchXPos)
+                self?.viewModel.cellSelected(cell: self?.selectedCell,
+                                             width: self?.tableView.frame.size.width,
+                                             touchXPos: self?.touchXPos)
             }.disposed(by: disposeBag)
         
         tableView.rx.itemDeselected

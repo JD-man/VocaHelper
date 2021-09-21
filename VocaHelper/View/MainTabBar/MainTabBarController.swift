@@ -69,6 +69,7 @@ class MainTabBarController: UITabBarController {
     }
     
     private func configure() {
+        tabBar.backgroundColor = .systemBackground
         tabBar.barTintColor = .systemBackground
         tabBar.tintColor = .label
         setViewControllers([wordsNavVC, searchNavVC, webNavVC], animated: true)

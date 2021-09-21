@@ -78,16 +78,24 @@ class WebViewController: UIViewController {
         tableView.rowHeight = 240
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        tableView.layer.masksToBounds = false
-        tableView.clipsToBounds = false
-        tableView.layer.shadowColor = UIColor.black.cgColor
-        tableView.layer.shadowRadius = 3
-        tableView.layer.shadowOpacity = 0.25
         tableView.layer.cornerRadius = 30
         tableView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        tableView.layer.shadowOffset = CGSize(width: 0, height: -0.5)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
+    }()
+    
+    let wordsTableViewShadow: UIView = {
+        let shadowView = UIView()
+        shadowView.backgroundColor = .white
+        shadowView.clipsToBounds = false
+        shadowView.layer.cornerRadius = 30
+        shadowView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowRadius = 3
+        shadowView.layer.shadowOpacity = 0.25
+        shadowView.layer.shadowOffset = CGSize(width: 0, height: -0.5)
+        shadowView.translatesAutoresizingMaskIntoConstraints = false
+        return shadowView
     }()
 
     override func viewDidLoad() {
@@ -118,6 +126,7 @@ class WebViewController: UIViewController {
         view.addSubview(loginButton)
         view.addSubview(sortButton)
         view.addSubview(uploadButton)
+        view.addSubview(wordsTableViewShadow)
         view.addSubview(wordsTableView)
         view.addSubview(activityIndicator)
     }
@@ -149,6 +158,11 @@ class WebViewController: UIViewController {
         wordsTableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
         wordsTableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
         wordsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        wordsTableViewShadow.topAnchor.constraint(equalTo: wordsTableView.topAnchor).isActive = true
+        wordsTableViewShadow.leftAnchor.constraint(equalTo: wordsTableView.leftAnchor).isActive = true
+        wordsTableViewShadow.rightAnchor.constraint(equalTo: wordsTableView.rightAnchor).isActive = true
+        wordsTableViewShadow.bottomAnchor.constraint(equalTo: wordsTableView.bottomAnchor).isActive = true
         
         activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
