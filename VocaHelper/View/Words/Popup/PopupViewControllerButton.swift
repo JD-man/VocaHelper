@@ -13,6 +13,7 @@ class PopupViewControllerButton: UIButton {
         setTitle(title, for: .normal)
         titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
         setTitleColor(title == "삭제하기" ? .systemRed : .label, for: .normal)
+        setTitleColor(.systemGray, for: .highlighted)
         backgroundColor = .systemBackground
         layer.masksToBounds = true
     }

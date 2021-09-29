@@ -20,8 +20,7 @@ class AddCollectionViewCell: UICollectionViewCell {
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowRadius = 2
         button.layer.shadowOpacity = 0.2
-        button.layer.shadowOffset = CGSize(width: 1, height: 1)
-        
+        button.layer.shadowOffset = CGSize(width: 1, height: 1)        
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
