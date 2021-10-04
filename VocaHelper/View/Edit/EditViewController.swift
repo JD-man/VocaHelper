@@ -38,7 +38,6 @@ class EditViewController: EditBaseViewController {
     
     private func registerKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(willShowKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(willHideKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - Override BaseClass Function
@@ -68,11 +67,11 @@ class EditViewController: EditBaseViewController {
         footer.addButton.tintColor = .systemGray
     }
     
-    @objc private func willHideKeyboard(_ notification: Notification) {
+    private func willHideKeyboard() {        
         guard let footer = tableView.tableFooterView as? EditTableViewFooter else {
             return
         }
-        
+
         tableViewHeightConstraints.constant = 0
         let animation = UIViewPropertyAnimator(duration: 0.3, curve: .easeInOut) { [weak self] in
             self?.view.layoutIfNeeded()
@@ -81,7 +80,7 @@ class EditViewController: EditBaseViewController {
             self?.navigationItem.leftBarButtonItem?.isEnabled = true
             self?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             footer.isUserInteractionEnabled = true
-            footer.addButton.tintColor = .systemGreen            
+            footer.addButton.tintColor = .systemGreen
         }
         animation.startAnimation()
     }
@@ -180,6 +179,8 @@ extension EditViewController: UITextFieldDelegate {
             viewModel.cellDeselected(section: section, cell: cell)
         }
         textField.resignFirstResponder()
+        willHideKeyboard()
+        
         return true
     }
 }
